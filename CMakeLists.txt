@@ -55,6 +55,7 @@ enable_testing()
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 set(INCLUDES_FOLDER includes)
 FILE(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}   "${INCLUDES_FOLDER}/*.cpp" )
+
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 
@@ -80,4 +81,20 @@ TARGET_LINK_LIBRARIES(basic_test gtest)
 TARGET_LINK_LIBRARIES(testB gtest)
 
  
+set(SFML_DIR "/opt/homebrew/opt/sfml/lib/cmake/SFML")
+find_package(SFML 2.5 REQUIRED COMPONENTS system window graphics network audio)
 
+set(SFML_INCLUDE_DIRS "/opt/homebrew/opt/sfml/include")
+set(SFML_LIBRARY_DIRS "/opt/homebrew/opt/sfml/lib")
+
+if(SFML_FOUND)
+    message(STATUS "SFML_INCLUDE_DIRS: ${SFML_INCLUDE_DIRS}")
+    message(STATUS "SFML_LIBRARIES: ${SFML_LIBRARIES}")
+    include_directories(${SFML_INCLUDE_DIRS})
+    link_directories(${SFML_LIBRARY_DIRS})
+    target_link_libraries(main sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+    target_link_libraries(basic_test sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+    target_link_libraries(testB sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+else()
+    message(FATAL_ERROR "SFML not found")
+endif()

@@ -1,13 +1,16 @@
 #include <iostream>
 #include <iomanip>
+#include <SFML/Graphics.hpp>
+#include "includes/system.h"
+#include "includes/graph.h"
+#include "includes/animate.h"
+#include "includes/sidebar.h"
 
 
-using namespace std;
-
-int main(int argv, char** argc) {
-    cout << "\n\n"
-         << endl;
-
-    cout << "\n\n\n=====================" << endl;
+int main()
+    {
+    animate game;
+    game.run();
     return 0;
-}
+    }
+
