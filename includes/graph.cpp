@@ -9,14 +9,15 @@ void Graph::update(const function<float(float)>& func)
     _points.clear(); //   clear the vector of points
 
     // generate the points and transform them to screen coordinates
-    for (float x = -10; x <= 10; x += 0.01f)
+    for (float x = -10; x <= 10; x += 0.1f)
         {
         float y = func(x); //  calculate the y value of the function
-        float screenX = x * 40 + 560; //  the x position of the point
-        float screenY = -y * 40 + 400; //  the y position of the point
+        float screenX = x * 56 + 560; //  the x position of the point
+        float screenY = -y * 56 + 400; //  the y position of the point
         _points.push_back(sf::Vector2f(screenX, screenY)); //  add the point to the vector
 
         }
+
     }
 
 void Graph::draw(sf::RenderWindow& window)

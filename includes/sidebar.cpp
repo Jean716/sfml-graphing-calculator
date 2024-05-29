@@ -61,8 +61,8 @@ Sidebar::Sidebar(float left, float width) :_left(left), _width(width)
 
 void Sidebar::draw(sf::RenderWindow& window)
     {
-    const double VERTICAL_LINE_SPACING = 5.0;
-    const double LEFT_MARGIN = 10.0;
+    const double VERTICAL_LINE_SPACING = 5.0;//  5 pixels between lines
+    const double LEFT_MARGIN = 10.0;  //  10 pixels from left edge
 
     window.draw(rect);
     float height = 10;

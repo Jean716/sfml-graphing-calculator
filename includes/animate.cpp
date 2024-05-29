@@ -80,7 +80,9 @@ void animate::processEvents()
                     mouseX = event.mouseMove.x;
                     mouseY = event.mouseMove.y;
 
-                    //Do something with it if you need to...
+                    // Update the position of the red dot
+                    mousePoint.setPosition(static_cast<float>(mouseX), static_cast<float>(mouseY));
+
                     break;
                 case sf::Event::MouseButtonReleased:
                     if (event.mouseButton.button == sf::Mouse::Right)
