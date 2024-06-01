@@ -19,7 +19,7 @@ class Sidebar
         void handleEvent(const sf::Event& event);
 
         string& operator [](int index);
-        string getInput() const;
+        string getInput() const; // get the input string from user
 
 
     private:

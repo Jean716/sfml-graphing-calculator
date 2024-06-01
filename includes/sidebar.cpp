@@ -1,5 +1,6 @@
 #include "sidebar.h"
 #include "constants.h"
+
 Sidebar::Sidebar() : _left(1120), _width(280)
     {
     _rect.setSize(sf::Vector2f(_width, 800));
@@ -43,7 +44,7 @@ Sidebar::Sidebar(float left, float width) :_left(left), _width(width)
     _sb_text.setFont(_font);
     _sb_text.setCharacterSize(20);
     _sb_text.setStyle(sf::Text::Bold);
-    _sb_text.setColor(sf::Color::Black);
+    _sb_text.setFillColor(sf::Color::Black);
 
     // position text on screen:
     //_sb_text.setPosition(sf::Vector2f(10, SCREEN_HEIGHT - _sb_text.getLocalBounds().height - 5));

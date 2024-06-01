@@ -10,8 +10,11 @@ using namespace std;
 // Constructor
 Animate::Animate()
     : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graph Plotter"),
-    _mouseIn(false)
+    _mouseIn(false), _sidebar(1120, 280)
     {
+    _mousePoint.setRadius(5);
+    _mousePoint.setFillColor(sf::Color::Red);
+
     }
 // _system(&_info) // Initialize system with graph info
 // {
@@ -97,12 +100,34 @@ void Animate::render()
     _window.clear(sf::Color::White); //  Clear the screen and set a background color
     _system.draw(_window);
 
+    // display the location of the mouse at the left top of the window
+    string mousePosStr = mouse_pos_string(_window);
+    sf::Text mouseText;
+    sf::Font font;
+    if (font.loadFromFile("arial.ttf"))
+        {
+        mouseText.setFont(font);
+        mouseText.setString(mousePosStr);
+        mouseText.setCharacterSize(20);
+        mouseText.setFillColor(sf::Color::Black);
+        mouseText.setPosition(10, 10);
+        _window.draw(mouseText);
+        }
+
+    // Draw the mouse point
+    sf::Vector2i mousePos = sf::Mouse::getPosition(_window);
+    _mousePoint.setPosition(static_cast<float>(mousePos.x) - _mousePoint.getRadius(), static_cast<float>(mousePos.y) - _mousePoint.getRadius());
+    _window.draw(_mousePoint);
+
+    // Draw the sidebar
+    _sidebar.draw(_window);
+
     _window.display();
     }
 
-// Helper function to get mouse position as string
-// string mouse_pos_string(sf::RenderWindow & window)
-//     {
-//     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-//     return "(" + std::to_string(mousePos.x) + ", " + std::to_string(mousePos.y) + ")";
-//     }
+//Helper function to get mouse position as string
+string Animate::mouse_pos_string(sf::RenderWindow & window)
+    {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    return "(" + std::to_string(mousePos.x) + ", " + std::to_string(mousePos.y) + ")";
+    }
