@@ -1,29 +1,39 @@
 #include "graph.h"
 #include "plot.h"
 #include "graphInfo.h"
+#include "coord_translation.h"
 
 
 
-Graph::Graph() : _info(nullptr), _plotter(nullptr), _points()
+Graph::Graph() : _info(nullptr), _plot(nullptr), _points(), _coordTranslation(nullptr)
     {
     }
 
-Graph::Graph(GraphInfo* info, const string& equation)
-    : _info(info), _plotter(info)
+Graph::Graph(GraphInfo* info)
+    : _info(info), _plot(info), _points(), _coordTranslation(info)
     {
     if (_info == nullptr)
         {
         cerr << "Error: GraphInfo pointer is null!" << endl;
         return;
         }
-    _info->getEquation() = equation;
+
     // update(equation);
 
 
 
     }
 
-void Graph::update(const string& equation)
+void Graph::set_info(GraphInfo* info)
+    {
+    _info = info;
+    _plot.set_info(info);
+    _coordTranslation.set_info(info);
+    }
+
+
+
+void Graph::update(GraphInfo* info)
     {
 
     // if (_info == nullptr)
@@ -42,15 +52,15 @@ void Graph::draw(sf::RenderWindow& window)
     // draw the x-axis
     sf::Vertex xAxis[] =
         {
-            sf::Vertex(sf::Vector2f(0, 400), sf::Color::Black), // set the left point of the x-axis
-            sf::Vertex(sf::Vector2f(1120, 400), sf::Color::Black) // set the right point of the x-axis
+            sf::Vertex(sf::Vector2f(0, 400), sf::Color::Green), // set the left point of the x-axis
+            sf::Vertex(sf::Vector2f(1120, 400), sf::Color::Green) // set the right point of the x-axis
         };
 
     // draw the y-axis
     sf::Vertex yAxis[] =
         {
-            sf::Vertex(sf::Vector2f(560, 0), sf::Color::Black), // set the top point of the y-axis
-            sf::Vertex(sf::Vector2f(560, 800), sf::Color::Black) // set the bottom point of the y-axis
+            sf::Vertex(sf::Vector2f(560, 0), sf::Color::Green), // set the top point of the y-axis
+            sf::Vertex(sf::Vector2f(560, 800), sf::Color::Green) // set the bottom point of the y-axis
         };
 
     window.draw(xAxis, 2, sf::Lines); // Lines is the type of the shape
@@ -65,5 +75,19 @@ void Graph::draw(sf::RenderWindow& window)
         window.draw(shape); // draw the circle
         }
     }
+
+// void Graph::plot()
+//     {
+//     if (_info)
+//         {
+//         _points = _plot(*_info); // generate the points of the graph through the plotter
+//         }
+//     }
+
+
+// sf::Vector2f Graph::translateMouseCoords(const sf::Vector2f& point) const
+//     {
+//     return _coordTranslation.getMathCoords(point);
+//     }
 
 

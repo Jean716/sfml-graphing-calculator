@@ -10,6 +10,8 @@ class Animate
     {
     public:
         Animate();
+        void set_info(GraphInfo* info); // set the information of the graph
+
         void run(); // run main loop
         void processEvents(); // process the events
         void update(); // update the system state
@@ -23,8 +25,12 @@ class Animate
         sf::CircleShape _mousePoint; // The little red dot
         sf::Font _font; // font to draw on main screen
         sf::Text _myTextLabel; // text to draw on main screen
+        sf::Text _coordLabel; // math coordinates
         Sidebar _sidebar; // rectangular message sidebar
         GraphInfo _info;
+        CoordTranslation  _coordTranslation;
+
+
 
         // helper function to convert mouse position to string
         string mouse_pos_string(sf::RenderWindow& window);

@@ -1,77 +1,38 @@
 #include "sidebar.h"
 #include "constants.h"
 
-Sidebar::Sidebar() : _left(1120), _width(280)
+Sidebar::Sidebar(float left, float width) : _left(left), _width(width), _isFocused(false), _showCursor(true)
     {
     _rect.setSize(sf::Vector2f(_width, 800));
-    _rect.setFillColor(sf::Color(100, 100, 100));
+    _rect.setFillColor(sf::Color(236, 236, 236));
     _rect.setPosition(_left, 0);
+
     if (!_font.loadFromFile("arial.ttf"))
         {
         // Handle error
         }
     _sb_text.setFont(_font);
-    _sb_text.setFillColor(sf::Color::White);
-    }
-
-
-Sidebar::Sidebar(float left, float width) :_left(left), _width(width)
-    {
-    cout << "Sidebar CTOR: TOP" << endl;
-    _items.reserve(50); //reserve space for 50 strings
-
-    //set up the sidebar rectangle:
-    _rect.setFillColor(sf::Color(131, 175, 155)); //green
-    _rect.setPosition(sf::Vector2f(left, 0));
-    _rect.setSize(sf::Vector2f(width, SCREEN_HEIGHT));
-    //setBackgroundColor(sf::Color(131, 175, 155));
-
-    cout << "Sidebar CTOR:  load font." << endl;
-
-    ////- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    //the font file must be in the "working directory"
-    // check projects->run->working directory
-    //      [Make sure it's not pointing to the app file]
-
-    if (!_font.loadFromFile("Roboto-Thin.ttf"))
-        {
-        cout << "Sidebar() CTOR: Font failed to load" << endl;
-        cin.get();
-        exit(-1);
-        }
-
-    cout << "Sidebar CTOR: Set the text of the sidebar" << endl;
-    _sb_text.setFont(_font);
-    _sb_text.setCharacterSize(20);
-    _sb_text.setStyle(sf::Text::Bold);
     _sb_text.setFillColor(sf::Color::Black);
+    _sb_text.setCharacterSize(20);
 
-    // position text on screen:
-    //_sb_text.setPosition(sf::Vector2f(10, SCREEN_HEIGHT - _sb_text.getLocalBounds().height - 5));
+    // add the default items
+    _items.push_back("Enter an equation:");
 
-    // add some text to the sidebar:
-    _items.push_back("Please Enter a Function.");
-    //_items.push_back("add some text here");
-
-    // set up the input box:
+    // initialize the input box
     _inputBox.setSize(sf::Vector2f(_width - 20, 30));
-    _inputBox.setFillColor(sf::Color::White);
+    _inputBox.setFillColor(sf::Color(255, 255, 255));
+    _inputBox.setOutlineColor(sf::Color::Black);
+    _inputBox.setOutlineThickness(1);
     _inputBox.setPosition(_left + 10, 50);
 
     _inputText.setFont(_font);
-    _inputText.setFillColor(sf::Color::Black);
+    _inputText.setFillColor(sf::Color::White);
     _inputText.setCharacterSize(20);
     _inputText.setPosition(_left + 15, 55);
 
-
-
-    //Fill the items vector with empty strings so that we can use [] to read them:
-    for (int i = 0; i < 30; i++)
-        {
-        _items.push_back("");
-        }
-    cout << "Sidebar: CTOR: Exit." << endl;
     }
+
+
 
 void Sidebar::draw(sf::RenderWindow& window)
     {
@@ -94,9 +55,20 @@ void Sidebar::draw(sf::RenderWindow& window)
 
         // drwa the input box and text
         window.draw(_inputBox);
+        _inputText.setString(_inputString + (_showCursor ? "|" : "")); // display the cursor
         window.draw(_inputText);
+
+
+        // display the cuosor state
+        if (_cursorClock.getElapsedTime().asSeconds() >= 0.5f)
+            {
+            _showCursor = !_showCursor;
+            _cursorClock.restart();
+            }
         }
     }
+
+
 
 string& Sidebar::operator [](int index)
     {
@@ -104,24 +76,42 @@ string& Sidebar::operator [](int index)
     }
 
 
-void Sidebar::handleEvent(const sf::Event& event)
+void Sidebar::handleEvent(const sf::Event & event)
     {
-    if (event.type == sf::Event::TextEntered)
+    // handle mouse click
+    if (event.type == sf::Event::MouseButtonPressed)
         {
-        if (event.text.unicode == '\b')
-            { // handle backspace
+        sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y);
+        if (_inputBox.getGlobalBounds().contains(mousePos))
+            {
+            _isFocused = true;
+            }
+        else
+            {
+            _isFocused = false;
+            }
+        }
+
+
+
+    // hanlde text input
+    if (_isFocused && event.type == sf::Event::TextEntered)
+        {
+        if (event.text.unicode == '\b')// handle backspace
+            {
             if (!_inputString.empty())
                 {
                 _inputString.pop_back();
                 }
             }
-        else if (event.text.unicode < 128)
-            { // handle ASCII characters only
+        else if (event.text.unicode < 128 && event.text.unicode >= 32)
+            {
             _inputString += static_cast<char>(event.text.unicode);
             }
-        _inputText.setString(_inputString);
         }
+    _inputText.setString(_inputString);
     }
+
 
 
 string Sidebar::getInput() const

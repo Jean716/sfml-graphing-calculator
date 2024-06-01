@@ -8,16 +8,19 @@
 class CoordTranslation
     {
     public:
+        CoordTranslation();
         CoordTranslation(GraphInfo* info);
-        sf::Vector2f translate(const sf::Vector2f& point) const; // translate the point to screen coord
-        sf::Vector2f operator()(const sf::Vector2f& point) const; // operator overloading to translate the point to screen coord
-        // simplify the code
+        void set_info(GraphInfo* info); // set the information of the graph
+        sf::Vector2f translate(const sf::Vector2f& point) const; // translate the math point to screen coord
+        sf::Vector2f getMathCoords(const sf::Vector2f& point) const; // screen coord to math coord
+        sf::Vector2f operator()(const sf::Vector2f& point) const; // operator overloading
 
     private:
         GraphInfo* _info;
     };
 
 #endif 
+
 
 
 // /*

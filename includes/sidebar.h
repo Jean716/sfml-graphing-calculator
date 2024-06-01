@@ -12,28 +12,31 @@ using namespace std;
 class Sidebar
     {
     public:
-        Sidebar();
-        Sidebar(float left, float width);
+
+        Sidebar(float left = 1120, float width = 280); // constructor with default values
 
         void draw(sf::RenderWindow& window);
-        void handleEvent(const sf::Event& event);
-
-        string& operator [](int index);
+        string& operator [](int index); // get the string at the index
+        void handleEvent(const sf::Event& event); // handle the events
         string getInput() const; // get the input string from user
 
 
+
     private:
-        sf::RectangleShape _rect;            //sidebar rectangle
         vector<string> _items;               //strings to place on the sidebar
+        sf::RectangleShape _rect;            //sidebar rectangle
         sf::Font _font;                      //used to draw text
         sf::Text _sb_text;
         //used to draw strings on the window object
         float _left;
         float _width;
 
-        sf::RectangleShape _inputBox;
-        sf::Text _inputText;
-        string _inputString;
+        sf::RectangleShape _inputBox; // input box
+        sf::Text _inputText; // text in the input box
+        string _inputString; // to store the input string
+        bool _isFocused; // if the input box is focused
+        bool _showCursor; // cursor blink flag
+        sf::Clock _cursorClock; // cursor blink clock
 
     };
 

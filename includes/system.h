@@ -13,10 +13,11 @@ class System
         System();
         System(GraphInfo* info);
         void set_info(GraphInfo* info); //  set the information of the graph
-        void step(int command); // handle the command
+        void step(int command, GraphInfo* info); // handle the command
         void draw(sf::RenderWindow& window); // draw the content of the window
         void update(); //  update the system state
         void handleEvent(const sf::Event& event); //  handle the events on the window object
+        sf::Vector2f getMouseCoords(const sf::Vector2f& screenCoords) const; // get the mouse coordinates
 
 
     private:

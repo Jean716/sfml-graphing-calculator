@@ -32,7 +32,7 @@ Plot::Plot(GraphInfo* info) : _info(info), _coordTranslation(info)
 void Plot::set_info(GraphInfo* info)
     {
     _info = info;
-    _coordTranslation = CoordTranslation(info); // 更新坐标转换
+    _coordTranslation.set_info(info); // 将信息传递给 CoordTranslation
     }
 
 

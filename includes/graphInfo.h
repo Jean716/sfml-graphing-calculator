@@ -32,19 +32,19 @@ class GraphInfo
         void setEquation(const std::string& equation) { _equation = equation; }
 
         sf::Vector2f getWindowDimensions() const { return _window_dimensions; }
-        //void setWindowDimensions(const sf::Vector2f& windowDimensions) { _window_dimensions = windowDimensions; }
+        void setWindowDimensions(const sf::Vector2f& windowDimensions) { _window_dimensions = windowDimensions; }
 
         sf::Vector2f getOrigin() const { return _origin; }
-        //void setOrigin(const sf::Vector2f& origin) { _origin = origin; }
+        void setOrigin(const sf::Vector2f& origin) { _origin = origin; }
 
         sf::Vector2f getDomain() const { return _domain; }
         void setDomain(const sf::Vector2f& domain) { _domain = domain; }
 
         float getScale() const { return _scale; }
-        //void setScale(float scale) { _scale = scale; }
+        void setScale(float scale) { _scale = scale; }
 
         int getPoints() const { return _points; }
-        // void setPoints(int points) { _points = points; }
+        void setPoints(int points) { _points = points; }
 
     private:
         std::string _equation;           // Equation of the graph
