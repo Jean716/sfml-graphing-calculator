@@ -3,25 +3,26 @@
 
 #include <SFML/Graphics.hpp>
 #include "graph.h"
+#include "graphInfo.h"
 #include "sidebar.h"
-#include <functional> // for std::function
-using namespace std;
 
-// manage domain and range of the graph
+// this class is to initialize the main window and manage the main loop and  the other interactive objects
 class System
     {
     public:
-        System(const function<float(float)>& func);
-        void update();
+        System();
+        System(GraphInfo* info);
+        void set_info(GraphInfo* info); //  set the information of the graph
+        void step(int command);
         void draw(sf::RenderWindow& window);
-        Graph& getGraph();
-        //void Step(int command);
-        Sidebar& getSidebar();
+        void update();
+        void handleEvent(const sf::Event& event); //  handle the events on the window object
+
 
     private:
-        Graph _graph; // This is the graph object that will be used to draw the graph
+        Graph _graph;
+        GraphInfo* _info;
         Sidebar _sidebar;
     };
 
-
-#endif
+#endif 
