@@ -1,24 +1,6 @@
 #include "function.h"
 #include <cmath>
-#include <stdexcept>
 
-Function::Function(const string& name) : _name(name) {}
-
-string Function::get_name() const
-    {
-    return _name;
-    }
-
-TokenType Function::type() const
-    {
-    return TokenType::FUNCTION;
-    }
-
-void Function::print(ostream& outs) const
-    {
-    //outs << "Function(" << _name << ")";
-    outs << _name;
-    }
 
 string Function::get_value() const
     {

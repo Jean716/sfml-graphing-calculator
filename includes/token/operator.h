@@ -5,28 +5,21 @@
 #include <string>
 
 
-
 using namespace std;
 
 class Operator : public Token
     {
     public:
-        Operator(const string& op);
+        Operator(const string& op) : _op(op) {}
+        string get_value() const override { return _op; }
+        TokenType type() const override { return TokenType::OPERATOR; }
+        void print(ostream& outs = cout) const override { outs << _op; }
 
-        string get_value() const override;
-        TokenType type() const override;
-        void print(ostream& outs = cout) const override;
-
-
-        void set_precedence(int precedence) { _precedence = precedence; }
-        int get_precedence() const { return _precedence; }
         float evaluate(float a, float b) const;
-
 
 
     private:
         string _op;
-        int _precedence;
     };
 
 #endif 

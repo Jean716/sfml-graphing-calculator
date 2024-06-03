@@ -3,13 +3,13 @@
 
 #include <vector>
 // #include <queue>
-// #include <string>
+#include <string>
 #include <SFML/Graphics.hpp>
-// #include "../includes/token/token.h"
-// #include "../includes/shunting_yard/shunting_yard.h"
-// #include "../includes/token/tk_string.h"
+#include "../includes/token/token.h"
+#include "../includes/shunting_yard/shunting_yard.h"
+#include "../includes/token/tk_string.h"
 
-// #include "../includes/rpn/rpn.h"
+#include "../includes/rpn/rpn.h"
 #include "graphInfo.h"
 #include "coord_translation.h"
 using namespace std;
@@ -27,13 +27,13 @@ class Plot
         Plot(GraphInfo* info);
         void set_info(GraphInfo* info);
         vector<sf::Vector2f> operator()(float xMin, float xMax, float increment);
-        //Queue<Token*> tokenize(const string& equation) const;
+        Queue<Token*> tokenize(const string& equation) const;
 
 
     private:
 
         GraphInfo* _info;
-        // ShuntingYard _shuntingYard;
+        ShuntingYard _shuntingYard;
         CoordTranslation _coordTranslation;
 
 

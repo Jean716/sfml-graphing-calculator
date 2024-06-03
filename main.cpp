@@ -4,12 +4,12 @@
 #include "includes/graph.h"
 #include "includes/animate.h"
 #include "includes/sidebar.h"
-//#include "includes/graphInfo.h"
+#include "includes/graphInfo.h"
 #include "includes/constants.h"
 int main()
     {
-    Animate animate;
     GraphInfo info;
+    Animate animate;
     animate.set_info(&info);
     animate.run();
     return 0;

@@ -26,12 +26,11 @@ Sidebar::Sidebar(float left, float width) : _left(left), _width(width), _isFocus
     _inputBox.setPosition(_left + 10, 50);
 
     _inputText.setFont(_font);
-    _inputText.setFillColor(sf::Color::White);
+    _inputText.setFillColor(sf::Color::Black);
     _inputText.setCharacterSize(20);
     _inputText.setPosition(_left + 15, 55);
 
     }
-
 
 
 void Sidebar::draw(sf::RenderWindow& window)

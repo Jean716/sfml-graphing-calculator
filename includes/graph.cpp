@@ -90,4 +90,3 @@ void Graph::draw(sf::RenderWindow& window)
 //     return _coordTranslation.getMathCoords(point);
 //     }
 
-

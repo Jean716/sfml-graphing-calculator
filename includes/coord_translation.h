@@ -23,18 +23,4 @@ class CoordTranslation
 
 
 
-// /*
-
-// GraphInfo info;
-// info._scale = 56.0f;
-// info._origin = sf::Vector2f(560, 400);
-
-// CoordTranslation coordTranslation(&info);
-// sf::Vector2f mathPoint(1.0f, 2.0f);
-// sf::Vector2f screenPoint = coordTranslation(mathPoint); // 使用运算符重载
-
-
-
-// */
-
 

@@ -10,4 +10,6 @@ const float SIDE_BAR_WIDTH = SCREEN_WIDTH * 1 / 5;  // sidebar is 280 pixels wid
 const int SB_MOUSE_POSITION = 0; //  sidebar mouse position
 const int SB_MOUSE_CLICKED = SB_MOUSE_POSITION + 1; //  sidebar mouse clicked
 const int SB_KEY_PRESSED = SB_MOUSE_CLICKED + 1; //  sidebar key pressed
+const float _minScale = 0.1f; // minimum scale
+const float _maxScale = 10.0f; // maximum scale
 #endif 

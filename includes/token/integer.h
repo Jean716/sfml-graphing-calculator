@@ -11,17 +11,17 @@ using namespace std;
 class Integer : public Token
     {
     public:
-        Integer(float value);
-        Integer(double value);
-        Integer(int value);
-        Integer(const string& value);
-        Integer(const char* value); // char* means a string of characters
-        Integer(char value);
+        Integer(float value) : _val(value) {}
+        Integer(double value) : _val(value) {}
+        Integer(int value) : _val(value) {}
+        Integer(const string& value) : _val(stof(value)) {}
+        Integer(const char* value) : _val(stof(value)) {}
+        Integer(char value) : _val(value) {}
 
-        string get_value() const override;
-        float get_value_float() const;
-        TokenType type() const override;
-        void print(ostream& outs = cout) const override;
+        string get_value() const override { return to_string(_val); }
+        float get_value_float() const { return _val; }
+        TokenType type() const override { return TokenType::INTEGER; }
+        void print(ostream& outs = cout) const override { outs << _val; }
 
     private:
         float _val;

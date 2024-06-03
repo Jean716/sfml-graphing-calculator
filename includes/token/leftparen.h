@@ -9,9 +9,24 @@ using namespace std;
 class LeftParen : public Token
     {
     public:
-        TokenType type() const override;
-        string get_value() const override;
-        void print(ostream& outs = cout) const override;
+        LeftParen() : _name("(") {}
+        TokenType type() const override
+            {
+            if (get_value() == "(")
+                {
+                return TokenType::LEFT_PAREN;
+                }
+            else
+                {
+                throw invalid_argument("Invalid left parenthesis");
+                }
+            }
+
+        string get_value() const override { return _name; }
+        void print(ostream& outs = cout) const override { outs << "("; }
+
+    private:
+        string _name = "(";
 
     };
 

@@ -8,16 +8,30 @@
 #include "tk_string.h"
 #include "token.h"
 using namespace std;
+#include <string>
+#include <vector>
+#include <iostream>
 
-class TK_string 
+#include "token.h"
+#include "integer.h"
+#include "operator.h"
+#include "function.h"
+#include "variable.h"
+#include "leftparen.h"
+#include "rightparen.h"
+
+class TK_string
     {
     public:
-        TK_string(const string& str) : _str(str) {}
-       
-        static vector<string> split(const string& str);
+
+        vector<Token*> split(const string& tk_Str);
 
     private:
-        string _str;
+        bool is_number(const string& s) const;
+        bool is_operator(const string& s) const;
+        bool is_function(const string& s) const;
+        bool is_variable(const string& s) const;
+
     };
 
-#endif 
+#endif // Tk_string_H

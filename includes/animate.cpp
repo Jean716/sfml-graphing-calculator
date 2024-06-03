@@ -117,4 +117,3 @@ void Animate::set_info(GraphInfo* info)
     _system.set_info(info);
     _coordTranslation.set_info(&_info);
     }
-

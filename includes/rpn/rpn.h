@@ -8,6 +8,7 @@
 #include "../../includes/token/token.h"
 #include "../../includes/token/operator.h"
 #include "../../includes/token/integer.h"
+#include "../../includes/token/function.h"
 
 using namespace std;
 
@@ -19,21 +20,6 @@ class RPN
         RPN(Queue<Token*>& postfix) : _postfix(postfix) {}
         void set_input(Queue<Token*>& postfix) { _postfix = postfix; }
         float operator()(float x);
-        void printStack(Stack<Token*>& stack)
-            {
-            Stack<Token*> temp;
-            while (!stack.empty())
-                {
-                Token* t = stack.pop();
-                t->print();
-                cout << " ";
-                temp.push(t);
-                }
-            while (!temp.empty())
-                {
-                stack.push(temp.pop());
-                }
-            }
 
     private:
         Queue<Token*> _postfix;

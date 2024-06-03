@@ -1,28 +1,5 @@
 #include "operator.h"
-#include <stdexcept>
-
-#include "../../includes/queue/MyQueue.h"
-#include "../../includes/stack/MyStack.h"
-
-
-Operator::Operator(const string& op) : _op(op) {}
-
-
-TokenType Operator::type() const
-    {
-    return TokenType::OPERATOR;
-    }
-
-string Operator::get_value() const
-    {
-    return _op;
-    }
-
-void Operator::print(ostream& outs) const
-    {
-    // outs << "Operator(" << _op << ")";
-    outs << _op;
-    }
+#include <cmath> // for pow
 
 float Operator::evaluate(float a, float b) const
     {
@@ -42,13 +19,17 @@ float Operator::evaluate(float a, float b) const
         {
         if (b == 0)
             {
-            throw invalid_argument("Division by zero");
+            throw runtime_error("Division by zero");
             }
         return a / b;
         }
+    else if (_op == "^")
+        {
+        return pow(a, b);
+        }
     else
         {
-        throw invalid_argument("Invalid operator");
+        throw invalid_argument("Invalid operator" + _op);
         }
     }
 

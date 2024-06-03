@@ -21,7 +21,10 @@ class ShuntingYard
 
         Queue<Token*> _infix;
 
+        int precedence(const string& op) const;
         bool is_left_assoc(const string& op) const;
+
+
     public:
         ShuntingYard() {}
         ShuntingYard(Queue<Token*>& input) : _infix(input) {}
@@ -30,7 +33,7 @@ class ShuntingYard
         Queue<Token*> postfix(const Queue<Token*>& input) const; // takes another Queue<Token*> as an argument
 
         void infix(Queue<Token*>& input) { _infix = input; }
-        int precedence(const string& op) const;
+
 
     };
 

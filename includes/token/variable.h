@@ -16,22 +16,23 @@ class Variable : public Token
                 }
             else
                 {
-                throw "Unknow Variable";
+                throw invalid_argument("Invalid variable name" + _name);
                 }
 
             }
 
         string get_value() const override
             {
-
             return _name;
+
+
 
             }
 
         void print(ostream& outs = cout) const override
             {
-            // outs << "Variable(" << "x" << ")";
             outs << get_value();
+
             }
 
 

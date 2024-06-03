@@ -1,57 +1,92 @@
 #include  "tk_string.h"
-#include <cctype>
-#include <sstream>
+#include <sstream> // for istringstream
 
-std::vector<std::string> TK_string::split(const std::string& str)
+
+bool TK_string::is_number(const string& s) const
     {
-    std::vector<std::string> tokens;
-    std::string token;
-    for (size_t i = 0; i < str.size(); ++i)
-        {
-        char c = str[i];
-        if (isdigit(c) || c == '.' || (c == '-' && (i == 0 || str[i - 1] == '(')))
-            {
-            // Handle numbers and negative numbers
-            token += c;
-            while (i + 1 < str.size() && (isdigit(str[i + 1]) || str[i + 1] == '.'))
-                {
-                token += str[++i];
-                }
-            }
-        else if (isalpha(c))
-            {
-            // Handle functions and variables
-            token += c;
-            while (i + 1 < str.size() && isalpha(str[i + 1]))
-                {
-                token += str[++i];
-                }
-            }
-        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '(' || c == ')')
-            {
-            // Handle operators and parentheses
-            if (!token.empty())
-                {
-                tokens.push_back(token);
-                token.clear();
-                }
-            tokens.push_back(std::string(1, c));
-            }
-        else
-            {
-            // Skip unrecognized characters
-            if (!token.empty())
-                {
-                tokens.push_back(token);
-                token.clear();
-                }
-            }
-        }
-    if (!token.empty())
-        {
-        tokens.push_back(token);
-        }
-    return tokens;
+    istringstream iss(s);
+    float f;
+    iss >> noskipws >> f;
+    return iss.eof() && !iss.fail();
+    }
+
+bool TK_string::is_operator(const string & s) const
+    {
+    return s == "+" || s == "-" || s == "*" || s == "/" || s == "^";
+    }
+
+bool TK_string::is_function(const string & s) const
+    {
+
+    return s == "sin" || s == "cos" || s == "tan" || s == "cot" || s == "sqrt";
+    }
+
+bool TK_string::is_variable(const string & s) const
+    {
+    return s == "x" || s == "X";
     }
 
 
+
+vector<Token*> TK_string::split(const string& tk_Str)
+    {
+    vector<Token*> tokens;
+    string token;
+
+    for (size_t i = 0; i < tk_Str.size(); ++i)
+        {
+        char c = tk_Str[i];
+
+        if (isspace(c))
+            {
+            continue;
+            }
+
+        if (isdigit(c) || c == '.')
+            {
+            token += c;
+            while (i + 1 < tk_Str.size() && (isdigit(tk_Str[i + 1]) || tk_Str[i + 1] == '.'))
+                {
+                token += tk_Str[++i];
+                }
+            tokens.push_back(static_cast<Token*>(new Integer(token)));
+
+            token.clear();
+            }
+        else if (is_operator(string(1, c)))
+            {
+            tokens.push_back(static_cast<Token*>(new Operator(string(1, c))));
+            }
+        else if (isalpha(c))
+            {
+            token += c;
+            while (i + 1 < tk_Str.size() && isalpha(tk_Str[i + 1]))
+                {
+                token += tk_Str[++i];
+                }
+            if (is_function(token))
+                {
+                tokens.push_back(static_cast<Token*>(new Function(token)));
+                }
+            else
+                {
+                tokens.push_back(static_cast<Token*>(new Variable(token)));
+                }
+            token.clear();
+            }
+        else if (c == '(')
+            {
+            tokens.push_back(static_cast<Token*>(new LeftParen()));
+            }
+        else if (c == ')')
+            {
+            tokens.push_back(static_cast<Token*>(new RightParen()));
+            }
+        else
+            {
+            throw invalid_argument("Unknown token: " + string(1, c));
+            }
+        }
+
+    return tokens;
+    }
