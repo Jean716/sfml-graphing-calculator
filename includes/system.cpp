@@ -28,32 +28,32 @@ void System::step(int command, GraphInfo* info)
         {
             case 1:
                 // Example command: Zoom in
-                _info->setScale(_info->getScale() * 1.1f);
+                _info->zoom(ZOOM_STEP);
                 break;
             case 2:
                 // Example command: Zoom out
-                _info->setScale(_info->getScale() / 1.1f);
+                _info->zoom(1.0f / ZOOM_STEP);
                 break;
             case 3:
                 // Example command: Move left
-                _info->setOrigin({ _info->getOrigin().x - 10, _info->getOrigin().y });
+                _info->pan(-PAN_STEP, 0.0f);
                 break;
             case 4:
                 // Example command: Move right
-                _info->setOrigin({ _info->getOrigin().x + 10, _info->getOrigin().y });
+                _info->pan(PAN_STEP, 0.0f);
                 break;
             case 5:
                 // Example command: Move up
-                _info->setOrigin({ _info->getOrigin().x, _info->getOrigin().y - 10 });
+                _info->pan(0.0f, -PAN_STEP);
                 break;
             case 6:
                 // Example command: Move down
-                _info->setOrigin({ _info->getOrigin().x, _info->getOrigin().y + 10 });
+                _info->pan(0.0f, PAN_STEP);
                 break;
             default:
                 break;
         }
-    update();
+    _graph.update(_info);
     }
 
 // Update the graph information
@@ -68,4 +68,5 @@ void System::draw(sf::RenderWindow& window)
     _graph.draw(window); // Draw the graph
     _sidebar.draw(window); // Draw the sidebar
     }
+
 

@@ -61,9 +61,53 @@ void Animate::processEvents()
             _window.close();
             }
         _sidebar.handleEvent(event); // Pass event to sidebar
-        // handle more events here...
-        }
 
+        if (event.type == sf::Event::KeyPressed)
+            {
+            cout << "Key pressed: " << event.key.code << endl;
+
+            switch (event.key.code)
+                {
+                    case sf::Keyboard::Equal:
+                        _system.step(1, _info); // zoom in
+                        break;
+                    case sf::Keyboard::Hyphen:
+                        _system.step(2, _info); // zoom out
+                        break;
+                    case sf::Keyboard::A:
+                        _system.step(3, _info); // move left
+                        break;
+                    case sf::Keyboard::D:
+                        _system.step(4, _info); // move right
+                        break;
+                    case sf::Keyboard::W:
+                        _system.step(5, _info); // move up
+                        break;
+                    case sf::Keyboard::S:
+                        _system.step(6, _info); // move down
+                        break;
+                    default:
+                        break;
+                }
+            }
+        update();
+        render();
+
+        if (event.type == sf::Event::MouseWheelScrolled)
+            {
+            if (event.mouseWheelScroll.delta > 0)
+                {
+                _system.step(1, _info); // zoom in
+                }
+            else
+                {
+                _system.step(2, _info); // zoom out
+                }
+
+            update();
+            render();
+            }
+        }
     }
 
 // Update the state of the system
@@ -108,6 +152,7 @@ void Animate::render()
     // drea the little red dot
     _mousePoint.setPosition(mousePosFloat.x - _mousePoint.getRadius(), mousePosFloat.y - _mousePoint.getRadius());
     _window.draw(_mousePoint);
+    _window.draw(_myTextLabel);
 
     // Draw the sidebar
     _sidebar.draw(_window);

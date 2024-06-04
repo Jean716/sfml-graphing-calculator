@@ -18,6 +18,8 @@ class System
         void draw(sf::RenderWindow& window); // draw the content of the window
         void update(); //  update the system state
 
+
+
     private:
         sf::RenderWindow _window; //  window object
         Graph _graph; // manage the graph drawing

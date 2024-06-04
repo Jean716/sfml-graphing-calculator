@@ -31,6 +31,9 @@ class GraphInfo
         float getScale() const { return _scale; }
         void setScale(float scale) { _scale = scale; }
 
+        float getPoint() const { return _points; }
+        void setPoints(int points) { _points = points; }
+
         float getOffsetX() const { return _offsetX; }
         void setOffsetX(float offsetX) { _offsetX = offsetX; }
 
@@ -39,6 +42,19 @@ class GraphInfo
 
         vector<sf::Vertex> getVertices() const { return _vertices; }
         void setVertices(const vector<sf::Vertex>& vertices) { _vertices = vertices; }
+
+        void zoom(float factor)
+            {
+            _scale *= factor;
+            cout << "Zoom: new scale = " << _scale << endl;
+            }
+        void pan(float deltaX, float deltaY)
+            {
+            _offsetX += deltaX;
+            _offsetY += deltaY;
+            cout << "Pan: new offset = (" << _offsetX << ", " << _offsetY << ")" << endl;
+
+            }
 
     private:
         string _equation;           // Equation of the graph

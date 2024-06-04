@@ -9,7 +9,7 @@
 int main()
     {
     GraphInfo graphInfo;
-    graphInfo.setEquation("x");
+    graphInfo.setEquation("x^2");
 
     Animate animate;
     animate.set_info(&graphInfo);

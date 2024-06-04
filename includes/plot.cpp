@@ -18,12 +18,15 @@ void Plot::set_info(GraphInfo* info)
 vector<sf::Vector2f> Plot::operator()(float xMin, float xMax, float increment)
     {
     cout << "================Plot::operator() is Fired================" << endl;
-    vector<sf::Vector2f> screenCoords;
+    vector<sf::Vector2f> screenPoints;
+    int pointsCount = _info->getPoint();
+    float step = (xMax - xMin) / pointsCount; // Calculate the step size
+
     // Get the postfix expression
     Queue<Token*> infix = tokenize(_info->getEquation());
 
-    // Convert Queue to std::vector
-    std::vector<Token*> vec;
+    // Convert Queue to vector
+    vector<Token*> vec;
     while (!infix.empty())
         {
         vec.push_back(infix.pop());
@@ -45,26 +48,30 @@ vector<sf::Vector2f> Plot::operator()(float xMin, float xMax, float increment)
 
     _rpn.set_input(postfix);
 
-    for (float x = xMin; x <= xMax; x += increment)
+    for (int i = 0; i <= pointsCount; ++i)
         {
+
+        float x = xMin + i * step;
         // Evaluate the RPN expression for the current x value
         float y = _rpn(x);
         std::cout << "Evaluating RPN with x = " << x << " Result: y = " << y << std::endl;
 
         // Translate mathematical coordinates to screen coordinates
         sf::Vector2f screenCoord = _coordTranslation(sf::Vector2f(x, y));
-        std::cout << "Math Coord: (" << x << ", " << y << ") -> Screen Coord: (" << screenCoord.x << ", " << screenCoord.y << ")" << std::endl;
+        cout << "Math Coord: (" << x << ", " << y << ") -> Screen Coord: (" << screenCoord.x << ", " << screenCoord.y << ")" << std::endl;
 
-        screenCoords.push_back(screenCoord);
+        screenPoints.push_back(screenCoord);
         }
 
-    return screenCoords;
+
+    return screenPoints;
     }
 
 
 
+
 // convert the equation to tokens queue
-Queue<Token*> Plot::tokenize(const string& equation) const
+Queue<Token*> Plot::tokenize(const string & equation) const
     {
     TK_string tk;
     vector<Token*> tokens = tk.split(equation);
