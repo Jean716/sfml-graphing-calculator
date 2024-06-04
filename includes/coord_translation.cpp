@@ -9,7 +9,7 @@ sf::Vector2f CoordTranslation::translate(const sf::Vector2f& point) const
     {
     assert(_info != nullptr && "GraphInfo pointer is null!");
     float screenX = _info->getOrigin().x + point.x * _info->getScale();
-    float screenY = _info->getOrigin().y + point.y * _info->getScale();
+    float screenY = _info->getOrigin().y - point.y * _info->getScale();
     return sf::Vector2f(screenX, screenY);
     }
 
