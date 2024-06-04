@@ -22,14 +22,14 @@ class Graph
         void update(GraphInfo* info);  // This function will be used to update the graph
         void draw(sf::RenderWindow& window); //  This function will be used to draw the graph
         void set_info(GraphInfo* info); // set the information of the graph
-        //void plot();
-        //sf::Vector2f translateMouseCoords(const sf::Vector2f& points) const;
-        ;
+
+
     private:
+        GraphInfo* _info; //  graph information
         vector<sf::Vector2f> _points; //  store the points of the graph
         Plot _plot; //  plot object
-        GraphInfo* _info; //  graph information
         CoordTranslation _coordTranslation;
+        void generatePoints(); // call the plot object to generate the points
 
     };
 

@@ -8,9 +8,11 @@
 #include "includes/constants.h"
 int main()
     {
-    GraphInfo info;
+    GraphInfo graphInfo;
+    graphInfo.setEquation("x");
+
     Animate animate;
-    animate.set_info(&info);
+    animate.set_info(&graphInfo);
     animate.run();
     return 0;
     }

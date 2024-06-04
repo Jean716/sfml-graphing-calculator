@@ -6,6 +6,7 @@
 #include "system.h"
 #include "sidebar.h"
 
+// user inteactions
 class Animate
     {
     public:
@@ -16,20 +17,22 @@ class Animate
         void processEvents(); // process the events
         void update(); // update the system state
         void render();  // render the graphics
+        // void step();
+        // void draw();
 
     private:
         sf::RenderWindow _window; // main SFML window
+        GraphInfo* _info;
         System _system; // container for all the animated objects
-        bool _mouseIn; // if mouse is in the screen
+        Sidebar _sidebar; // rectangular message sidebar
+        int _command;
 
+        bool _mouseIn; // if mouse is in the screen
         sf::CircleShape _mousePoint; // The little red dot
         sf::Font _font; // font to draw on main screen
         sf::Text _myTextLabel; // text to draw on main screen
         sf::Text _coordLabel; // math coordinates
-        Sidebar _sidebar; // rectangular message sidebar
-        GraphInfo _info;
         CoordTranslation  _coordTranslation;
-
 
 
         // helper function to convert mouse position to string

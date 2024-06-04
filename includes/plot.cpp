@@ -1,5 +1,5 @@
 #include "plot.h"
-// #include "../includes/rpn/rpn.h"
+#include "../includes/rpn/rpn.h"
 #include "graphInfo.h"
 #include "constants.h"
 #include "coord_translation.h"
@@ -61,6 +61,8 @@ vector<sf::Vector2f> Plot::operator()(float xMin, float xMax, float increment)
     return screenCoords;
     }
 
+
+
 // convert the equation to tokens queue
 Queue<Token*> Plot::tokenize(const string& equation) const
     {
@@ -74,8 +76,7 @@ Queue<Token*> Plot::tokenize(const string& equation) const
         cout << "Token: " << token->get_value() << endl;
         tokenQueue.push(token);
         }
-
     return tokenQueue;
-
-
     }
+
+

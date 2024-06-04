@@ -3,25 +3,14 @@
 #include "graphInfo.h"
 #include "coord_translation.h"
 
-
-
-Graph::Graph() : _info(nullptr), _plot(nullptr), _points(), _coordTranslation(nullptr)
+Graph::Graph() : _info(nullptr), _plot(nullptr), _coordTranslation(nullptr)
     {
     }
 
 Graph::Graph(GraphInfo* info)
-    : _info(info), _plot(info), _points(), _coordTranslation(info)
+    : _info(info), _plot(info), _coordTranslation(info)
     {
-    if (_info == nullptr)
-        {
-        cerr << "Error: GraphInfo pointer is null!" << endl;
-        return;
-        }
-
-    // update(equation);
-
-
-
+    generatePoints();
     }
 
 void Graph::set_info(GraphInfo* info)
@@ -31,20 +20,10 @@ void Graph::set_info(GraphInfo* info)
     _coordTranslation.set_info(info);
     }
 
-
-
 void Graph::update(GraphInfo* info)
     {
-
-    // if (_info == nullptr)
-    //     {
-    //     cerr << "Error: Graphinfo pointer is null!" << endl;
-    //     return;
-    //     }
-
-    // _info->getEquation() = equation;
-    // _points = _plotter(-10, 10, 0.1f);
-
+    set_info(info);
+    generatePoints();
     }
 
 void Graph::draw(sf::RenderWindow& window)
@@ -76,17 +55,10 @@ void Graph::draw(sf::RenderWindow& window)
         }
     }
 
-// void Graph::plot()
-//     {
-//     if (_info)
-//         {
-//         _points = _plot(*_info); // generate the points of the graph through the plotter
-//         }
-//     }
-
-
-// sf::Vector2f Graph::translateMouseCoords(const sf::Vector2f& point) const
-//     {
-//     return _coordTranslation.getMathCoords(point);
-//     }
-
+void Graph::generatePoints()
+    {
+    if (_info)
+        {
+        _points = _plot(_info->getDomain().x, _info->getDomain().y, 0.1f); // generate the points of the graph
+        }
+    }

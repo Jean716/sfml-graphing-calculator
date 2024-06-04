@@ -14,11 +14,11 @@
 #include "coord_translation.h"
 using namespace std;
 
-// // by using the graphinfo, coord_translation, and rpn classes
-// // evaluate the value of the postfix expression
-// // convert the value to screen coordinates
-// // store the screen coordinates in a vector
-// //then  plot the graph
+// by using the graphinfo, coord_translation, and rpn classes
+// evaluate the value of the postfix expression
+// convert the value to screen coordinates
+// store the screen coordinates in a vector
+//then  plot the graph
 
 
 class Plot

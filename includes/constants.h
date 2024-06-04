@@ -12,4 +12,14 @@ const int SB_MOUSE_CLICKED = SB_MOUSE_POSITION + 1; //  sidebar mouse clicked
 const int SB_KEY_PRESSED = SB_MOUSE_CLICKED + 1; //  sidebar key pressed
 const float _minScale = 0.1f; // minimum scale
 const float _maxScale = 10.0f; // maximum scale
+
+// Default domain values
+const sf::Vector2f DEFAULT_DOMAIN(-15.0f, 15.0f);
+const float DEFAULT_SCALE = 60.0f; // default scale
+const int DEFAULT_POINTS = 10; // default number of points
+const float DEFAULT_OFFSET_X = 0.0f; // default X-axis offset for panning
+const float DEFAULT_OFFSET_Y = 0.0f; // default Y-axis offset for panning
+
+// Sidebar default values
+const float SIDE_BAR_LEFT = 1120.0f;
 #endif 

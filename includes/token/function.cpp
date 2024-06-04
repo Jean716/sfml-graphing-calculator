@@ -35,19 +35,19 @@ float Function::evaluate(const float& value) const
     {
     if (_name == "sin")
         {
-        return sin(value * M_PI / 180);
+        return sin(value);
         }
     else if (_name == "cos")
         {
-        return cos(value * M_PI / 180);
+        return cos(value);
         }
     else if (_name == "tan")
         {
-        return tan(value * M_PI / 180);
+        return tan(value);
         }
     else if (_name == "cot")
         {
-        return 1 / tan(value * M_PI / 180);
+        return 1 / tan(value);
         }
 
     else if (_name == "sqrt")

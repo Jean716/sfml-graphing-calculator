@@ -4,21 +4,15 @@
 #include "graphInfo.h"
 #include "constants.h"
 #include "animate.h"
+#include "sidebar.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 
 
-System::System() : _graph(), _info(nullptr), _sidebar(1120, 280)
-    {
+System::System() : _info(nullptr), _graph(nullptr), _sidebar(SIDE_BAR_LEFT, SIDE_BAR_WIDTH) {}
 
-    }
-
-
-System::System(GraphInfo* info) : _graph(), _info(info), _sidebar(0, 280)
-    {
-
-    }
+System::System(GraphInfo* info) : _info(info), _graph(info), _sidebar(SIDE_BAR_LEFT, SIDE_BAR_WIDTH) {}
 
 void System::set_info(GraphInfo* info)
     {
@@ -65,8 +59,7 @@ void System::step(int command, GraphInfo* info)
 // Update the graph information
 void System::update()
     {
-    // Update the graph with the latest info
-    //_graph.update(_info->getEquation());
+    _graph.update(_info);
     }
 
 // Draw the graph and sidebar
@@ -76,7 +69,3 @@ void System::draw(sf::RenderWindow& window)
     _sidebar.draw(window); // Draw the sidebar
     }
 
-void System::handleEvent(const sf::Event& event)
-    {
-    _sidebar.handleEvent(event);
-    }

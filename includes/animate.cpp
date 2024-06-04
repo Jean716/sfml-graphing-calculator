@@ -7,30 +7,36 @@
 #include <iostream>
 #include <string>
 #include <sstream> 
+#include <SFML/Graphics.hpp>
+
 using namespace std;
 
 // Constructor
 Animate::Animate()
-    : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graph Plotter"),
-    _mouseIn(false), _sidebar(1120, 280)
+    : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graphing Calculator"),
+    _system(), _sidebar(SIDE_BAR_LEFT, SIDE_BAR_WIDTH), _mouseIn(false),
+    _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(), _coordTranslation(nullptr)
     {
-    _mousePoint.setRadius(5);
-    _mousePoint.setFillColor(sf::Color::Red);
-    if (!_font.loadFromFile("arial.ttf"))
-        {
-        // handel error
-        }
-    _myTextLabel.setFont(_font);
-    _myTextLabel.setCharacterSize(20);
-    _myTextLabel.setFillColor(sf::Color::White);
+            {
+            _mousePoint.setRadius(5);
+            _mousePoint.setFillColor(sf::Color::Red);
+            if (!_font.loadFromFile("arial.ttf"))
+                {
+                // handel error
+                }
+            _myTextLabel.setFont(_font);
+            _myTextLabel.setCharacterSize(20);
+            _myTextLabel.setFillColor(sf::Color::White);
+            _myTextLabel.setPosition(10, 10);
 
-    _coordLabel.setFont(_font);
-    _coordLabel.setCharacterSize(20);
-    _coordLabel.setFillColor(sf::Color::White);
-    _coordLabel.setPosition(10, 40);
-    _coordTranslation.set_info(&_info);
+            _coordLabel.setFont(_font);
+            _coordLabel.setCharacterSize(20);
+            _coordLabel.setFillColor(sf::Color::White);
+            _coordLabel.setPosition(10, 40);
+            _coordTranslation.set_info(_info);
 
 
+            }
     }
 
 // Run the main loop
@@ -54,8 +60,8 @@ void Animate::processEvents()
             {
             _window.close();
             }
-        _system.handleEvent(event); // Pass event to system
         _sidebar.handleEvent(event); // Pass event to sidebar
+        // handle more events here...
         }
 
     }
@@ -64,6 +70,10 @@ void Animate::processEvents()
 void Animate::update()
     {
     _system.update();// Update system objects
+    if (_mouseIn)
+        {
+        _coordLabel.setString(mouse_pos_string(_window));
+        }
 
     }
 
@@ -112,8 +122,9 @@ string Animate::mouse_pos_string(sf::RenderWindow & window)
     return "(" + std::to_string(mousePos.x) + ", " + std::to_string(mousePos.y) + ")";
     }
 
-void Animate::set_info(GraphInfo* info)
+void Animate::set_info(GraphInfo * info)
     {
+    _info = info;
     _system.set_info(info);
-    _coordTranslation.set_info(&_info);
+    _coordTranslation.set_info(_info);
     }
