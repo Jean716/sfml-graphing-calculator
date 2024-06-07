@@ -13,12 +13,11 @@ sf::Vector2f CoordTranslation::translate(const sf::Vector2f& point) const
     return sf::Vector2f(screenX, screenY);
     }
 
-//convert screen coord to math coord 
 sf::Vector2f CoordTranslation::getMathCoords(const sf::Vector2f& point) const
     {
     assert(_info != nullptr && "GraphInfo pointer is null!");
-    float x = (point.x - _info->getOrigin().x) / _info->getScale();
-    float y = (_info->getOrigin().y - point.y) / _info->getScale();
+    float x = (point.x - _info->getOrigin().x - _info->getOffsetX()) / _info->getScale();
+    float y = (_info->getOrigin().y - point.y - _info->getOffsetY()) / _info->getScale();
     return sf::Vector2f(x, y);
     }
 

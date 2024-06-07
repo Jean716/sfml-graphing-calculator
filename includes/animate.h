@@ -10,19 +10,16 @@
 class Animate
     {
     public:
-        Animate();
+        Animate(); // default constructor
         void set_info(GraphInfo* info); // set the information of the graph
-
         void run(); // run main loop
         void processEvents(); // process the events
         void update(); // update the system state
         void render();  // render the graphics
-        // void step();
-        // void draw();
 
     private:
         sf::RenderWindow _window; // main SFML window
-        GraphInfo* _info;
+        GraphInfo* _info; // graph information
         System _system; // container for all the animated objects
         Sidebar _sidebar; // rectangular message sidebar
         int _command;
@@ -33,7 +30,6 @@ class Animate
         sf::Text _myTextLabel; // text to draw on main screen
         sf::Text _coordLabel; // math coordinates
         CoordTranslation  _coordTranslation;
-
 
         // helper function to convert mouse position to string
         string mouse_pos_string(sf::RenderWindow& window);

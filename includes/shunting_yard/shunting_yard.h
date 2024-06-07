@@ -11,6 +11,8 @@
 #include "../token/rightparen.h"
 #include "../exceptions/missingparan.h"
 #include "../token/variable.h"
+#include "../token/comma.h"
+#include "../exceptions/exceptions.h"
 
 
 using namespace std;

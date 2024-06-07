@@ -2,9 +2,8 @@
 #define GRAPH_H
 
 #include <vector>
-#include <SFML/Graphics.hpp>
 #include "plot.h"
-#include "graphInfo.h"
+#include <SFML/Graphics.hpp>
 #include "coord_translation.h"
 #include <string>
 
@@ -22,15 +21,12 @@ class Graph
         void update(GraphInfo* info);  // This function will be used to update the graph
         void draw(sf::RenderWindow& window); //  This function will be used to draw the graph
         void set_info(GraphInfo* info); // set the information of the graph
-
-
     private:
         GraphInfo* _info; //  graph information
         vector<sf::Vector2f> _points; //  store the points of the graph
         Plot _plot; //  plot object
         CoordTranslation _coordTranslation;
         void generatePoints(); // call the plot object to generate the points
-
     };
 
 #endif

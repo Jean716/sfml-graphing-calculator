@@ -13,7 +13,7 @@ Sidebar::Sidebar(float left, float width) : _left(left), _width(width), _rect(sf
     _sb_text.setFont(_font);
     _sb_text.setCharacterSize(20);
     _sb_text.setPosition(_left + 10, 10);
-    _sb_text.setFillColor(sf::Color::Black);
+    _sb_text.setFillColor(sf::Color::Blue);
 
     _rect.setFillColor(sf::Color(236, 236, 236));
     _rect.setPosition(_left, 0);
@@ -26,59 +26,53 @@ void Sidebar::draw(sf::RenderWindow& window)
     window.draw(_rect);
     window.draw(_sb_text);
 
-    // draw the history
-    float yOffset = 50.0f;
-    for (const auto& expr : _history)
+    // Draw the function list
+    float yPos = 50.0f; // starting y position for function texts
+    for (size_t i = 0; i < _functions.size(); ++i)
         {
-        sf::Text historyText(expr, _font, 20);
-        historyText.setFillColor(sf::Color::White);
-        historyText.setPosition(_left + 10, yOffset);
-        window.draw(historyText);
-        yOffset += 30.0f; // increment the y offset
+        sf::Text functionText;
+        functionText.setFont(_font);
+        functionText.setCharacterSize(20);
+        functionText.setFillColor(sf::Color::Blue);
+        functionText.setString(std::to_string(i + 1) + ": " + _functions[i]);
+        functionText.setPosition(_left + 10, yPos);
+        window.draw(functionText);
+        yPos += 30.0f; // increment y position for next text
         }
     }
 
 
+// string& Sidebar::operator [](int index)
+//     {
+//     return _history[index];
+//     }
 
-string& Sidebar::operator [](int index)
+
+void Sidebar::handleEvent(const sf::Event & event, GraphInfo* info)
     {
-    return _history[index];
-    }
-
-
-void Sidebar::handleEvent(const sf::Event & event)
-    {
-    if (event.type == sf::Event::TextEntered)
+    if (event.type == sf::Event::KeyPressed)
         {
-        if (event.text.unicode == '\b')
+        // Check if the pressed key is a number key
+        if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num9)
             {
-            if (!_inputEquation.empty())
+            int index = event.key.code - sf::Keyboard::Num1;
+            if (index < _functions.size())
                 {
-                _inputEquation.pop_back();
+                info->setEquation(_functions[index]);
+                updateText();
                 }
             }
-        else if (event.text.unicode == '\r')
-            {
-            // press enter to submit the equation
-            _history.push_back(_inputEquation);
-            _inputEquation.clear();
-            }
-        else
-            {
-            _inputEquation += static_cast<char>(event.text.unicode);
-            }
-        updateText();
         }
     }
 
-
-
-string Sidebar::getInput() const
-    {
-    return _inputEquation;
-    }
 
 void Sidebar::updateText()
     {
-    _sb_text.setString("Input: " + _inputEquation);
+    _sb_text.setString("Functions:");
+    }
+
+void Sidebar::setFunctions(const vector<string>& functions)
+    {
+    _functions = functions;
+    updateText();
     }

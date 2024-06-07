@@ -11,6 +11,7 @@ Plot::Plot(GraphInfo* info) : _info(info), _coordTranslation(info)
 
 void Plot::set_info(GraphInfo* info)
     {
+    cout << "Plot:: set_info is fired" << endl;
     _info = info;
     _coordTranslation.set_info(info);
     }
@@ -54,7 +55,8 @@ vector<sf::Vector2f> Plot::operator()(float xMin, float xMax, float increment)
         float x = xMin + i * step;
         // Evaluate the RPN expression for the current x value
         float y = _rpn(x);
-        std::cout << "Evaluating RPN with x = " << x << " Result: y = " << y << std::endl;
+
+        cout << "Evaluating RPN with x = " << x << " Result: y = " << y << std::endl;
 
         // Translate mathematical coordinates to screen coordinates
         sf::Vector2f screenCoord = _coordTranslation(sf::Vector2f(x, y));
@@ -62,13 +64,8 @@ vector<sf::Vector2f> Plot::operator()(float xMin, float xMax, float increment)
 
         screenPoints.push_back(screenCoord);
         }
-
-
     return screenPoints;
     }
-
-
-
 
 // convert the equation to tokens queue
 Queue<Token*> Plot::tokenize(const string & equation) const

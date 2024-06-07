@@ -9,7 +9,7 @@
 int main()
     {
     GraphInfo graphInfo;
-    graphInfo.setEquation("x^2");
+    graphInfo.setEquation("sin(x)");
 
     Animate animate;
     animate.set_info(&graphInfo);

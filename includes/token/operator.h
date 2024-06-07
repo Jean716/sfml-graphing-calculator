@@ -3,6 +3,9 @@
 #include "token.h"
 #include <iostream>
 #include <string>
+#include <exception>
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/exceptions.h"
+
 
 
 using namespace std;
@@ -12,7 +15,7 @@ class Operator : public Token
     public:
         Operator(const string& op) : _op(op) {}
         string get_value() const override { return _op; }
-        TokenType type() const override { return TokenType::OPERATOR; }
+        TokenType type() const override;
         void print(ostream& outs = cout) const override { outs << _op; }
 
         float evaluate(float a, float b) const;

@@ -5,7 +5,7 @@
 // #include <queue>
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "../includes/token/token.h"
+
 #include "../includes/shunting_yard/shunting_yard.h"
 #include "../includes/token/tk_string.h"
 
@@ -20,7 +20,6 @@ using namespace std;
 // store the screen coordinates in a vector
 //then  plot the graph
 
-
 class Plot
     {
     public:
@@ -29,18 +28,11 @@ class Plot
         vector<sf::Vector2f> operator()(float xMin, float xMax, float increment);
         Queue<Token*> tokenize(const string& equation) const;
 
-
     private:
-
         GraphInfo* _info;
         ShuntingYard _shuntingYard;
         CoordTranslation _coordTranslation;
 
-
-
-
     };
-
-
 
 #endif 

@@ -27,33 +27,36 @@ void System::step(int command, GraphInfo* info)
     switch (command)
         {
             case 1:
-                // Example command: Zoom in
-                _info->zoom(ZOOM_STEP);
+                cout << "Zooming in" << endl;
+                info->zoom(ZOOM_STEP);
                 break;
             case 2:
-                // Example command: Zoom out
-                _info->zoom(1.0f / ZOOM_STEP);
+                cout << "Zooming out" << endl;
+                info->zoom(1.0f / ZOOM_STEP);
                 break;
             case 3:
-                // Example command: Move left
-                _info->pan(-PAN_STEP, 0.0f);
+                cout << "Moving left" << endl;
+                info->pan(-PAN_STEP, 0.0f);
                 break;
             case 4:
-                // Example command: Move right
-                _info->pan(PAN_STEP, 0.0f);
+                cout << "Moving right" << endl;
+                info->pan(PAN_STEP, 0.0f);
                 break;
             case 5:
-                // Example command: Move up
-                _info->pan(0.0f, -PAN_STEP);
+                cout << "Moving up" << endl;
+                info->pan(0.0f, -PAN_STEP);
                 break;
             case 6:
-                // Example command: Move down
-                _info->pan(0.0f, PAN_STEP);
+                cout << "Moving down" << endl;
+                info->pan(0.0f, PAN_STEP);
                 break;
             default:
+                cout << "Unknown command" << endl;
                 break;
         }
-    _graph.update(_info);
+
+    cout << "Updating graph" << endl;
+    _graph.update(info);
     }
 
 // Update the graph information

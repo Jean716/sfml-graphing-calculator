@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-class GraphInfo
+struct GraphInfo
     {
     public:
         // Default constructor
@@ -17,7 +17,6 @@ class GraphInfo
             _scale(DEFAULT_SCALE), _points(DEFAULT_POINTS), _offsetX(DEFAULT_OFFSET_X), _offsetY(DEFAULT_OFFSET_Y)
             {
             }
-
         // Getter and Setter methods
         string getEquation() const { return _equation; }
         void setEquation(const string& equation) { _equation = equation; }
@@ -53,10 +52,8 @@ class GraphInfo
             _offsetX += deltaX;
             _offsetY += deltaY;
             cout << "Pan: new offset = (" << _offsetX << ", " << _offsetY << ")" << endl;
-
             }
 
-    private:
         string _equation;           // Equation of the graph
         sf::Vector2f _windowDimensions; // Window dimensions
         sf::Vector2f _origin;            // Origin of the graph

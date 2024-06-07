@@ -14,27 +14,34 @@ using namespace std;
 // Constructor
 Animate::Animate()
     : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graphing Calculator"),
-    _system(), _sidebar(SIDE_BAR_LEFT, SIDE_BAR_WIDTH), _mouseIn(false),
+    _system(), _sidebar(WORK_PANEL, SIDE_BAR_WIDTH), _mouseIn(false),
     _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(), _coordTranslation(nullptr)
     {
             {
-            _mousePoint.setRadius(5);
+            _mousePoint.setRadius(2);
             _mousePoint.setFillColor(sf::Color::Red);
             if (!_font.loadFromFile("arial.ttf"))
                 {
                 // handel error
                 }
+            // screen coords text
             _myTextLabel.setFont(_font);
             _myTextLabel.setCharacterSize(20);
             _myTextLabel.setFillColor(sf::Color::White);
             _myTextLabel.setPosition(10, 10);
-
+            // math coords text
             _coordLabel.setFont(_font);
             _coordLabel.setCharacterSize(20);
             _coordLabel.setFillColor(sf::Color::White);
             _coordLabel.setPosition(10, 40);
+
             _coordTranslation.set_info(_info);
 
+            vector<string> functions = {
+        "sin(x)", "cos(x)", "tan(x)", "cot(x)","sin(x)+1", "x^2", "log(x)",  "abs(x)", "max(x,2)+1"
+                };
+
+            _sidebar.setFunctions(functions);
 
             }
     }
@@ -60,7 +67,8 @@ void Animate::processEvents()
             {
             _window.close();
             }
-        _sidebar.handleEvent(event); // Pass event to sidebar
+
+        _sidebar.handleEvent(event, _info); // Pass event to sidebar
 
         if (event.type == sf::Event::KeyPressed)
             {
@@ -93,20 +101,6 @@ void Animate::processEvents()
         update();
         render();
 
-        if (event.type == sf::Event::MouseWheelScrolled)
-            {
-            if (event.mouseWheelScroll.delta > 0)
-                {
-                _system.step(1, _info); // zoom in
-                }
-            else
-                {
-                _system.step(2, _info); // zoom out
-                }
-
-            update();
-            render();
-            }
         }
     }
 
@@ -118,7 +112,6 @@ void Animate::update()
         {
         _coordLabel.setString(mouse_pos_string(_window));
         }
-
     }
 
 // Render everything
@@ -129,7 +122,7 @@ void Animate::render()
 
     // display the location of the mouse at the left top of the window
     string mousePosStr = mouse_pos_string(_window);
-    _myTextLabel.setString("Mouse Position: " + mousePosStr);
+    _myTextLabel.setString("Screen Coords: " + mousePosStr);
     _myTextLabel.setPosition(10, 10);
     _window.draw(_myTextLabel);
 
@@ -141,10 +134,10 @@ void Animate::render()
     sf::Vector2f mathPos = _coordTranslation.getMathCoords(mousePosFloat);
 
     // set the precision of the math coordinates
-    std::ostringstream oss;
+    ostringstream oss;
     oss.precision(0);
-    oss << std::fixed << "(" << mathPos.x << ", " << mathPos.y << ")";
-    std::string mathPosStr = oss.str();
+    oss << fixed << "(" << mathPos.x << ", " << mathPos.y << ")";
+    string mathPosStr = oss.str();
 
     _coordLabel.setString("Math Coords: " + mathPosStr);
     _window.draw(_coordLabel);
@@ -152,7 +145,7 @@ void Animate::render()
     // drea the little red dot
     _mousePoint.setPosition(mousePosFloat.x - _mousePoint.getRadius(), mousePosFloat.y - _mousePoint.getRadius());
     _window.draw(_mousePoint);
-    _window.draw(_myTextLabel);
+    //_window.draw(_myTextLabel);
 
     // Draw the sidebar
     _sidebar.draw(_window);
@@ -164,11 +157,13 @@ void Animate::render()
 string Animate::mouse_pos_string(sf::RenderWindow & window)
     {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    return "(" + std::to_string(mousePos.x) + ", " + std::to_string(mousePos.y) + ")";
+
+    return "(" + to_string(mousePos.x) + ", " + to_string(mousePos.y) + ")";
     }
 
 void Animate::set_info(GraphInfo * info)
     {
+    cout << "Animat:: set_info is fired" << endl;
     _info = info;
     _system.set_info(info);
     _coordTranslation.set_info(_info);

@@ -1,5 +1,8 @@
 #include "operator.h"
 #include <cmath> // for pow
+#include <algorithm> // for max and min
+#include <stdexcept> // for runtime_error
+
 
 float Operator::evaluate(float a, float b) const
     {
@@ -19,7 +22,7 @@ float Operator::evaluate(float a, float b) const
         {
         if (b == 0)
             {
-            throw runtime_error("Division by zero");
+            throw DivideByZeroException();
             }
         return a / b;
         }
@@ -27,9 +30,34 @@ float Operator::evaluate(float a, float b) const
         {
         return pow(a, b);
         }
+    else if (_op == "%")
+        {
+        return fmod(a, b);
+        }
+    else if (_op == "max")
+        {
+        return max(a, b);
+        }
+    else if (_op == "min")
+        {
+        return min(a, b);
+        }
     else
         {
-        throw invalid_argument("Invalid operator" + _op);
+        throw InvalidOperatorException(_op);
         }
     }
+
+TokenType Operator::type() const
+    {
+    if (_op == "+" || _op == "-" || _op == "*" || _op == "/" || _op == "^" || _op == "%" || _op == "max" || _op == "min")
+        {
+        return TokenType::OPERATOR;
+        }
+    else
+        {
+        throw InvalidOperatorException(_op);
+        }
+    }
+
 

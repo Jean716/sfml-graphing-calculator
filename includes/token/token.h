@@ -6,6 +6,8 @@
 
 #include "../../includes/queue/MyQueue.h"
 #include "../../includes/stack/MyStack.h"
+#include "../../includes/exceptions/exceptions.h"
+
 
 using namespace std;
 
@@ -18,6 +20,7 @@ enum class TokenType
     VARIABLE,
     LEFT_PAREN,
     RIGHT_PAREN,
+    COMMA,
 
     };
 

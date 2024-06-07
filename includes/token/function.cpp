@@ -1,7 +1,6 @@
 #include "function.h"
 #include <cmath>
 
-
 string Function::get_value() const
     {
     if (_name == "sin")
@@ -23,6 +22,18 @@ string Function::get_value() const
     else if (_name == "sqrt")
         {
         return "sqrt";
+        }
+    else if (_name == "log")
+        {
+        return "log";
+        }
+    else if (_name == "exp")
+        {
+        return "exp";
+        }
+    else if (_name == "abs")
+        {
+        return "abs";
         }
     else
         {
@@ -53,6 +64,18 @@ float Function::evaluate(const float& value) const
     else if (_name == "sqrt")
         {
         return sqrt(value);
+        }
+    else if (_name == "log")
+        {
+        return log(value);
+        }
+    else if (_name == "exp")
+        {
+        return exp(value);
+        }
+    else if (_name == "abs")
+        {
+        return abs(value);
         }
     else
         {

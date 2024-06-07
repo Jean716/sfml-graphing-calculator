@@ -15,6 +15,7 @@ Graph::Graph(GraphInfo* info)
 
 void Graph::set_info(GraphInfo* info)
     {
+    cout << "Graph::set_info is Fired" << endl;
     _info = info;
     _plot.set_info(info);
     _coordTranslation.set_info(info);
@@ -28,32 +29,84 @@ void Graph::update(GraphInfo* info)
 
 void Graph::draw(sf::RenderWindow& window)
     {
+    // get the current scale, origin, offsetX, offsetY
+    float scale = _info->getScale();
+    sf::Vector2f origin = _info->getOrigin();
+    float offsetX = _info->getOffsetX();
+    float offsetY = _info->getOffsetY();
+
+
     // draw the x-axis
     sf::Vertex xAxis[] =
         {
-            sf::Vertex(sf::Vector2f(0, 400), sf::Color::Green), // set the left point of the x-axis
-            sf::Vertex(sf::Vector2f(1120, 400), sf::Color::Green) // set the right point of the x-axis
+            sf::Vertex(sf::Vector2f(0, origin.y + offsetY), sf::Color::Green),
+            sf::Vertex(sf::Vector2f(SCREEN_WIDTH, origin.y + offsetY), sf::Color::Green)
         };
+
 
     // draw the y-axis
     sf::Vertex yAxis[] =
         {
-            sf::Vertex(sf::Vector2f(560, 0), sf::Color::Green), // set the top point of the y-axis
-            sf::Vertex(sf::Vector2f(560, 800), sf::Color::Green) // set the bottom point of the y-axis
+            sf::Vertex(sf::Vector2f(origin.x + offsetX, 0), sf::Color::Green),
+            sf::Vertex(sf::Vector2f(origin.x + offsetX, SCREEN_HEIGHT), sf::Color::Green)
         };
 
-    window.draw(xAxis, 2, sf::Lines); // Lines is the type of the shape
-    window.draw(yAxis, 2, sf::Lines); // draw the x-axis and y-axis
+    window.draw(xAxis, 2, sf::Lines);
+    window.draw(yAxis, 2, sf::Lines);
+
+    // Draw tick marks on the x-axis
+    for (float x = origin.x + offsetX; x < SCREEN_WIDTH; x += scale)
+        {
+        sf::Vertex tick[] =
+            {
+                sf::Vertex(sf::Vector2f(x, origin.y + offsetY - 5), sf::Color::White),
+                sf::Vertex(sf::Vector2f(x, origin.y + offsetY + 5), sf::Color::White)
+            };
+        window.draw(tick, 2, sf::Lines);
+        }
+
+    for (float x = origin.x + offsetX; x > 0; x -= scale)
+        {
+        sf::Vertex tick[] =
+            {
+                sf::Vertex(sf::Vector2f(x, origin.y + offsetY - 5), sf::Color::White),
+                sf::Vertex(sf::Vector2f(x, origin.y + offsetY + 5), sf::Color::White)
+            };
+        window.draw(tick, 2, sf::Lines);
+        }
+
+    // Draw tick marks on the y-axis
+    for (float y = origin.y + offsetY; y < SCREEN_HEIGHT; y += scale)
+        {
+        sf::Vertex tick[] =
+            {
+                sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, y), sf::Color::White),
+                sf::Vertex(sf::Vector2f(origin.x + offsetX + 5, y), sf::Color::White)
+            };
+        window.draw(tick, 2, sf::Lines);
+        }
+
+    for (float y = origin.y + offsetY; y > 0; y -= scale)
+        {
+        sf::Vertex tick[] =
+            {
+                sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, y), sf::Color::White),
+                sf::Vertex(sf::Vector2f(origin.x + offsetX + 5, y), sf::Color::White)
+            };
+        window.draw(tick, 2, sf::Lines);
+        }
 
     // draw the function
     for (const auto& point : _points)
         {
-        sf::CircleShape shape(2); // the radius of the circle is 2
-        shape.setPosition(point); // the position of the circle is the point
-        shape.setFillColor(sf::Color::Red); // the color of the circle is red
-        window.draw(shape); // draw the circle
+        sf::CircleShape shape(2);
+        shape.setPosition(point);
+        shape.setFillColor(sf::Color::Red);
+        window.draw(shape);
         }
     }
+
+
 
 void Graph::generatePoints()
     {

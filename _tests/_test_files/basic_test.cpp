@@ -123,6 +123,54 @@ void test_split(const string& expression)
     }
   }
 
+void testExceptions(const string& expression)
+  {
+  try
+    {
+    TK_string tk_string;
+    vector<Token*> tokens = tk_string.split(expression);
+
+
+    Queue<Token*> infix;
+    for (auto token : tokens)
+      {
+      infix.push(token);
+      }
+
+
+    ShuntingYard shuntingYard;
+    Queue<Token*> postfix = shuntingYard.postfix(infix);
+
+
+    while (!postfix.empty())
+      {
+      Token* token = postfix.front();
+      postfix.pop();
+      cout << token->get_value() << " ";
+      }
+    cout << endl;
+    }
+  catch (const MissingParenthesisException& e)
+    {
+    cout << "Error: " << e.what() << endl;
+    }
+  catch (const DivideByZeroException& e)
+    {
+    cout << "Error: " << e.what() << endl;
+    }
+  catch (const InvalidOperatorException& e)
+    {
+    cout << "Error: " << e.what() << endl;
+    }
+  catch (const invalid_argument& e)
+    {
+    cout << "Error: " << e.what() << endl;
+    }
+  catch (const exception& e)
+    {
+    cout << "Error: " << e.what() << endl;
+    }
+  }
 
 int main(int argc, char **argv)
   {
@@ -134,6 +182,27 @@ int main(int argc, char **argv)
   test_split("10 / cos(45) - 7");
   test_split("sqrt(x) + 5 ^ 2");
   test_split("tan(30) + cot(60)");
+  test_split("log(100) % exp(2)");
+  test_split("abs(-5) + abs(5)");
+  test_split("max(10, 20) + min(5, 10)");
+  cout << "\n\n----------testExceptions.cpp---------\n\n" << endl;
+
+  std::vector<std::string> expressions = {
+          "3 + 5",
+          "sin(30)",
+          "max(3, 5)",
+          "sinx", // missing parenthesis, should throw an exception
+          "3 / 0", // division by zero, should throw an exception
+          "(3 + 5", //no right parenthesis, should throw an exception
+          "3 + 5)" // no left parenthesis, should throw an exception
+    };
+
+  for (const auto& expr : expressions)
+    {
+    std::cout << "Testing expression: " << expr << std::endl;
+    testExceptions(expr);
+    std::cout << std::endl;
+    }
 
   return RUN_ALL_TESTS();
   }

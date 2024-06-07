@@ -96,6 +96,17 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                     stack.pop(); // pop the left parenthesis from the stack but do not add it to the output queue
                     break;
 
+                case TokenType::COMMA:
+                    while (!stack.empty() && stack.top()->type() != TokenType::LEFT_PAREN)
+                        {
+                        output.push(stack.pop());
+                        }
+                    if (stack.empty() || stack.top()->type() != TokenType::LEFT_PAREN)
+                        {
+                        throw MissingParenthesisException();
+                        }
+                    break;
+
                 default:
                     throw invalid_argument("Unknown token type");
             }
