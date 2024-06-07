@@ -12,14 +12,53 @@ struct GraphInfo
     public:
         // Default constructor
         GraphInfo()
-            : _equation(""), _windowDimensions(SCREEN_WIDTH, SCREEN_HEIGHT),
+            : _windowDimensions(SCREEN_WIDTH, SCREEN_HEIGHT),
             _origin(WORK_PANEL / 2, SCREEN_HEIGHT / 2), _domain(DEFAULT_DOMAIN),
-            _scale(DEFAULT_SCALE), _points(DEFAULT_POINTS), _offsetX(DEFAULT_OFFSET_X), _offsetY(DEFAULT_OFFSET_Y)
+            _scale(DEFAULT_SCALE), _points(DEFAULT_POINTS), _offsetX(DEFAULT_OFFSET_X),
+            _offsetY(DEFAULT_OFFSET_Y), hasParenError(false)
             {
             }
         // Getter and Setter methods
-        string getEquation() const { return _equation; }
-        void setEquation(const string& equation) { _equation = equation; }
+        vector<string> getEquations() const
+            {
+            return _equations;
+            }
+        vector<sf::Color> getColors() const
+            {
+            return _colors;
+            }
+        void addEquation(const string& equation)
+            {
+            _equations.push_back(equation);
+            _colors.push_back(generateDistinctColor());
+            }
+
+        void setEquation(const string& equation)
+            {
+            cout << "Setting equation: " << equation << endl;
+
+            _equations.clear();
+            _equations.push_back(equation);
+            }
+
+        void removeEquation(size_t index)
+            {
+            if (index < _equations.size())
+                {
+                cout << "Removing equation at index: " << index << endl;
+                cout << "Before removing, _equations size: " << _equations.size() << ", _colors size: " << _colors.size() << endl;
+
+                _equations.erase(_equations.begin() + index);
+                _colors.erase(_colors.begin() + index);
+
+                cout << "After removing, _equations size: " << _equations.size() << ", _colors size: " << _colors.size() << endl;
+                cout << "Equation removed successfully." << endl;
+                }
+            else
+                {
+                cout << "Index out of range: " << index << endl;
+                }
+            }
 
         sf::Vector2f getDomain() const { return _domain; }
         void setDomain(const sf::Vector2f& domain) { _domain = domain; }
@@ -30,7 +69,7 @@ struct GraphInfo
         float getScale() const { return _scale; }
         void setScale(float scale) { _scale = scale; }
 
-        float getPoint() const { return _points; }
+        float getPoints() const { return _points; }
         void setPoints(int points) { _points = points; }
 
         float getOffsetX() const { return _offsetX; }
@@ -53,8 +92,21 @@ struct GraphInfo
             _offsetY += deltaY;
             cout << "Pan: new offset = (" << _offsetX << ", " << _offsetY << ")" << endl;
             }
+        void setColor(const sf::Color& color)
+            {
+            _colors.clear();
+            _colors.push_back(color);
+            }
 
-        string _equation;           // Equation of the graph
+
+        sf::Color generateDistinctColor()
+            {
+            return distinctColors[rand() % distinctColors.size()];
+            }
+        bool hasParenError;
+
+        vector<string> _equations;          // Equation of the graph
+        vector<sf::Color> _colors;          // Color of the graph
         sf::Vector2f _windowDimensions; // Window dimensions
         sf::Vector2f _origin;            // Origin of the graph
         sf::Vector2f _domain;            // Domain of the graph
@@ -63,6 +115,18 @@ struct GraphInfo
         float _offsetX;                  // X-axis offset for panning
         float _offsetY;                  // Y-axis offset for panning
         vector<sf::Vertex> _vertices; // Vertices for drawing the graph
+
+        const vector<sf::Color> distinctColors = {
+        sf::Color(210, 176, 251), // light purple
+        sf::Color(131, 175, 155), //light green
+        sf::Color(241, 196, 15),  // Yellow
+        sf::Color(228, 68, 52),   // Red
+        sf::Color(142, 68, 173),  // Purple
+        sf::Color(211, 84, 0),    // Orange
+        //sf::Color(41, 128, 185)   // Blue
+
+
+            };
     };
 
 #endif 

@@ -9,8 +9,6 @@
 int main()
     {
     GraphInfo graphInfo;
-    graphInfo.setEquation("sin(x)");
-
     Animate animate;
     animate.set_info(&graphInfo);
     animate.run();

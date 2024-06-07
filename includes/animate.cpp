@@ -17,33 +17,26 @@ Animate::Animate()
     _system(), _sidebar(WORK_PANEL, SIDE_BAR_WIDTH), _mouseIn(false),
     _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(), _coordTranslation(nullptr)
     {
-            {
-            _mousePoint.setRadius(2);
-            _mousePoint.setFillColor(sf::Color::Red);
-            if (!_font.loadFromFile("arial.ttf"))
-                {
-                // handel error
-                }
-            // screen coords text
-            _myTextLabel.setFont(_font);
-            _myTextLabel.setCharacterSize(20);
-            _myTextLabel.setFillColor(sf::Color::White);
-            _myTextLabel.setPosition(10, 10);
-            // math coords text
-            _coordLabel.setFont(_font);
-            _coordLabel.setCharacterSize(20);
-            _coordLabel.setFillColor(sf::Color::White);
-            _coordLabel.setPosition(10, 40);
 
-            _coordTranslation.set_info(_info);
+    _mousePoint.setRadius(2);
+    _mousePoint.setFillColor(sf::Color::Red);
+    if (!_font.loadFromFile("arial.ttf"))
+        {
+        // handel error
+        }
+    // screen coords text
+    _myTextLabel.setFont(_font);
+    _myTextLabel.setCharacterSize(20);
+    _myTextLabel.setFillColor(sf::Color::White);
+    _myTextLabel.setPosition(10, 10);
+    // math coords text
+    _coordLabel.setFont(_font);
+    _coordLabel.setCharacterSize(20);
+    _coordLabel.setFillColor(sf::Color::White);
+    _coordLabel.setPosition(10, 40);
 
-            vector<string> functions = {
-        "sin(x)", "cos(x)", "tan(x)", "cot(x)","sin(x)+1", "x^2", "log(x)",  "abs(x)", "max(x,2)+1"
-                };
+    _coordTranslation.set_info(_info);
 
-            _sidebar.setFunctions(functions);
-
-            }
     }
 
 // Run the main loop
@@ -149,6 +142,17 @@ void Animate::render()
 
     // Draw the sidebar
     _sidebar.draw(_window);
+    // check if there is a paren error
+    if (_info->hasParenError)
+        {
+        sf::Text errorMsg;
+        errorMsg.setFont(_font);
+        errorMsg.setCharacterSize(20);
+        errorMsg.setFillColor(sf::Color::Red);
+        errorMsg.setString("Error: Mismatched parentheses. Please check your input.");
+        errorMsg.setPosition(10, SCREEN_HEIGHT - 30);
+        _window.draw(errorMsg);
+        }
 
     _window.display();
     }

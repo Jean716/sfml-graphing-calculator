@@ -1,7 +1,8 @@
 #include  "tk_string.h"
 #include <iostream>
 #include "comma.h"
-#include <sstream> // for istringstream
+#include <sstream> 
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/missingparan.h"
 
 
 bool TK_string::is_number(const string& s) const
@@ -31,35 +32,42 @@ bool TK_string::is_variable(const string & s) const
 
 
 
-vector<Token*> TK_string::split(const string& tk_Str)
+
+vector<Token*> TK_string::split(const string& tk_Str, bool& hasParenError)
     {
-    vector<Token*> tokens; // initialize an empty vector of tokens
-    string token;  // initialize an empty string
+    vector<Token*> tokens;
+    string token;
     int leftParenCount = 0;
     int rightParenCount = 0;
 
     for (size_t i = 0; i < tk_Str.size(); ++i)
         {
-        char c = tk_Str[i]; // get the character at index i
+        char c = tk_Str[i];
 
         if (isspace(c))
-            { // if the character is a space, skip it
-            continue; // skip the rest of the loop and go to the next iteration
+            {
+            continue;
             }
 
         if (isdigit(c) || c == '.')
-            { // if the character is a digit or a decimal point
-            token += c; // add the character to the token string
+            {
+            token += c;
             while (i + 1 < tk_Str.size() && (isdigit(tk_Str[i + 1]) || tk_Str[i + 1] == '.'))
-                { // while the next character is a digit or a decimal point
-                token += tk_Str[++i]; // add the next character to the token string
+                {
+                token += tk_Str[++i];
                 }
-            tokens.push_back(static_cast<Token*>(new Integer(token))); // add the token to the vector of tokens
-            token.clear(); // clear the token string
+            tokens.push_back(static_cast<Token*>(new Integer(token)));
+            token.clear();
+
+
+            if (i + 1 < tk_Str.size() && (isalpha(tk_Str[i + 1]) || tk_Str[i + 1] == '('))
+                {
+                tokens.push_back(static_cast<Token*>(new Operator("*")));
+                }
             }
         else if (isalpha(c))
-            { // if the character is a letter
-            token += c; // add the character to the token string
+            {
+            token += c;
             while (i + 1 < tk_Str.size() && isalpha(tk_Str[i + 1]))
                 {
                 token += tk_Str[++i];
@@ -67,19 +75,32 @@ vector<Token*> TK_string::split(const string& tk_Str)
             if (is_function(token))
                 {
                 tokens.push_back(static_cast<Token*>(new Function(token)));
+
+                if (i + 1 >= tk_Str.size() || tk_Str[i + 1] != '(')
+                    {
+                    cerr << "Warning: Missing parenthesis for function: " << token << ". Please use the format " << token << "(x)." << endl;
+                    }
                 }
             else if (is_operator(token))
-                { // check if it's a multi-character operator
+                {
                 tokens.push_back(static_cast<Token*>(new Operator(token)));
                 }
             else
                 {
+                if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::RIGHT_PAREN))
+                    {
+                    tokens.push_back(static_cast<Token*>(new Operator("*")));
+                    }
                 tokens.push_back(static_cast<Token*>(new Variable(token)));
                 }
             token.clear();
             }
         else if (c == '(')
             {
+            if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::VARIABLE || tokens.back()->type() == TokenType::RIGHT_PAREN))
+                {
+                tokens.push_back(static_cast<Token*>(new Operator("*")));
+                }
             tokens.push_back(static_cast<Token*>(new LeftParen()));
             leftParenCount++;
             }
@@ -93,7 +114,7 @@ vector<Token*> TK_string::split(const string& tk_Str)
             tokens.push_back(static_cast<Token*>(new Comma()));
             }
         else if (is_operator(string(1, c)))
-            { // check for single character operators
+            {
             tokens.push_back(static_cast<Token*>(new Operator(string(1, c))));
             }
         else
@@ -104,7 +125,7 @@ vector<Token*> TK_string::split(const string& tk_Str)
 
     if (leftParenCount != rightParenCount)
         {
-        throw MissingParenthesisException();
+        hasParenError = true;
         }
 
     return tokens;

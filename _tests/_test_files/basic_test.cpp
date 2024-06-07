@@ -105,7 +105,8 @@ void test_split(const string& expression)
   cout << "\n===Test 3: split===\n" << endl;
   // create a TK_string object
   TK_string tk;
-  vector<Token*> tokens = tk.split(expression);
+  bool hasParenError = false;
+  vector<Token*> tokens = tk.split(expression, hasParenError);
 
   // print the expression and the tokens
   cout << "Expression: " << expression << endl;
@@ -123,54 +124,7 @@ void test_split(const string& expression)
     }
   }
 
-void testExceptions(const string& expression)
-  {
-  try
-    {
-    TK_string tk_string;
-    vector<Token*> tokens = tk_string.split(expression);
 
-
-    Queue<Token*> infix;
-    for (auto token : tokens)
-      {
-      infix.push(token);
-      }
-
-
-    ShuntingYard shuntingYard;
-    Queue<Token*> postfix = shuntingYard.postfix(infix);
-
-
-    while (!postfix.empty())
-      {
-      Token* token = postfix.front();
-      postfix.pop();
-      cout << token->get_value() << " ";
-      }
-    cout << endl;
-    }
-  catch (const MissingParenthesisException& e)
-    {
-    cout << "Error: " << e.what() << endl;
-    }
-  catch (const DivideByZeroException& e)
-    {
-    cout << "Error: " << e.what() << endl;
-    }
-  catch (const InvalidOperatorException& e)
-    {
-    cout << "Error: " << e.what() << endl;
-    }
-  catch (const invalid_argument& e)
-    {
-    cout << "Error: " << e.what() << endl;
-    }
-  catch (const exception& e)
-    {
-    cout << "Error: " << e.what() << endl;
-    }
-  }
 
 int main(int argc, char **argv)
   {
@@ -178,31 +132,16 @@ int main(int argc, char **argv)
   cout << "\n\n----------running basic_test.cpp---------\n\n" << endl;
   test_shunting_yard_2();
   test_shunting_yard_1();
-  test_split("3 + sin(x) * 2");
-  test_split("10 / cos(45) - 7");
+  cout << "test:sinx" << endl;
+  test_split("sinx");
+  cout << "2x+3" << endl;
+  test_split("2x+3");
+  cout << "test(sqrt(x) + 5 ^ 2)" << endl;
   test_split("sqrt(x) + 5 ^ 2");
   test_split("tan(30) + cot(60)");
   test_split("log(100) % exp(2)");
   test_split("abs(-5) + abs(5)");
   test_split("max(10, 20) + min(5, 10)");
-  cout << "\n\n----------testExceptions.cpp---------\n\n" << endl;
-
-  std::vector<std::string> expressions = {
-          "3 + 5",
-          "sin(30)",
-          "max(3, 5)",
-          "sinx", // missing parenthesis, should throw an exception
-          "3 / 0", // division by zero, should throw an exception
-          "(3 + 5", //no right parenthesis, should throw an exception
-          "3 + 5)" // no left parenthesis, should throw an exception
-    };
-
-  for (const auto& expr : expressions)
-    {
-    std::cout << "Testing expression: " << expr << std::endl;
-    testExceptions(expr);
-    std::cout << std::endl;
-    }
 
   return RUN_ALL_TESTS();
   }

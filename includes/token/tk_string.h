@@ -19,12 +19,12 @@ using namespace std;
 #include "variable.h"
 #include "leftparen.h"
 #include "rightparen.h"
-#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/exceptions.h"
+
 class TK_string
     {
     public:
 
-        vector<Token*> split(const string& tk_Str);
+        vector<Token*> split(const string& tk_Str, bool& hasParenError);
 
     private:
         bool is_number(const string& s) const;

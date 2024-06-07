@@ -1,18 +1,18 @@
 #include "gtest/gtest.h"
 #include <iostream>
-// #include <iomanip>
-// #include <iostream>
-// #include <SFML/Graphics.hpp>
-// #include "../../includes/system.h"
-// #include "../../includes/graph.h"
-// #include "../../includes/animate.h"
-// #include "../../includes/sidebar.h"
-// #include "../../includes/graphInfo.h"
-// #include "../../includes/constants.h"
-// #include "../../includes/coord_translation.h"
-// #include "../../includes/plot.h"
-// #include "../../includes/token/token.h"
-// #include "../../includes/token/variable.h"
+#include <iomanip>
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include "../../includes/system.h"
+#include "../../includes/graph.h"
+#include "../../includes/animate.h"
+#include "../../includes/sidebar.h"
+#include "../../includes/graphInfo.h"
+#include "../../includes/constants.h"
+#include "../../includes/coord_translation.h"
+#include "../../includes/plot.h"
+#include "../../includes/token/token.h"
+#include "../../includes/token/variable.h"
 using namespace std;
 
 bool test_stub(bool debug = false)
@@ -34,25 +34,6 @@ TEST(TEST_STUB, TestStub)
 
 
 // //Function to test the tokenize method
-// void test_tokenize()
-//   {
-//   cout << "================Test_tokenize()================" << endl;
-//   GraphInfo info;
-//   info.setEquation("sin(x)");
-//   Plot plot(&info);
-
-//   Queue<Token*> tokens = plot.tokenize(info.getEquation());
-//   Queue<Token*> temp = tokens;
-//   while (!temp.empty())
-//     {
-//     Token* t = temp.pop();
-//     t->print();
-//     std::cout << " ";
-//     delete t; // delete the token to avoid memory leak
-//     }
-//   std::cout << std::endl;
-//   cout << "\n\n";
-//   }
 
 
 // void test_plot_operator()
@@ -69,13 +50,13 @@ TEST(TEST_STUB, TestStub)
 //   Plot plot(&info);
 
 //   // call the operator() method to generate points
-//   std::vector<sf::Vector2f> points = plot(-5, 5, 0.5f);
+//   vector<sf::Vector2f> points = plot(-5, 5, 0.5f);
 
 
-//   std::cout << "Generated Points:" << std::endl;
+//   cout << "Generated Points:" << endl;
 //   for (const auto& point : points)
 //     {
-//     std::cout << "Math Point: (" << point.x << ", " << point.y << "), Screen Point: (" << point.x << ", " << point.y << ")" << std::endl;
+//     cout << "Math Point: (" << point.x << ", " << point.y << "), Screen Point: (" << point.x << ", " << point.y << ")" << endl;
 //     }
 //   cout << "\n\n";
 //   }
@@ -91,35 +72,35 @@ TEST(TEST_STUB, TestStub)
 //   infix.push(new Integer(1));
 //   infix.push(new RightParen());
 
-//   std::cout << "Infix expression: ";
+//   cout << "Infix expression: ";
 //   Queue<Token*> tempInfix = infix;
 //   while (!tempInfix.empty())
 //     {
 //     Token* t = tempInfix.pop();
 //     t->print();
-//     std::cout << " ";
+//     cout << " ";
 //     }
-//   std::cout << std::endl;
+//   cout << endl;
 
 //   ShuntingYard sy;
 //   Queue<Token*> postfix = sy.postfix(infix);
 
 
-//   std::cout << "Postfix expression: ";
+//   cout << "Postfix expression: ";
 //   Queue<Token*> tempPostfix = postfix;
 //   while (!tempPostfix.empty())
 //     {
 //     Token* t = tempPostfix.pop();
 //     t->print();
-//     std::cout << " ";
+//     cout << " ";
 //     }
-//   std::cout << std::endl;
+//   cout << endl;
 //   }
 
 int main(int argc, char **argv)
     {
     ::testing::InitGoogleTest(&argc, argv);
-    std::cout << "\n\n----------running testB.cpp---------\n\n" << std::endl;
+    cout << "\n\n----------running testB.cpp---------\n\n" << endl;
     //   test_tokenize();
     //   test_plot_operator();
     //   test_shunting_yard();

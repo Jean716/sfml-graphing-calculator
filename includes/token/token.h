@@ -6,7 +6,7 @@
 
 #include "../../includes/queue/MyQueue.h"
 #include "../../includes/stack/MyStack.h"
-#include "../../includes/exceptions/exceptions.h"
+
 
 
 using namespace std;

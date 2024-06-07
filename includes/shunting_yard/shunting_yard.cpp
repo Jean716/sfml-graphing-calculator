@@ -94,6 +94,10 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                         throw invalid_argument("Mismatched parentheses");
                         }
                     stack.pop(); // pop the left parenthesis from the stack but do not add it to the output queue
+                    if (!stack.empty() && stack.top()->type() == TokenType::FUNCTION)
+                        {
+                        output.push(stack.pop());
+                        }
                     break;
 
                 case TokenType::COMMA:
@@ -103,7 +107,7 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                         }
                     if (stack.empty() || stack.top()->type() != TokenType::LEFT_PAREN)
                         {
-                        throw MissingParenthesisException();
+                        throw invalid_argument("Mismatched parentheses");
                         }
                     break;
 

@@ -29,7 +29,7 @@ float RPN::operator()(float x)
                 case TokenType::OPERATOR: {
                 if (stack.size() < 2)
                     {
-                    throw std::runtime_error("Insufficient values in expression");
+                    throw runtime_error("Insufficient values in expression");
                     }
                 float right = stack.pop();
                 float left = stack.pop();
@@ -40,7 +40,7 @@ float RPN::operator()(float x)
                 case TokenType::FUNCTION: {
                 if (stack.empty())
                     {
-                    throw std::runtime_error("Insufficient values in expression");
+                    throw runtime_error("Insufficient values in expression");
                     }
                 float value = stack.pop();
                 Function* function_token = static_cast<Function*>(token);
@@ -48,14 +48,14 @@ float RPN::operator()(float x)
                 break;
                 }
                 default: {
-                throw std::runtime_error("Unknown token type");
+                throw runtime_error("Unknown token type");
                 }
             }
         }
 
     if (stack.size() != 1)
         {
-        throw std::runtime_error("The user input has too many values");
+        throw runtime_error("The user input has too many values");
         }
 
     return stack.pop();

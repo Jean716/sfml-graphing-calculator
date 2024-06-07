@@ -1,49 +1,39 @@
 #ifndef SIDEBAR_H
 #define SIDEBAR_H
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
 #include "graphInfo.h"
-using namespace std;
 
-// this class is used to create a sidebar on the window object
-// user can input the strings to be displayed on the sidebar
-// display the coordinates of the mouse on the sidebar
 class Sidebar
     {
     public:
-
         Sidebar(float left = SIDE_BAR_LEFT, float width = SIDE_BAR_WIDTH);
-
         void draw(sf::RenderWindow& window);
-        string& operator [](int index); // get the string at the index
-        void handleEvent(const sf::Event& event, GraphInfo* info); // handle the events
-        //string getInput() const; // get the input string from user
-        void setFunctions(const std::vector<string>& functions);
-
+        void handleEvent(const sf::Event& event, GraphInfo* info);
+        void setFunctions(const vector<string>& functions, const vector<sf::Color>& colors);
 
     private:
-
-        string _inputEquation; // to store the input string
-        sf::Font _font;                      //used to draw text
+        string _inputEquation;
+        sf::Font _font;
         sf::Text _sb_text;
-        sf::RectangleShape _rect;            //sidebar rectangle
-        vector<string> _functions;              //store the functions list
+        sf::RectangleShape _rect;
+        vector<string> _functions;
 
-        //used to draw strings on the window object
         float _left;
         float _width;
 
-        void updateText(); // update the text on the sidebar
+        sf::RectangleShape _inputBox;
+        sf::Text _inputText;
+        bool _showCursor;
+        sf::Clock _cursorClock;
+        vector<sf::Color> _colors;
+        int _cursorPos;
 
+        void updateText();
+        void removeFunction(size_t index, GraphInfo* info);
     };
 
 #endif // SIDEBAR_H
-
-
-// sf::RectangleShape _inputBox; // input box
-   // sf::Text _inputText; // text in the input box
-   // bool _isFocused; // if the input box is focused
-   // bool _showCursor; // cursor blink flag
-   // sf::Clock _cursorClock; // cursor blink clock

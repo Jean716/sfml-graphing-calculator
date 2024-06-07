@@ -2,7 +2,6 @@
 #define PLOT_H
 
 #include <vector>
-// #include <queue>
 #include <string>
 #include <SFML/Graphics.hpp>
 
@@ -25,7 +24,7 @@ class Plot
     public:
         Plot(GraphInfo* info);
         void set_info(GraphInfo* info);
-        vector<sf::Vector2f> operator()(float xMin, float xMax, float increment);
+        vector<vector<sf::Vector2f>> operator()(float xMin, float xMax, float increment);
         Queue<Token*> tokenize(const string& equation) const;
 
     private:

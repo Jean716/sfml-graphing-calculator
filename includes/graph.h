@@ -23,10 +23,11 @@ class Graph
         void set_info(GraphInfo* info); // set the information of the graph
     private:
         GraphInfo* _info; //  graph information
-        vector<sf::Vector2f> _points; //  store the points of the graph
+        vector<vector<sf::Vector2f>> _points; //  store the points of the graph
         Plot _plot; //  plot object
         CoordTranslation _coordTranslation;
         void generatePoints(); // call the plot object to generate the points
+        sf::Font _font;
     };
 
 #endif

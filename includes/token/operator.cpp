@@ -22,7 +22,7 @@ float Operator::evaluate(float a, float b) const
         {
         if (b == 0)
             {
-            throw DivideByZeroException();
+            throw runtime_error("Division by zero");
             }
         return a / b;
         }
@@ -44,7 +44,7 @@ float Operator::evaluate(float a, float b) const
         }
     else
         {
-        throw InvalidOperatorException(_op);
+        throw invalid_argument("Invalid operator");
         }
     }
 
@@ -56,7 +56,7 @@ TokenType Operator::type() const
         }
     else
         {
-        throw InvalidOperatorException(_op);
+        throw invalid_argument("Invalid operator");
         }
     }
 
