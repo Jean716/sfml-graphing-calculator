@@ -15,7 +15,6 @@ class CoordTranslation
         sf::Vector2f getMathCoords(const sf::Vector2f& point) const; // screen coord to math coord
         sf::Vector2f operator()(const sf::Vector2f& point) const; // operator overloading
 
-
     private:
         GraphInfo* _info;
     };

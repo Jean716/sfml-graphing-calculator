@@ -9,6 +9,8 @@
 #include "../../includes/token/operator.h"
 #include "../../includes/token/integer.h"
 #include "../../includes/token/function.h"
+#include "../../includes/token/variable.h"
+#include "../../includes/token/constant.h"
 
 using namespace std;
 

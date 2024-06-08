@@ -27,6 +27,8 @@ class Sidebar
 
         sf::RectangleShape _inputBox;
         sf::Text _inputText;
+        sf::Text _instructionLabel;
+        sf::Text _addButtonText;
         bool _showCursor;
         sf::Clock _cursorClock;
         vector<sf::Color> _colors;

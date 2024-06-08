@@ -14,6 +14,7 @@ void Plot::set_info(GraphInfo* info)
     cout << "Plot:: set_info is fired" << endl;
     _info = info;
     _coordTranslation.set_info(info);
+
     }
 
 vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float increment)
@@ -78,8 +79,7 @@ vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float incr
 Queue<Token*> Plot::tokenize(const string & equation) const
     {
     TK_string tk;
-    bool hasParenError = false;
-    vector<Token*> tokens = tk.split(equation, hasParenError);
+    vector<Token*> tokens = tk.split(equation);
     Queue<Token*> tokenQueue;
 
     cout << "Tokenizing equation: " << equation << endl;
@@ -88,11 +88,11 @@ Queue<Token*> Plot::tokenize(const string & equation) const
         cout << "Token: " << token->get_value() << endl;
         tokenQueue.push(token);
         }
-    if (hasParenError)
-        {
-        cerr << "Error: Parenthesis mismatch in equation: " << equation << endl;
-        }
+
     return tokenQueue;
     }
+
+
+
 
 

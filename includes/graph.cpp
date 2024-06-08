@@ -1,10 +1,11 @@
 #include "graph.h"
 #include "plot.h"
 #include "graphInfo.h"
+#include <cmath>
 
 #include "coord_translation.h"
 
-Graph::Graph() : _info(nullptr), _plot(nullptr), _coordTranslation(nullptr)
+Graph::Graph() : _info(nullptr), _plot(nullptr), _coordTranslation(nullptr)//, _polar()
     {
     }
 
@@ -28,9 +29,17 @@ void Graph::update(GraphInfo* info)
     generatePoints();
     }
 
+
 void Graph::draw(sf::RenderWindow& window)
     {
-    // get the scale, origin, and offset of the graph
+
+
+
+
+
+
+
+
     float scale = _info->getScale();
     sf::Vector2f origin = _info->getOrigin();
     float offsetX = _info->getOffsetX();
@@ -39,129 +48,105 @@ void Graph::draw(sf::RenderWindow& window)
 
     if (!font.loadFromFile("arial.ttf"))
         {
-        // handle error
+
         }
 
-    // draw x axis
+    float tickSpacing = scale;
+
+
     sf::Vertex xAxis[] =
         {
-            sf::Vertex(sf::Vector2f(0, origin.y + offsetY), sf::Color::Green),
-            sf::Vertex(sf::Vector2f(SCREEN_WIDTH, origin.y + offsetY), sf::Color::Green)
+            sf::Vertex(sf::Vector2f(0, origin.y + offsetY), sf::Color::Black),
+            sf::Vertex(sf::Vector2f(window.getSize().x, origin.y + offsetY), sf::Color::Black)
         };
-
-    // draw y axis
-    sf::Vertex yAxis[] =
-        {
-            sf::Vertex(sf::Vector2f(origin.x + offsetX, 0), sf::Color::Green),
-            sf::Vertex(sf::Vector2f(origin.x + offsetX, SCREEN_HEIGHT), sf::Color::Green)
-        };
-
     window.draw(xAxis, 2, sf::Lines);
+
+
+    sf::Vertex yAxis[]
+        {
+            sf::Vertex(sf::Vector2f(origin.x + offsetX, 0), sf::Color::Black),
+            sf::Vertex(sf::Vector2f(origin.x + offsetX, window.getSize().y), sf::Color::Black)
+        };
     window.draw(yAxis, 2, sf::Lines);
 
-    // draw origin
+
     sf::Text originLabel;
     originLabel.setFont(font);
     originLabel.setCharacterSize(15);
-    originLabel.setFillColor(sf::Color::White);
+    originLabel.setFillColor(sf::Color::Black);
     originLabel.setString("0");
     originLabel.setPosition(origin.x + offsetX + 5, origin.y + offsetY + 5);
     window.draw(originLabel);
 
-    // set the tick spacing based on the scale
-    float tickSpacing = scale; // 1 unit on the graph is equal to 1 pixel on the screen
 
-    // draw x axis ticks and labels
-    for (float x = origin.x; x < SCREEN_WIDTH; x += tickSpacing)
+    for (float graphX = 0; graphX * scale < window.getSize().x / 2; ++graphX)
         {
-        sf::Vector2f screenPos = _coordTranslation.translate(sf::Vector2f((x - origin.x) / scale, 0));
-
-        if (static_cast<int>(screenPos.x) == static_cast<int>(origin.x + offsetX)) continue; // skip the origin
-
-        sf::Vertex tick[] =
+        if (graphX != 0)
             {
-                sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY - 5), sf::Color::White),
-                sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY + 5), sf::Color::White)
-            };
-        window.draw(tick, 2, sf::Lines);
 
-        sf::Text label;
-        label.setFont(font);
-        label.setCharacterSize(10);
-        label.setFillColor(sf::Color::White);
-        label.setString(to_string(static_cast<int>((x - origin.x) / scale)));
-        label.setPosition(screenPos.x, origin.y + offsetY + 10);
-        window.draw(label);
+            sf::Vector2f screenPos = sf::Vector2f(origin.x + graphX * scale + offsetX, origin.y + offsetY);
+            sf::Vertex tick[] =
+                {
+                    sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY - 5), sf::Color::Black),
+                    sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY + 5), sf::Color::Black)
+                };
+            window.draw(tick, 2, sf::Lines);
+
+            sf::Text label;
+            label.setFont(font);
+            label.setCharacterSize(15);
+            label.setFillColor(sf::Color::Black);
+            label.setString(std::to_string(static_cast<int>(graphX)));
+            label.setPosition(screenPos.x, origin.y + offsetY + 10);
+            window.draw(label);
+
+
+            screenPos = sf::Vector2f(origin.x - graphX * scale + offsetX, origin.y + offsetY);
+            tick[0].position = sf::Vector2f(screenPos.x, origin.y + offsetY - 5);
+            tick[1].position = sf::Vector2f(screenPos.x, origin.y + offsetY + 5);
+            window.draw(tick, 2, sf::Lines);
+
+            label.setString("-" + std::to_string(static_cast<int>(graphX)));
+            label.setPosition(screenPos.x, origin.y + offsetY + 10);
+            window.draw(label);
+            }
         }
 
-    for (float x = origin.x; x > 0; x -= tickSpacing)
+
+    for (float graphY = 0; graphY * scale < window.getSize().y / 2; ++graphY)
         {
-        sf::Vector2f screenPos = _coordTranslation.translate(sf::Vector2f((x - origin.x) / scale, 0));
-
-        if (static_cast<int>(screenPos.x) == static_cast<int>(origin.x + offsetX)) continue; // skip the origin
-
-        sf::Vertex tick[] =
+        if (graphY != 0)
             {
-                sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY - 5), sf::Color::White),
-                sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY + 5), sf::Color::White)
-            };
-        window.draw(tick, 2, sf::Lines);
 
-        sf::Text label;
-        label.setFont(font);
-        label.setCharacterSize(15);
-        label.setFillColor(sf::Color::White);
-        label.setString(to_string(static_cast<int>((x - origin.x) / scale)));
-        label.setPosition(screenPos.x, origin.y + offsetY + 10);
-        window.draw(label);
+            sf::Vector2f screenPos = sf::Vector2f(origin.x + offsetX, origin.y - graphY * scale + offsetY);
+            sf::Vertex tick[] =
+                {
+                    sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, screenPos.y), sf::Color::Black),
+                    sf::Vertex(sf::Vector2f(origin.x + offsetX + 5, screenPos.y), sf::Color::Black)
+                };
+            window.draw(tick, 2, sf::Lines);
+
+            sf::Text label;
+            label.setFont(font);
+            label.setCharacterSize(15);
+            label.setFillColor(sf::Color::Black);
+            label.setString(std::to_string(static_cast<int>(graphY)));
+            label.setPosition(origin.x + offsetX + 10, screenPos.y);
+            window.draw(label);
+
+
+            screenPos = sf::Vector2f(origin.x + offsetX, origin.y + graphY * scale + offsetY);
+            tick[0].position = sf::Vector2f(origin.x + offsetX - 5, screenPos.y);
+            tick[1].position = sf::Vector2f(origin.x + offsetX + 5, screenPos.y);
+            window.draw(tick, 2, sf::Lines);
+
+            label.setString("-" + std::to_string(static_cast<int>(graphY)));
+            label.setPosition(origin.x + offsetX + 10, screenPos.y);
+            window.draw(label);
+            }
         }
 
-    // draw y axis ticks and labels
-    for (float y = origin.y; y < SCREEN_HEIGHT; y += tickSpacing)
-        {
-        sf::Vector2f screenPos = _coordTranslation.translate(sf::Vector2f(0, (origin.y - y) / scale));
 
-        if (static_cast<int>(screenPos.y) == static_cast<int>(origin.y + offsetY)) continue;
-
-        sf::Vertex tick[] =
-            {
-                sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, screenPos.y), sf::Color::White),
-                sf::Vertex(sf::Vector2f(origin.x + offsetX + 5, screenPos.y), sf::Color::White)
-            };
-        window.draw(tick, 2, sf::Lines);
-
-        sf::Text label;
-        label.setFont(font);
-        label.setCharacterSize(15);
-        label.setFillColor(sf::Color::White);
-        label.setString(to_string(static_cast<int>((origin.y - y) / scale)));
-        label.setPosition(origin.x + offsetX + 10, screenPos.y);
-        window.draw(label);
-        }
-
-    for (float y = origin.y; y > 0; y -= tickSpacing)
-        {
-        sf::Vector2f screenPos = _coordTranslation.translate(sf::Vector2f(0, (origin.y - y) / scale));
-
-        if (static_cast<int>(screenPos.y) == static_cast<int>(origin.y + offsetY)) continue; // 跳过原点
-
-        sf::Vertex tick[] =
-            {
-                sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, screenPos.y), sf::Color::White),
-                sf::Vertex(sf::Vector2f(origin.x + offsetX + 5, screenPos.y), sf::Color::White)
-            };
-        window.draw(tick, 2, sf::Lines);
-
-        sf::Text label;
-        label.setFont(font);
-        label.setCharacterSize(15);
-        label.setFillColor(sf::Color::White);
-        label.setString(to_string(static_cast<int>((origin.y - y) / scale)));
-        label.setPosition(origin.x + offsetX + 10, screenPos.y);
-        window.draw(label);
-        }
-
-    // draw the functions
     vector<sf::Color> colors = _info->getColors();
     for (size_t eqIndex = 0; eqIndex < _points.size(); ++eqIndex)
         {
@@ -175,10 +160,11 @@ void Graph::draw(sf::RenderWindow& window)
         }
     }
 
+
 void Graph::generatePoints()
     {
     if (_info)
         {
-        _points = _plot(_info->getDomain().x, _info->getDomain().y, 0.1f); // generate the points of the graph
+        _points = _plot(_info->getDomain().x, _info->getDomain().y, 0.1f);
         }
     }

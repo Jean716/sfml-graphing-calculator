@@ -10,6 +10,15 @@ using namespace std;
 struct GraphInfo
     {
     public:
+        enum Mode
+            {
+            INPUT,
+            ZOOM,
+            PAN,
+            CARTESIAN,
+            POLAR
+            };
+        Mode currentMode = INPUT;
         // Default constructor
         GraphInfo()
             : _windowDimensions(SCREEN_WIDTH, SCREEN_HEIGHT),
@@ -18,6 +27,8 @@ struct GraphInfo
             _offsetY(DEFAULT_OFFSET_Y), hasParenError(false)
             {
             }
+
+
         // Getter and Setter methods
         vector<string> getEquations() const
             {
@@ -104,6 +115,15 @@ struct GraphInfo
             return distinctColors[rand() % distinctColors.size()];
             }
         bool hasParenError;
+
+        void setMode(Mode mode)
+            {
+            currentMode = mode;
+            }
+        Mode getMode()
+            {
+            return currentMode;
+            }
 
         vector<string> _equations;          // Equation of the graph
         vector<sf::Color> _colors;          // Color of the graph

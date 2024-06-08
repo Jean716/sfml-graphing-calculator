@@ -47,6 +47,11 @@ float RPN::operator()(float x)
                 stack.push(function_token->evaluate(value));
                 break;
                 }
+                case TokenType::CONSTANT: {
+                Constant* constant_token = static_cast<Constant*>(token);
+                stack.push(constant_token->get_value_float());
+                break;
+                }
                 default: {
                 throw runtime_error("Unknown token type");
                 }

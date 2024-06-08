@@ -43,19 +43,21 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
     {
     cout << "\n*****SY::ShuntingYard is Fired*****" << endl;
 
-    Queue<Token*> output; // The output queue
-    Stack<Token*> stack;  // for operators and parentheses
-    Queue<Token*> inputCopy = input; // copy of the input queue
+    Queue<Token*> output;
+    Stack<Token*> stack;
+    Queue<Token*> inputCopy = input;
 
     while (!inputCopy.empty())
-        { // traverse the infix queue
-        Token* it = inputCopy.pop(); // get the token at the front of the queue
+        {
+        Token* it = inputCopy.pop();
         TokenType type = it->type();
 
         switch (type)
             {
                 case TokenType::INTEGER:
                 case TokenType::VARIABLE:
+                case TokenType::CONSTANT:
+
                     output.push(it);
                     break;
 
@@ -74,7 +76,7 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                             }
                         else
                             {
-                            break; // break the loop
+                            break;
                             }
                         }
                     stack.push(it);
@@ -93,7 +95,7 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                         {
                         throw invalid_argument("Mismatched parentheses");
                         }
-                    stack.pop(); // pop the left parenthesis from the stack but do not add it to the output queue
+                    stack.pop();
                     if (!stack.empty() && stack.top()->type() == TokenType::FUNCTION)
                         {
                         output.push(stack.pop());
@@ -126,7 +128,7 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
         output.push(stack.pop());
         }
 
-    // print the postfix queue for debugging purposes
+
     cout << "Postfix Queue: ";
     for (Queue<Token*>::Iterator it = output.begin(); it != output.end(); it++)
         {

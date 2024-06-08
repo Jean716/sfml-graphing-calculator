@@ -4,6 +4,7 @@
 #include "sidebar.h"
 #include "graphInfo.h"
 #include "coord_translation.h"
+
 #include <iostream>
 #include <string>
 #include <sstream> 
@@ -15,7 +16,8 @@ using namespace std;
 Animate::Animate()
     : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graphing Calculator"),
     _system(), _sidebar(WORK_PANEL, SIDE_BAR_WIDTH), _mouseIn(false),
-    _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(), _coordTranslation(nullptr)
+    _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(),
+    _coordTranslation(nullptr)
     {
 
     _mousePoint.setRadius(2);
@@ -27,12 +29,12 @@ Animate::Animate()
     // screen coords text
     _myTextLabel.setFont(_font);
     _myTextLabel.setCharacterSize(20);
-    _myTextLabel.setFillColor(sf::Color::White);
+    _myTextLabel.setFillColor(sf::Color::Black);
     _myTextLabel.setPosition(10, 10);
     // math coords text
     _coordLabel.setFont(_font);
     _coordLabel.setCharacterSize(20);
-    _coordLabel.setFillColor(sf::Color::White);
+    _coordLabel.setFillColor(sf::Color::Black);
     _coordLabel.setPosition(10, 40);
 
     _coordTranslation.set_info(_info);
@@ -69,25 +71,36 @@ void Animate::processEvents()
 
             switch (event.key.code)
                 {
-                    case sf::Keyboard::Equal:
+                    case sf::Keyboard::RBracket:
+                        _info->currentMode = GraphInfo::ZOOM;
                         _system.step(1, _info); // zoom in
                         break;
-                    case sf::Keyboard::Hyphen:
+                    case sf::Keyboard::LBracket:
+                        _info->currentMode = GraphInfo::ZOOM;
                         _system.step(2, _info); // zoom out
                         break;
-                    case sf::Keyboard::A:
+                    case sf::Keyboard::Left:
+                        _info->currentMode = GraphInfo::PAN;
                         _system.step(3, _info); // move left
                         break;
-                    case sf::Keyboard::D:
+                    case sf::Keyboard::Right:
+                        _info->currentMode = GraphInfo::PAN;
                         _system.step(4, _info); // move right
                         break;
-                    case sf::Keyboard::W:
+                    case sf::Keyboard::Up:
+                        _info->currentMode = GraphInfo::PAN;
                         _system.step(5, _info); // move up
                         break;
-                    case sf::Keyboard::S:
+                    case sf::Keyboard::Down:
+                        _info->currentMode = GraphInfo::PAN;
                         _system.step(6, _info); // move down
                         break;
+                    case sf::Keyboard::Tab:
+                        isPolarMode = !isPolarMode;
+                        break;
+
                     default:
+                        _info->currentMode = GraphInfo::INPUT;
                         break;
                 }
             }
@@ -110,7 +123,9 @@ void Animate::update()
 // Render everything
 void Animate::render()
     {
-    _window.clear(sf::Color(34, 37, 42)); //  Clear the screen and set a background color
+    _window.clear(sf::Color(236, 236, 236)); //  Clear the screen and set a background color
+    drawGrid(_window);
+
     _system.draw(_window); // Draw all objects in system
 
     // display the location of the mouse at the left top of the window
@@ -135,10 +150,23 @@ void Animate::render()
     _coordLabel.setString("Math Coords: " + mathPosStr);
     _window.draw(_coordLabel);
 
-    // drea the little red dot
-    _mousePoint.setPosition(mousePosFloat.x - _mousePoint.getRadius(), mousePosFloat.y - _mousePoint.getRadius());
+
+    // Convert math coordinates back to screen coordinates to ensure the red dot stays at the correct position
+    sf::Vector2f screenPos = _coordTranslation.translate(mathPos);
+    _mousePoint.setPosition(screenPos.x - _mousePoint.getRadius(), screenPos.y - _mousePoint.getRadius());
     _window.draw(_mousePoint);
-    //_window.draw(_myTextLabel);
+
+    // if (isPolarMode)
+    //     {
+    //     _polar.draw(_window, _info);
+    //     }
+    // else
+    //     {
+    //     _graph.drawGrid(_window);
+    //     _graph.draw(_window);
+    //     _system.draw(_window);
+    //     }
+
 
     // Draw the sidebar
     _sidebar.draw(_window);
@@ -172,3 +200,43 @@ void Animate::set_info(GraphInfo * info)
     _system.set_info(info);
     _coordTranslation.set_info(_info);
     }
+
+void Animate::drawGrid(sf::RenderWindow& window)
+    {
+    sf::VertexArray lines(sf::Lines);
+
+    const float step = _info->getScale();
+    const sf::Color gridColor(200, 200, 200);
+
+    sf::Vector2f origin = _info->getOrigin();
+    float offsetX = _info->getOffsetX();
+    float offsetY = _info->getOffsetY();
+    float scale = _info->getScale();
+
+
+    for (float x = origin.x + offsetX; x < WORK_PANEL; x += step)
+        {
+        lines.append(sf::Vertex(sf::Vector2f(x, 0), gridColor));
+        lines.append(sf::Vertex(sf::Vector2f(x, SCREEN_HEIGHT), gridColor));
+        }
+    for (float x = origin.x + offsetX; x > 0; x -= step)
+        {
+        lines.append(sf::Vertex(sf::Vector2f(x, 0), gridColor));
+        lines.append(sf::Vertex(sf::Vector2f(x, SCREEN_HEIGHT), gridColor));
+        }
+
+
+    for (float y = origin.y + offsetY; y < SCREEN_HEIGHT; y += step)
+        {
+        lines.append(sf::Vertex(sf::Vector2f(0, y), gridColor));
+        lines.append(sf::Vertex(sf::Vector2f(WORK_PANEL, y), gridColor));
+        }
+    for (float y = origin.y + offsetY; y > 0; y -= step)
+        {
+        lines.append(sf::Vertex(sf::Vector2f(0, y), gridColor));
+        lines.append(sf::Vertex(sf::Vector2f(WORK_PANEL, y), gridColor));
+        }
+
+    window.draw(lines);
+    }
+

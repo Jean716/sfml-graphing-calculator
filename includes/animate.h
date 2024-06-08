@@ -5,6 +5,8 @@
 #include "graphInfo.h"
 #include "system.h"
 #include "sidebar.h"
+#include "graph.h"
+
 
 // user inteactions
 class Animate
@@ -22,6 +24,7 @@ class Animate
         GraphInfo* _info; // graph information
         System _system; // container for all the animated objects
         Sidebar _sidebar; // rectangular message sidebar
+        Graph _graph; // graph object
         int _command;
 
         bool _mouseIn; // if mouse is in the screen
@@ -30,9 +33,13 @@ class Animate
         sf::Text _myTextLabel; // text to draw on main screen
         sf::Text _coordLabel; // math coordinates
         CoordTranslation  _coordTranslation;
+        //Polar _polar;
+        bool isPolarMode = false;
+
 
         // helper function to convert mouse position to string
         string mouse_pos_string(sf::RenderWindow& window);
+        void drawGrid(sf::RenderWindow& window);
 
     };
 

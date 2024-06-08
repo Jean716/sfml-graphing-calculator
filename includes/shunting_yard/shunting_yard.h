@@ -12,6 +12,7 @@
 #include "../exceptions/missingparan.h"
 #include "../token/variable.h"
 #include "../token/comma.h"
+#include "../token/constant.h"
 
 
 using namespace std;

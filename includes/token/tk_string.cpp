@@ -30,10 +30,15 @@ bool TK_string::is_variable(const string & s) const
     return s == "x" || s == "X";
     }
 
+bool TK_string::is_constant(const string& s) const
+    {
+    return s == "pi" || s == "e";
+    }
 
 
 
-vector<Token*> TK_string::split(const string& tk_Str, bool& hasParenError)
+
+vector<Token*> TK_string::split(const string& tk_Str)
     {
     vector<Token*> tokens;
     string token;
@@ -85,6 +90,11 @@ vector<Token*> TK_string::split(const string& tk_Str, bool& hasParenError)
                 {
                 tokens.push_back(static_cast<Token*>(new Operator(token)));
                 }
+            else if (is_constant(token))
+                {
+                tokens.push_back(static_cast<Token*>(new Constant(token)));
+                }
+
             else
                 {
                 if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::RIGHT_PAREN))
@@ -123,10 +133,10 @@ vector<Token*> TK_string::split(const string& tk_Str, bool& hasParenError)
             }
         }
 
-    if (leftParenCount != rightParenCount)
-        {
-        hasParenError = true;
-        }
+    // if (leftParenCount != rightParenCount)
+    //     {
+    //     hasParenError = true;
+    //     }
 
     return tokens;
     }

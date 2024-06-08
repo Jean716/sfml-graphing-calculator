@@ -106,7 +106,7 @@ void test_split(const string& expression)
   // create a TK_string object
   TK_string tk;
   bool hasParenError = false;
-  vector<Token*> tokens = tk.split(expression, hasParenError);
+  vector<Token*> tokens = tk.split(expression);
 
   // print the expression and the tokens
   cout << "Expression: " << expression << endl;

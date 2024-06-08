@@ -14,7 +14,7 @@ _rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _cursorPos(0)
     _sb_text.setPosition(_left + 10, 10);
     _sb_text.setFillColor(sf::Color::Black);
 
-    _rect.setFillColor(sf::Color(236, 236, 236));
+    _rect.setFillColor(sf::Color(255, 255, 255));
     _rect.setPosition(_left, 0);
 
     _inputBox.setSize(sf::Vector2f(_width - 60, 30));
@@ -28,6 +28,12 @@ _rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _cursorPos(0)
     _inputText.setFillColor(sf::Color::Black);
     _inputText.setPosition(_left + 45, 55);
 
+    _instructionLabel.setFont(_font);
+    _instructionLabel.setCharacterSize(15);
+    _instructionLabel.setFillColor(sf::Color::Black);
+    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: [\nZoom Out: ]\nPan: Up Down Left Right Arrow Keys\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
+    _instructionLabel.setPosition(_left + 10, SCREEN_HEIGHT - 200);
+
     updateText();
     }
 
@@ -39,10 +45,19 @@ void Sidebar::draw(sf::RenderWindow& window)
     window.draw(_inputBox);
     window.draw(_inputText);
 
-    sf::CircleShape addButton(10);
+    sf::RectangleShape addButton(sf::Vector2f(20, 20));
     addButton.setPosition(_left + 10, 55);
     addButton.setFillColor(sf::Color::Green);
     window.draw(addButton);
+    _addButtonText.setFont(_font);
+    _addButtonText.setCharacterSize(20);
+    _addButtonText.setFillColor(sf::Color::White);
+    _addButtonText.setString("+");
+    _addButtonText.setPosition(_left + 14, 52);
+    window.draw(_addButtonText);
+
+
+    window.draw(_instructionLabel);
 
 
     if (_showCursor)
@@ -81,11 +96,19 @@ void Sidebar::draw(sf::RenderWindow& window)
         window.draw(functionText);
 
         yPos += 40.0f;
+
+
+
         }
     }
 
 void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)
     {
+    // Check if the current mode is input
+    if (info->currentMode != GraphInfo::INPUT)
+        {
+        return;
+        }
     if (event.type == sf::Event::TextEntered)
         {
         if (event.text.unicode == '\b')
@@ -177,6 +200,8 @@ void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)
         _showCursor = !_showCursor;
         _cursorClock.restart();
         }
+
+
     }
 
 void Sidebar::updateText()

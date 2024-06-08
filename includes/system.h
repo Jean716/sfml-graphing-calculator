@@ -5,6 +5,7 @@
 #include "graph.h"
 #include "graphInfo.h"
 #include "sidebar.h"
+#include "coord_translation.h"
 
 // manage domain,zoom,pan,etc
 class System
@@ -23,8 +24,6 @@ class System
         Graph _graph; // manage the graph drawing
         GraphInfo* _info;  // manage the graph information
         Sidebar _sidebar; // manage the sidebar
-        CoordTranslation _coordTranslation; // manage the translation of the coordinates
-
     };
 
 #endif 

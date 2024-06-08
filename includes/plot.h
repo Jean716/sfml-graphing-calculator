@@ -11,6 +11,7 @@
 #include "../includes/rpn/rpn.h"
 #include "graphInfo.h"
 #include "coord_translation.h"
+#include "polar.h"
 using namespace std;
 
 // by using the graphinfo, coord_translation, and rpn classes
