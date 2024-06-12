@@ -6,6 +6,7 @@
 #include "system.h"
 #include "sidebar.h"
 #include "graph.h"
+#include "polar.h"
 
 
 // user inteactions
@@ -33,8 +34,8 @@ class Animate
         sf::Text _myTextLabel; // text to draw on main screen
         sf::Text _coordLabel; // math coordinates
         CoordTranslation  _coordTranslation;
-        //Polar _polar;
-        bool isPolarMode = false;
+        bool _isPolarMode = false;
+        Polar _polar;
 
 
         // helper function to convert mouse position to string

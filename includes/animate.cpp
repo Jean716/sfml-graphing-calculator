@@ -3,6 +3,7 @@
 #include "system.h"
 #include "sidebar.h"
 #include "graphInfo.h"
+#include "polar.h"
 #include "coord_translation.h"
 
 #include <iostream>
@@ -17,7 +18,7 @@ Animate::Animate()
     : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graphing Calculator"),
     _system(), _sidebar(WORK_PANEL, SIDE_BAR_WIDTH), _mouseIn(false),
     _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(),
-    _coordTranslation(nullptr)
+    _coordTranslation(nullptr), _isPolarMode(false)
     {
 
     _mousePoint.setRadius(2);
@@ -62,8 +63,12 @@ void Animate::processEvents()
             {
             _window.close();
             }
+        _sidebar.handleEvent(event, _info);
 
-        _sidebar.handleEvent(event, _info); // Pass event to sidebar
+        if (_info->getMode() == GraphInfo::INPUT)
+            {
+            continue;
+            }
 
         if (event.type == sf::Event::KeyPressed)
             {
@@ -72,35 +77,38 @@ void Animate::processEvents()
             switch (event.key.code)
                 {
                     case sf::Keyboard::RBracket:
-                        _info->currentMode = GraphInfo::ZOOM;
-                        _system.step(1, _info); // zoom in
+                        //_info->setMode(GraphInfo::ZOOM);
+                        _info->zoom(1.1f);
+                        //_system.step(1, _info); // zoom in
                         break;
                     case sf::Keyboard::LBracket:
-                        _info->currentMode = GraphInfo::ZOOM;
-                        _system.step(2, _info); // zoom out
+                        // _info->setMode(GraphInfo::ZOOM);
+                        _info->zoom(0.9f);
+                        //_system.step(2, _info); // zoom out
                         break;
                     case sf::Keyboard::Left:
-                        _info->currentMode = GraphInfo::PAN;
+                        _info->setMode(GraphInfo::PAN);
                         _system.step(3, _info); // move left
                         break;
                     case sf::Keyboard::Right:
-                        _info->currentMode = GraphInfo::PAN;
+                        _info->setMode(GraphInfo::PAN);
                         _system.step(4, _info); // move right
                         break;
                     case sf::Keyboard::Up:
-                        _info->currentMode = GraphInfo::PAN;
+                        _info->setMode(GraphInfo::PAN);
                         _system.step(5, _info); // move up
                         break;
                     case sf::Keyboard::Down:
-                        _info->currentMode = GraphInfo::PAN;
+                        _info->setMode(GraphInfo::PAN);
                         _system.step(6, _info); // move down
                         break;
                     case sf::Keyboard::Tab:
-                        isPolarMode = !isPolarMode;
+                        _isPolarMode = !_isPolarMode;
+                        _info->setMode(_isPolarMode ? GraphInfo::POLAR : GraphInfo::CARTESIAN);
+                        cout << "Mode toggled to: " << (_info->getMode() == GraphInfo::CARTESIAN ? "CARTESIAN" : "POLAR") << endl;
                         break;
 
                     default:
-                        _info->currentMode = GraphInfo::INPUT;
                         break;
                 }
             }
@@ -118,15 +126,28 @@ void Animate::update()
         {
         _coordLabel.setString(mouse_pos_string(_window));
         }
+    _graph.update(_info); // Ensure _info is passed correctly
+
     }
 
 // Render everything
 void Animate::render()
     {
     _window.clear(sf::Color(236, 236, 236)); //  Clear the screen and set a background color
-    drawGrid(_window);
+    if (_info->getMode() == GraphInfo::POLAR)
+        {
+        _polar.draw(_window, _info);
+        _polar.drawPolarLabels(_window, _info);
 
-    _system.draw(_window); // Draw all objects in system
+        }
+    else
+        {
+        drawGrid(_window);
+        _graph.draw(_window);
+        }
+
+    //_system.draw(_window); // Draw all objects in system
+
 
     // display the location of the mouse at the left top of the window
     string mousePosStr = mouse_pos_string(_window);
@@ -156,13 +177,13 @@ void Animate::render()
     _mousePoint.setPosition(screenPos.x - _mousePoint.getRadius(), screenPos.y - _mousePoint.getRadius());
     _window.draw(_mousePoint);
 
-    // if (isPolarMode)
+    // if (_info->getMode() == GraphInfo::POLAR)
     //     {
     //     _polar.draw(_window, _info);
     //     }
     // else
     //     {
-    //     _graph.drawGrid(_window);
+    //     drawGrid(_window);
     //     _graph.draw(_window);
     //     _system.draw(_window);
     //     }
@@ -171,16 +192,6 @@ void Animate::render()
     // Draw the sidebar
     _sidebar.draw(_window);
     // check if there is a paren error
-    if (_info->hasParenError)
-        {
-        sf::Text errorMsg;
-        errorMsg.setFont(_font);
-        errorMsg.setCharacterSize(20);
-        errorMsg.setFillColor(sf::Color::Red);
-        errorMsg.setString("Error: Mismatched parentheses. Please check your input.");
-        errorMsg.setPosition(10, SCREEN_HEIGHT - 30);
-        _window.draw(errorMsg);
-        }
 
     _window.display();
     }

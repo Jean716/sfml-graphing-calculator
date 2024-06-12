@@ -19,6 +19,8 @@ class Integer : public Token
         Integer(char value) : _val(value) {}
 
         string get_value() const override { return to_string(_val); }
+
+
         float get_value_float() const { return _val; }
         TokenType type() const override { return TokenType::INTEGER; }
         void print(ostream& outs = cout) const override { outs << _val; }

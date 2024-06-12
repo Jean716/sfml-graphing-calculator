@@ -6,7 +6,9 @@
 #include <SFML/Graphics.hpp>
 #include "coord_translation.h"
 #include <string>
+#include "graphInfo.h"
 #include "polar.h"
+
 
 using namespace std;
 // Graphinfo class is to store the information of the graph
@@ -22,7 +24,6 @@ class Graph
         void update(GraphInfo* info);  // This function will be used to update the graph
         void draw(sf::RenderWindow& window); //  This function will be used to draw the graph
         void set_info(GraphInfo* info); // set the information of the graph
-        void drawGrid(sf::RenderWindow& window);
     private:
         sf::RenderWindow _window; // main SFML window
 
@@ -32,7 +33,7 @@ class Graph
         CoordTranslation _coordTranslation;
         void generatePoints(); // call the plot object to generate the points
         sf::Font _font;
-        //Polar _polar;
+        Polar _polar;
     };
 
 #endif

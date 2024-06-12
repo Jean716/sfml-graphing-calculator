@@ -27,83 +27,126 @@ bool test_stub(bool debug = false)
 TEST(TEST_STUB, TestStub)
     {
 
-    //EXPECT_EQ(0, <your individual test functions are called here>);
+
 
     EXPECT_EQ(1, test_stub(false));
     }
 
 
-// //Function to test the tokenize method
 
 
-// void test_plot_operator()
-//   {
-//   cout << "================Test__plot_operator()==========" << endl;
-//   // create a Graphinfo object with the equation, domain, scale, and origin
-//   GraphInfo info;
-//   info.setEquation("sin(x)");
-//   info.setDomain(sf::Vector2f(-10, 10));
-//   info.setScale(50.0f);
-//   info.setOrigin(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-
-//   // create a Plot object with the Graphinfo object
-//   Plot plot(&info);
-
-//   // call the operator() method to generate points
-//   vector<sf::Vector2f> points = plot(-5, 5, 0.5f);
 
 
-//   cout << "Generated Points:" << endl;
-//   for (const auto& point : points)
-//     {
-//     cout << "Math Point: (" << point.x << ", " << point.y << "), Screen Point: (" << point.x << ", " << point.y << ")" << endl;
-//     }
-//   cout << "\n\n";
-//   }
-
-// void test_shunting_yard()
-//   {
-
-//   Queue<Token*> infix;
-//   infix.push(new Function("sin"));
-//   infix.push(new LeftParen());
-//   infix.push(new Variable("x"));
-//   infix.push(new Operator("+"));
-//   infix.push(new Integer(1));
-//   infix.push(new RightParen());
-
-//   cout << "Infix expression: ";
-//   Queue<Token*> tempInfix = infix;
-//   while (!tempInfix.empty())
-//     {
-//     Token* t = tempInfix.pop();
-//     t->print();
-//     cout << " ";
-//     }
-//   cout << endl;
-
-//   ShuntingYard sy;
-//   Queue<Token*> postfix = sy.postfix(infix);
 
 
-//   cout << "Postfix expression: ";
-//   Queue<Token*> tempPostfix = postfix;
-//   while (!tempPostfix.empty())
-//     {
-//     Token* t = tempPostfix.pop();
-//     t->print();
-//     cout << " ";
-//     }
-//   cout << endl;
-//   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void testPolarPlot()
+    {
+
+    GraphInfo info;
+    info.setMode(GraphInfo::POLAR);
+    info.addEquation("2 * sin((3/2)theta)");
+
+
+    Plot plot(&info);
+    plot.set_info(&info);
+
+
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Polar Coordinates Test");
+
+
+    while (window.isOpen())
+        {
+        sf::Event event;
+        while (window.pollEvent(event))
+            {
+            if (event.type == sf::Event::Closed)
+                window.close();
+            }
+
+        window.clear(sf::Color::White);
+
+
+        vector<vector<sf::Vector2f>> points = plot(0, 2 * M_PI, 0.01f);
+        for (const auto& pointSet : points)
+            {
+            for (const auto& point : pointSet)
+                {
+                sf::CircleShape shape(2);
+                shape.setPosition(point);
+                shape.setFillColor(sf::Color::Red);
+                window.draw(shape);
+                }
+            }
+
+        window.display();
+        }
+    }
 
 int main(int argc, char **argv)
     {
     ::testing::InitGoogleTest(&argc, argv);
     cout << "\n\n----------running testB.cpp---------\n\n" << endl;
-    //   test_tokenize();
-    //   test_plot_operator();
-    //   test_shunting_yard();
+
+
+
+    testPolarPlot();
     return RUN_ALL_TESTS();
     }
 

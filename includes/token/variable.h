@@ -14,6 +14,10 @@ class Variable : public Token
                 {
                 return TokenType::VARIABLE;
                 }
+            if (_name == "theta" || _name == "θ")
+                {
+                return TokenType::VARIABLE;
+                }
             else
                 {
                 throw invalid_argument("Invalid variable name" + _name);
@@ -25,8 +29,12 @@ class Variable : public Token
             {
             return _name;
 
+            }
 
-
+        string set_value(const string& name)
+            {
+            _name = name;
+            return _name;
             }
 
         void print(ostream& outs = cout) const override

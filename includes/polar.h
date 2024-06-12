@@ -1,18 +1,21 @@
-// #ifndef POLAR_H
-// #define POLAR__H
+#ifndef POLAR_H
+#define POLAR_H
 
-// #include <SFML/Graphics.hpp>
-// #include "graphInfo.h"
+#include <SFML/Graphics.hpp>
+#include "graphInfo.h"
 
-// class Polar
-//     {
-//     public:
-//         Polar();
-//         void draw(sf::RenderWindow& window, GraphInfo* info);
+class Polar
+    {
+    public:
+        Polar();
+        void draw(sf::RenderWindow& window, GraphInfo* info);
+        void drawPolarLabels(sf::RenderWindow& window, GraphInfo* info);
+        void drawPoints(sf::RenderWindow& window, GraphInfo* info);
 
-//     private:
-//         void drawPolarGrid(sf::RenderWindow& window, GraphInfo* info);
-//         void drawPolarLabels(sf::RenderWindow& window, GraphInfo* info);
-//     };
 
-// #endif // POLAR_COORDINATE_SYSTEM_H
+
+    private:
+        void drawPolarGrid(sf::RenderWindow& window, GraphInfo* info);
+    };
+
+#endif // POLAR_COORDINATE_SYSTEM_H

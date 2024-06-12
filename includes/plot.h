@@ -11,7 +11,7 @@
 #include "../includes/rpn/rpn.h"
 #include "graphInfo.h"
 #include "coord_translation.h"
-#include "polar.h"
+
 using namespace std;
 
 // by using the graphinfo, coord_translation, and rpn classes
@@ -27,6 +27,9 @@ class Plot
         void set_info(GraphInfo* info);
         vector<vector<sf::Vector2f>> operator()(float xMin, float xMax, float increment);
         Queue<Token*> tokenize(const string& equation) const;
+        vector<vector<sf::Vector2f>> calculateC(float xMin, float xMax, float increment);
+        vector<vector<sf::Vector2f>> calculateP(float thetaMin, float thetaMax, float increment);
+
 
     private:
         GraphInfo* _info;

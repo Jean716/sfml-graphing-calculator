@@ -27,6 +27,7 @@ enum class TokenType
 class Token
     {
     public:
+
         virtual ~Token() = default;
         virtual TokenType type() const = 0;
         virtual string get_value() const = 0;

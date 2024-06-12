@@ -10,6 +10,7 @@ class Constant : public Token
     public:
         Constant(const string& value) : _value(value) {}
         string get_value() const override { return _value; }
+
         TokenType type() const override { return TokenType::CONSTANT; }
         void print(ostream& outs = cout) const override { outs << _value; }
         float get_value_float() const

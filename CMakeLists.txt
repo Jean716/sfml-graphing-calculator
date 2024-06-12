@@ -59,8 +59,6 @@ FILE(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}   "${INCLUDE
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 
-
-
 ADD_EXECUTABLE(main
     main.cpp
     ${SOURCE_FILES}
