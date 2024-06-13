@@ -14,7 +14,7 @@
 
 using namespace std;
 
-// by using the graphinfo, coord_translation, and rpn classes
+// by using the graphinfo, coord_translation, shuntingYard and rpn classes
 // evaluate the value of the postfix expression
 // convert the value to screen coordinates
 // store the screen coordinates in a vector
@@ -23,18 +23,18 @@ using namespace std;
 class Plot
     {
     public:
-        Plot(GraphInfo* info);
-        void set_info(GraphInfo* info);
-        vector<vector<sf::Vector2f>> operator()(float xMin, float xMax, float increment);
-        Queue<Token*> tokenize(const string& equation) const;
-        vector<vector<sf::Vector2f>> calculateC(float xMin, float xMax, float increment);
-        vector<vector<sf::Vector2f>> calculateP(float thetaMin, float thetaMax, float increment);
+        Plot(GraphInfo* info); // constructor
+        void set_info(GraphInfo* info); // set the information of the graph
+        vector<vector<sf::Vector2f>> operator()(float xMin, float xMax, float increment); // operator overloading
+        Queue<Token*> tokenize(const string& equation) const; // tokenize the equation
+        vector<vector<sf::Vector2f>> calculateC(float xMin, float xMax, float increment); // calculate the cartesian coordinates
+        vector<vector<sf::Vector2f>> calculateP(float thetaMin, float thetaMax, float increment); // calculate the polar coordinates
 
 
     private:
-        GraphInfo* _info;
-        ShuntingYard _shuntingYard;
-        CoordTranslation _coordTranslation;
+        GraphInfo* _info; // graph information
+        ShuntingYard _shuntingYard; // shunting yard object
+        CoordTranslation _coordTranslation; // coordinate translation object
 
     };
 

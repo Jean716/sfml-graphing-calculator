@@ -20,6 +20,7 @@ class CoordTranslation
 
         sf::Vector2f polarToCartesian(float r, float theta) const; // translate polar to cartesian
         sf::Vector2f cartesianToPolar(const sf::Vector2f point) const; // translate cartesian to polar
+        sf::Vector2f getPolarCoords(const sf::Vector2f& screenPoint) const; // screen coord to Polar coord
 
 
     private:

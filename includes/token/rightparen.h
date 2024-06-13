@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 class RightParen : public Token
     {
     public:

@@ -61,3 +61,14 @@ TokenType Operator::type() const
     }
 
 
+float Operator::evaluate(float a) const
+    {
+    if (_op == "-")
+        {
+        return -a;
+        }
+    else
+        {
+        throw invalid_argument("Invalid unary operator");
+        }
+    }

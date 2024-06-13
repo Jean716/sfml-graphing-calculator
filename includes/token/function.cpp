@@ -77,40 +77,6 @@ float Function::evaluate(const float& value) const
         {
         return abs(value);
         }
-    else if (_name == "sinh")
-        {
-        return sinh(value);
-        }
-    else if (_name == "cosh")
-        {
-        return cosh(value);
-        }
-    else if (_name == "tanh")
-        {
-        return tanh(value);
-        }
-    else if (_name == "acosh")
-        {
-        return acosh(value);
-        }
-
-    else if (_name == "islessequal")
-        {
-        return islessequal(value, value);
-        }
-    else if (_name == "isless")
-        {
-        return isless(value, value);
-        }
-    else if (_name == "isgreaterequal")
-        {
-        return isgreaterequal(value, value);
-        }
-    else if (_name == "isgreater")
-        {
-        return isgreater(value, value);
-        }
-
     else
         {
         throw runtime_error("Invalid function name");

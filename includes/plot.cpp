@@ -3,10 +3,12 @@
 #include "graphInfo.h"
 #include "constants.h"
 #include "coord_translation.h"
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Plot::Plot(GraphInfo* info) : _info(info), _coordTranslation(info)
     {
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 void Plot::set_info(GraphInfo* info)
     {
@@ -14,29 +16,32 @@ void Plot::set_info(GraphInfo* info)
     _info = info;
     _coordTranslation.set_info(info);
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float increment)
     {
     cout << "================Plot::operator() is Fired================" << endl;
-    if (_info->getMode() == GraphInfo::CARTESIAN)
+    if (_info->_mode == GraphInfo::CARTESIAN)
         {
         return calculateC(xMin, xMax, increment);
         }
-    else if (_info->getMode() == GraphInfo::POLAR)
+    else if (_info->_mode == GraphInfo::POLAR)
         {
         return calculateP(0, 2 * M_PI, increment);
         }
     return {};
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
+// calculate and return all the math coordinates which is 2D vector
 
 vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float increment)
     {
     vector<vector<sf::Vector2f>> allScreenPoints;
-    int pointsCount = _info->getPoints();
-    float step = (xMax - xMin) / pointsCount; // Calculate the step size
 
-    vector<string> equations = _info->getEquations();
-    vector<sf::Color> colors = _info->getColors();
+    float step = (xMax - xMin) / _info->_points; // Calculate the step size
+
+    vector<string> equations = _info->_history;
+    vector<sf::Color> colors = _info->_colors;
 
     for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)
         {
@@ -68,7 +73,7 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
 
         _rpn.set_input(postfix);
 
-        for (int i = 0; i <= pointsCount; ++i)
+        for (int i = 0; i <= _info->_points; ++i)
             {
             float x = xMin + i * step;
             // Evaluate the RPN expression for the current x value
@@ -86,15 +91,15 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
         }
     return allScreenPoints;
     }
-/*========================================================================================================================*/
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, float increment)
     {
-    vector<vector<sf::Vector2f>> allScreenPoints;
-    int pointsCount = _info->getPoints();
+    vector<vector<sf::Vector2f>> allScreenPoints; // 2D vector to store all screen points 
+    int pointsCount = _info->_points;
     float step = (thetaMax - thetaMin) / pointsCount; // Calculate the step size
 
-    vector<string> equations = _info->getEquations();
-    vector<sf::Color> colors = _info->getColors();
+    vector<string> equations = _info->_history;
+    vector<sf::Color> colors = _info->_colors;
 
     for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)
         {
@@ -147,12 +152,12 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
         allScreenPoints.push_back(screenPoints);
         }
 
-    // 存储计算出的点到GraphInfo中
+
     _info->setPointsData(allScreenPoints);
 
     return allScreenPoints;
     }
-
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // convert the equation to tokens queue
 Queue<Token*> Plot::tokenize(const string & equation) const
     {
@@ -169,6 +174,7 @@ Queue<Token*> Plot::tokenize(const string & equation) const
             Token* newToken = new Variable("x");
             tokenQueue.push(newToken);
             }
+
         else
             {
             tokenQueue.push(token);

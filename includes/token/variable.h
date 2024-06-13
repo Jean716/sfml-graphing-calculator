@@ -20,7 +20,7 @@ class Variable : public Token
                 }
             else
                 {
-                throw invalid_argument("Invalid variable name" + _name);
+                throw invalid_argument("Invalid variable name: " + _name);
                 }
 
             }

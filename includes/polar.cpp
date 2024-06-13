@@ -4,22 +4,27 @@
 #include <iomanip>
 #include <iostream>
 using namespace std;
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Polar::Polar() {}
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 void Polar::draw(sf::RenderWindow& window, GraphInfo* info)
     {
-    drawPolarGrid(window, info); // 绘制极坐标网格
-    drawPolarLabels(window, info); // 绘制极坐标标签
-    drawPoints(window, info); // 绘制计算出的点
+    drawPolarGrid(window, info);
+    drawPolarLabels(window, info);
+    drawPoints(window, info);
+
+
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 void Polar::drawPolarGrid(sf::RenderWindow& window, GraphInfo* info)
     {
-    float scale = info->getScale();
-    sf::Vector2f origin = info->getOrigin();
-    float offsetX = info->getOffsetX();
-    float offsetY = info->getOffsetY();
+    float scale = info->_scale;
+    sf::Vector2f origin = info->_origin;
+    float offsetX = info->_offsetX;
+    float offsetY = info->_offsetY;
 
     sf::CircleShape circle;
     circle.setOutlineColor(sf::Color::Black);
@@ -44,13 +49,14 @@ void Polar::drawPolarGrid(sf::RenderWindow& window, GraphInfo* info)
     window.draw(line, 2, sf::Lines);
     window.draw(&line[2], 2, sf::Lines);
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
     {
-    float scale = info->getScale();
-    sf::Vector2f origin = info->getOrigin();
-    float offsetX = info->getOffsetX();
-    float offsetY = info->getOffsetY();
+    float scale = info->_scale;
+    sf::Vector2f origin = info->_origin;
+    float offsetX = info->_offsetX;
+    float offsetY = info->_offsetY;
     sf::Font font;
 
     if (!font.loadFromFile("DejaVuSans.ttf"))
@@ -77,7 +83,6 @@ void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
         float radian = angle * M_PI / 180;
         std::string piLabel;
 
-        // 根据角度值生成标签
         switch (angle)
             {
                 case 0:
@@ -143,11 +148,12 @@ void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
         window.draw(label);
         }
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 void Polar::drawPoints(sf::RenderWindow& window, GraphInfo* info)
     {
-    vector<sf::Color> colors = info->getColors();
-    vector<vector<sf::Vector2f>> points = info->getPointsData(); // 获取需要绘制的点
+    vector<sf::Color> colors = info->_colors;
+    vector<vector<sf::Vector2f>> points = info->getPointsData();
 
     for (size_t eqIndex = 0; eqIndex < points.size(); ++eqIndex)
         {
@@ -160,3 +166,11 @@ void Polar::drawPoints(sf::RenderWindow& window, GraphInfo* info)
             }
         }
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
+
+void Polar::set_info(GraphInfo* info)
+    {
+    _info = info;
+    }
+
+

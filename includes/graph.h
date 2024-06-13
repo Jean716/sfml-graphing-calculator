@@ -9,37 +9,33 @@
 #include "graphInfo.h"
 #include "polar.h"
 
-
 using namespace std;
-// Graphinfo class is to store the information of the graph
-// initialize the graph with the equation
-// plot the graph based on the equation 
 
-using namespace std;
 class Graph
     {
     public:
-        Graph();
-        Graph(GraphInfo* info); // function<float(float)> means a function that takes a float and returns a float
-        void update(GraphInfo* info);  // This function will be used to update the graph
-        void draw(sf::RenderWindow& window); //  This function will be used to draw the graph
-        void set_info(GraphInfo* info); // set the information of the graph
-    private:
-        sf::RenderWindow _window; // main SFML window
+        Graph(); // Constructor
+        Graph(GraphInfo* info); // Parameterized constructor
 
-        GraphInfo* _info; //  graph information
-        vector<vector<sf::Vector2f>> _points; //  store the points of the graph
-        Plot _plot; //  plot object
-        CoordTranslation _coordTranslation;
-        void generatePoints(); // call the plot object to generate the points
-        sf::Font _font;
+        void update(GraphInfo* info);  // This function will be used to update the graph
+        void draw(sf::RenderWindow& window); // This function will be used to draw the graph
+        void set_info(GraphInfo* info); // Set the information of the graph
+        void drawGrid(sf::RenderWindow& window);
+
+
+    private:
+        GraphInfo* _info; // Graph information
+        vector<vector<sf::Vector2f>> _points; // Store the points of the graph
+        Plot _plot; // Plot object
         Polar _polar;
+        CoordTranslation _coordTranslation;
+        void generatePoints(); // Call the plot object to generate the points
+        void drawCartesian(sf::RenderWindow& window); // Draw the Cartesian graph
+        void drawAxes(sf::RenderWindow& window); // Draw the axes for the Cartesian graph
+        void drawTicksAndLabels(sf::RenderWindow& window); // Draw ticks and labels for the Cartesian graph
+        void drawTickAndLabel(sf::RenderWindow& window, const sf::Font& font, float graphValue, float scale, const sf::Vector2f& origin, float offsetX, float offsetY, bool isYAxis = false); // Helper function to draw individual ticks and labels
+        void drawGraphPoints(sf::RenderWindow& window); // Draw the graph points
+        void drawDomainAndCoordinate(sf::RenderWindow& window);
     };
 
 #endif
-
-
-/*
-vector< > is a container that can hold a dynamic number of elements
-vector<sf::Vector2f> means that a vector that can hold 2D points
-*/

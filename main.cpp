@@ -6,12 +6,25 @@
 #include "includes/sidebar.h"
 #include "includes/graphInfo.h"
 #include "includes/constants.h"
+using namespace std;
 int main()
     {
-    GraphInfo graphInfo;
-    Animate animate;
-    animate.set_info(&graphInfo);
-    animate.run();
+    try
+        {
+
+        GraphInfo graphInfo;
+        Animate animate;
+        animate.set_info(&graphInfo);
+        animate.run();
+        }
+    catch (const exception& e)
+        {
+        cerr << "An error occurred: " << e.what() << endl;
+        }
+    catch (...)
+        {
+        cerr << "An unknown error occurred." << endl;
+        }
+
     return 0;
     }
-

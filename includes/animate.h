@@ -20,6 +20,7 @@ class Animate
         void update(); // update the system state
         void render();  // render the graphics
 
+
     private:
         sf::RenderWindow _window; // main SFML window
         GraphInfo* _info; // graph information
@@ -33,14 +34,23 @@ class Animate
         sf::Font _font; // font to draw on main screen
         sf::Text _myTextLabel; // text to draw on main screen
         sf::Text _coordLabel; // math coordinates
+        sf::Text _domainLabel;
         CoordTranslation  _coordTranslation;
         bool _isPolarMode = false;
         Polar _polar;
-
+        sf::Vector2f _lastMousePos;
 
         // helper function to convert mouse position to string
         string mouse_pos_string(sf::RenderWindow& window);
-        void drawGrid(sf::RenderWindow& window);
+
+        vector<string> _functions;
+        bool _isDragging;
+        sf::Vector2f _dragStartPos;
+
+        // Helper methods to display domain and coordinates
+        void drawCartesianDomainAndCoordinates(sf::RenderWindow& window);
+        void drawPolarDomainAndCoordinates(sf::RenderWindow& window);
+
 
     };
 

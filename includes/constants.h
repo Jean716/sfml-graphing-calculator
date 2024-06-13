@@ -1,5 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
+#include <SFML/Graphics.hpp>
+#include <cmath>
 
 const float SCREEN_WIDTH = 1400;
 const float SCREEN_HEIGHT = 800;
@@ -13,8 +15,13 @@ const int SB_KEY_PRESSED = SB_MOUSE_CLICKED + 1; //  sidebar key pressed
 const float _minScale = 0.1f; // minimum scale
 const float _maxScale = 10.0f; // maximum scale
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // Default domain values
-const sf::Vector2f DEFAULT_DOMAIN(-10.0f, 10.0f);
+const sf::Vector2f DEFAULT_DOMAIN(-5.0f, 5.0f);
+const sf::Vector2f DEFAULT_POLAR_DOMAIN(0.0f, 2 * M_PI);
 const float DEFAULT_SCALE = 60.0f; // default scale
 const int DEFAULT_POINTS = 1000; // default number of points
 const float DEFAULT_OFFSET_X = 0.0f; // default X-axis offset for panning
@@ -26,4 +33,17 @@ const float SIDE_BAR_LEFT = 1120.0f;
 // Zoom and pan steps
 const float ZOOM_STEP = 1.1f; // zoom factor
 const float PAN_STEP = 2.0f; // pan step in pixels
+
+
+// Colors
+const std::vector<sf::Color> distinctColors = {
+    sf::Color(210, 176, 251), // light purple
+    sf::Color(131, 175, 155), // light green
+    sf::Color(241, 196, 15),  // Yellow
+    sf::Color(228, 68, 52),   // Red
+    sf::Color(142, 68, 173),  // Purple
+    sf::Color(211, 84, 0),    // Orange
+    sf::Color(41, 128, 185)   // Blue
+    };
+
 #endif 
