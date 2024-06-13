@@ -7,6 +7,8 @@
 #include "sidebar.h"
 #include "graph.h"
 #include "polar.h"
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
+
 
 
 // user inteactions

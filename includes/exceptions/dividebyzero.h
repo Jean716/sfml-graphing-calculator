@@ -19,3 +19,5 @@ class DivideByZero : public std::exception
     };
 
 #endif // DIVIDEBYZERO_H
+
+

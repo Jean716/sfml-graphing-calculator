@@ -14,6 +14,8 @@ using namespace std;
 #include "../../includes/plot.h"
 #include "../../includes/token/token.h"
 #include "../../includes/token/variable.h"
+#include "../../includes/exceptions/dividebyzero.h"
+
 using namespace std;
 
 bool test_stub(bool debug = false)
@@ -124,7 +126,6 @@ void testGetPolarCoordsFromScreen()
     cout << "Polar Coord (r, theta): ";
     printVector(polarCoords);
     }
-
 
 int main(int argc, char **argv)
     {

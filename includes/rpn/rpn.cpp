@@ -57,7 +57,15 @@ float RPN::operator()(float x)
                             }
                         float right = stack.pop();
                         float left = stack.pop();
-                        stack.push(operator_token->evaluate(left, right));
+                        try
+                            {
+                            stack.push(operator_token->evaluate(left, right));
+                            }
+                        catch (const DivideByZero& e)
+                            {
+                            cerr << "Error: " << e.what() << endl;
+                            throw; // Rethrow the exception to be caught by the outer catch block
+                            }
                         }
                     break;
                     }
@@ -92,11 +100,11 @@ float RPN::operator()(float x)
     catch (const exception& e)
         {
         cerr << "An error occurred in RPN::operator(): " << e.what() << endl;
-        return 0.0f; // Return a default value in case of error
+        throw;
         }
     catch (const DivideByZero& e)
         {
         std::cerr << "Error: " << e.what() << std::endl;
-        return 0.0f; // Return a default value in case of error
+        throw;
         }
     }

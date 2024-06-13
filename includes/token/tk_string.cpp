@@ -2,9 +2,8 @@
 #include <iostream>
 #include "comma.h"
 #include <sstream> 
-#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/missingparan.h"
-#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
-
+#include "../../includes/exceptions/missingparan.h"
+#include "../../includes/exceptions/dividebyzero.h"
 bool TK_string::is_number(const string& s) const  // check if the string is a number
     {
     istringstream iss(s);  // create an input string stream

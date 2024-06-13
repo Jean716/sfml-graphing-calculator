@@ -10,6 +10,7 @@
 #include "../token/leftparen.h"
 #include "../token/rightparen.h"
 #include "../exceptions/missingparan.h"
+#include "../exceptions/dividebyzero.h"
 #include "../token/variable.h"
 #include "../token/comma.h"
 #include "../token/constant.h"

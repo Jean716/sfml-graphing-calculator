@@ -17,6 +17,11 @@ int main()
         animate.set_info(&graphInfo);
         animate.run();
         }
+    catch (const DivideByZero& e)
+        {
+        std::cerr << "Caught DivideByZero exception in Animate::run: " << e.what() << std::endl;
+
+        }
     catch (const exception& e)
         {
         cerr << "An error occurred: " << e.what() << endl;

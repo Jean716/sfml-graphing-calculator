@@ -5,7 +5,6 @@
 #include "graphInfo.h"
 #include "polar.h"
 #include "coord_translation.h"
-#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
 
 #include <iostream>
 #include <string>
@@ -14,6 +13,7 @@
 #include <cmath>
 #include <thread> // std::this_thread::sleep_for
 #include <SFML/Graphics.hpp>
+
 
 using namespace std;
 //*------------------------------------------------------- Constructor-------------------------------------------------------*/
@@ -51,22 +51,26 @@ void Animate::run()  // run the main loop
             update();  // update the system state
             render();  // render the graphics
             }
+
+        catch (const DivideByZero& e)
+            {
+            std::cerr << "Caught DivideByZero exception in Animate::run: " << e.what() << std::endl;
+            showErrorMessage("Error: " + std::string(e.what()));  // show the error message
+
+
+            }
         catch (const exception& e)  // catch the exception
             {
             cerr << "An error occurred: " << e.what() << endl;  // handle the error
-            showErrorMessage("Error: " + string(e.what()));  // show the error message
-
-            }
-        catch (const DivideByZero& e)
-            {
-            std::cerr << "Error: " << e.what() << std::endl;
             showErrorMessage("Error: " + std::string(e.what()));  // show the error message
-            throw; // Rethrow the exception to be caught by the caller
+
+
             }
         catch (...)
             {
             cerr << "An unknown error occurred." << endl;  // handle the error
             showErrorMessage("Unknown error occurred.");  // show the error message
+
 
             }
         }
