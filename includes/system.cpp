@@ -6,7 +6,7 @@
 #include "animate.h"
 #include "sidebar.h"
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp> 
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 

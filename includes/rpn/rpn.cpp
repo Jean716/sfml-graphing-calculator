@@ -1,6 +1,8 @@
 #include "rpn.h"
 #include <iostream>
 #include <stdexcept> // for runtime_error
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
+
 using namespace std;
 
 
@@ -90,6 +92,11 @@ float RPN::operator()(float x)
     catch (const exception& e)
         {
         cerr << "An error occurred in RPN::operator(): " << e.what() << endl;
+        return 0.0f; // Return a default value in case of error
+        }
+    catch (const DivideByZero& e)
+        {
+        std::cerr << "Error: " << e.what() << std::endl;
         return 0.0f; // Return a default value in case of error
         }
     }

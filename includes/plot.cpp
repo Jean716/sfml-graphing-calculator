@@ -41,7 +41,13 @@ vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float incr
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // calculate and return all the math coordinates which is 2D vector
-
+/*
+    •	Initialization: Sets up necessary variables and vectors.
+    •	Tokenization and Parsing: Converts equations into postfix expressions using the Shunting Yard algorithm.
+    •	Evaluation: Uses the RPN evaluator to calculate y-values for each x-value in the specified range.
+    •	Coordinate Translation: Translates mathematical coordinates to screen coordinates.
+    •	Storing Results: Collects and stores screen coordinates for each equation, returning them as a 2D vector.
+*/
 vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float increment)
     {
     vector<vector<sf::Vector2f>> allScreenPoints;  // 2D vector to store all screen points

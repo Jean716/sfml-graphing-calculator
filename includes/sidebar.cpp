@@ -37,7 +37,7 @@ _rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _cursorPos(0)
     _instructionLabel.setFont(_font);  // font for the instruction label
     _instructionLabel.setCharacterSize(15);  // character size for the instruction label
     _instructionLabel.setFillColor(sf::Color::Black);  // color for the instruction label
-    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: [\nZoom Out: ]\nPan: Up Down Left Right Arrow Keys\nRose Curve Step: A D W E\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
+    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: [\nZoom Out: ]\nPan: Up Down Left Right Arrow Keys\nRose Curve Step: V F G D\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
     _instructionLabel.setPosition(_left + 10, SCREEN_HEIGHT - 200);  // position for the instruction label
 
     updateText(); //  update the text
@@ -181,6 +181,13 @@ void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)  // Handle ev
     {
     if (info->_mode != GraphInfo::INPUT)
         {
+        if (info->_mode == GraphInfo::INPUT)
+            {
+            if (event.type == sf::Event::TextEntered)  // Text entered event
+                {
+                handleTextEntered(event, info);
+                }
+            }
         switch (event.type)
             {
                 case sf::Event::TextEntered:  // Text entered event
@@ -201,10 +208,7 @@ void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)  // Handle ev
 
         handleCursorBlinking();  // Handle cursor blinking
         }
-    else
-        {
-        cout << "Current mode is INPUT" << endl;  // Print current mode is INPUT
-        }
+
     }
 
 void Sidebar::handleTextEntered(const sf::Event& event, GraphInfo* info)  // Handle text entered event

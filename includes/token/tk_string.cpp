@@ -3,7 +3,7 @@
 #include "comma.h"
 #include <sstream> 
 #include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/missingparan.h"
-
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
 
 bool TK_string::is_number(const string& s) const  // check if the string is a number
     {
@@ -150,6 +150,11 @@ vector<Token*> TK_string::split(const string& tk_Str)
             }
         }
     catch (const MissingParan& e)
+        {
+        cerr << "Error: " << e.what() << endl;
+        throw; // Rethrow the exception to be caught by the caller
+        }
+    catch (const DivideByZero& e)
         {
         cerr << "Error: " << e.what() << endl;
         throw; // Rethrow the exception to be caught by the caller

@@ -40,6 +40,7 @@ class Animate
         bool _isPolarMode = false;  // if polar mode is on
         Polar _polar;  // polar object
         sf::Vector2f _lastMousePos;  // last mouse position
+        bool inputDisabled;
 
         // helper function to convert mouse position to string
         string mouse_pos_string(sf::RenderWindow& window);  // convert mouse position to string

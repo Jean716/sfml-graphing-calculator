@@ -11,8 +11,8 @@ GraphInfo::GraphInfo()
     _scale(DEFAULT_SCALE), _points(DEFAULT_POINTS), _offsetX(DEFAULT_OFFSET_X),
     _offsetY(DEFAULT_OFFSET_Y), _mode(CARTESIAN), a(1.0f), b(1.0f), _currentFunctionIndex(-1), _history(0), _colors(0)
     {
-    a = 5.0f;
-    b = 6.0f;
+    a = 5.0f;  // Set the value of a
+    b = 6.0f;  // Set the value of b
     }
 
 
@@ -20,14 +20,14 @@ GraphInfo::GraphInfo()
 
 void GraphInfo::zoom(float factor)  // Zoom the graph
     {
-    _scale *= factor;
+    _scale *= factor;  // Scale the graph
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 void GraphInfo::pan(float deltaX, float deltaY)  // Pan the graph
     {
-    _offsetX += deltaX;
-    _offsetY += deltaY;
+    _offsetX += deltaX;  // Pan the graph in x direction
+    _offsetY += deltaY;  // Pan the graph in y direction
     }
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/

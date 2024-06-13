@@ -17,10 +17,10 @@ Graph::Graph(GraphInfo* info)
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 void Graph::set_info(GraphInfo* info)  // Set the information of the graph
     {
-    _info = info;
-    _plot.set_info(info);
-    _coordTranslation.set_info(info);
-    _polar.set_info(info);
+    _info = info;  // Set the information of the graph
+    _plot.set_info(info);  // Set the information of the plot object
+    _coordTranslation.set_info(info);  // Set the information of the coordinate translation object
+    _polar.set_info(info);  // Set the information of the polar object
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
@@ -112,7 +112,25 @@ void Graph::drawTicksAndLabels(sf::RenderWindow& window) // Draw ticks and label
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-
+/**==================================================================================
+ * 	1.	Calculate Screen Position and Tick Lines:
+    •	Determine if it is drawing Y-axis or X-axis ticks based on isYAxis.
+    •	Use the origin, scale, and offsets to calculate the screen position of the tick.
+    •	Create two vertices to represent the tick line and set their color to black.
+    2.	Draw the Tick Lines:
+    •	Use window.draw to draw the tick lines.
+    3.	Draw the Labels:
+    •	Create an sf::Text object for displaying the label.
+    •	Set the font, character size, and color of the label.
+    •	Set the string content of the label based on graphValue.
+    •	Position the label based on whether it is the Y-axis or X-axis.
+    •	Use window.draw to draw the label.
+    4.	Handle Negative Tick Lines and Labels:
+    •	For the X-axis (!isYAxis), handle the negative tick lines and labels.
+    •	Recalculate the screen position and tick line position.
+    •	Set the label string to the negative value and draw them.
+ *
+ *=================================================================================**/
 void Graph::drawTickAndLabel(sf::RenderWindow& window, const sf::Font& font, float graphValue, float scale, const sf::Vector2f& origin, float offsetX, float offsetY, bool isYAxis)
     {
     sf::Vector2f screenPos;

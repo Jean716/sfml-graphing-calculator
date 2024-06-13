@@ -2,6 +2,7 @@
 #include <cmath> // for pow
 #include <algorithm> // for max and min
 #include <stdexcept> // for runtime_error
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
 
 
 float Operator::evaluate(float a, float b) const
@@ -22,7 +23,7 @@ float Operator::evaluate(float a, float b) const
         {
         if (b == 0)
             {
-            throw runtime_error("Division by zero");
+            throw DivideByZero("Division by zero error");
             }
         return a / b;
         }

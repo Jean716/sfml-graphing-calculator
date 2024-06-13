@@ -5,6 +5,7 @@
 #include "graphInfo.h"
 #include "polar.h"
 #include "coord_translation.h"
+#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
 
 #include <iostream>
 #include <string>
@@ -56,6 +57,12 @@ void Animate::run()  // run the main loop
             showErrorMessage("Error: " + string(e.what()));  // show the error message
 
             }
+        catch (const DivideByZero& e)
+            {
+            std::cerr << "Error: " << e.what() << std::endl;
+            showErrorMessage("Error: " + std::string(e.what()));  // show the error message
+            throw; // Rethrow the exception to be caught by the caller
+            }
         catch (...)
             {
             cerr << "An unknown error occurred." << endl;  // handle the error
@@ -81,12 +88,12 @@ void Animate::showErrorMessage(const string& message)  // show error message
 
     // Add a delay to prevent flickering
     this_thread::sleep_for(chrono::milliseconds(2000)); // 2 seconds delay
+    inputDisabled = false;
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // Process events (like mouse clicks, key presses)
 void Animate::processEvents()
     {
-
     sf::Event event;
     while (_window.pollEvent(event))
         {
@@ -94,19 +101,10 @@ void Animate::processEvents()
             {
             _window.close();
             }
-        _sidebar.handleEvent(event, _info);
-
-        if (_info->_mode == GraphInfo::INPUT)
-            {
-            continue;
-            }
 
         if (event.type == sf::Event::KeyPressed)
             {
-
-
-            cout << "Key pressed: " << event.key.code << endl;
-
+            inputDisabled = true; // Disable input handling on key press
             switch (event.key.code)
                 {
                     case sf::Keyboard::RBracket:
@@ -131,28 +129,39 @@ void Animate::processEvents()
                         _isPolarMode = !_isPolarMode;
                         _info->_mode = _isPolarMode ? GraphInfo::POLAR : GraphInfo::CARTESIAN;
                         break;
-                    case sf::Keyboard::A: // press A key to increase a
+
+                    case sf::Keyboard::V: // press A key to increase a
                         _system.step(7, _info);
                         break;
-                    case sf::Keyboard::D: // press Z key to decrease a
+                    case sf::Keyboard::F: // press Z key to decrease a
                         _system.step(8, _info);
                         break;
-                    case sf::Keyboard::W: // press S key to increase b
+                    case sf::Keyboard::G: // press S key to increase b
                         _system.step(9, _info);
                         break;
-                    case sf::Keyboard::E: // press X key to decrease b
+                    case sf::Keyboard::D: // press X key to decrease b
                         _system.step(10, _info);
                         break;
                     default:
+                        inputDisabled = false; // Allow input handling for other keys
                         break;
                 }
+            }
+        else if (event.type == sf::Event::KeyReleased)
+            {
+            inputDisabled = false; // Re-enable input handling on key release
+            }
+
+        if (!inputDisabled)
+            {
+            _sidebar.handleEvent(event, _info); // Handle sidebar events if input is not disabled
             }
         }
 
     update();  // Update the system
     render();  // Render the graphics
-
     }
+
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // Update the state of the system
