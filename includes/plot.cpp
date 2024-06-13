@@ -11,31 +11,31 @@ Plot::Plot(GraphInfo* info) : _info(info), _coordTranslation(info)
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Plot::set_info(GraphInfo* info)
+void Plot::set_info(GraphInfo* info)  // set the information of the graph
     {
     cout << "Plot:: set_info is fired" << endl;
-    _info = info;
-    _coordTranslation.set_info(info);
+    _info = info;  // set the information of the graph
+    _coordTranslation.set_info(info);  // set the information of the coordinate translation
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float increment)
     {
     cout << "================Plot::operator() is Fired================" << endl;
-    if (_info->_mode == GraphInfo::CARTESIAN)
+    if (_info->_mode == GraphInfo::CARTESIAN)  // check if the mode is cartesian
         {
-        return calculateC(xMin, xMax, increment);
+        return calculateC(xMin, xMax, increment);  // call the calculateC function
         }
-    else if (_info->_mode == GraphInfo::POLAR)
+    else if (_info->_mode == GraphInfo::POLAR)  // check if the mode is polar
         {
         if (_info->_history.size() > 0 && _info->_history[0].find("a") != string::npos && _info->_history[0].find("b") != string::npos)
             {
-            float a = _info->a;
-            float b = _info->b;
-            cout << _info->a << " " << _info->b << endl;
+            float a = _info->a;  // get the value of a
+            float b = _info->b;  // get the value of b
+            cout << _info->a << " " << _info->b << endl;  // print the values of a and b
             return calculateRoseCurve(0, 2 * M_PI, increment, a, b); // handle the rose curve with additional parameters
             }
-        return calculateP(0, 2 * M_PI, increment);
+        return calculateP(0, 2 * M_PI, increment);  // call the calculateP function
         }
     return {};
     }
@@ -44,32 +44,32 @@ vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float incr
 
 vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float increment)
     {
-    vector<vector<sf::Vector2f>> allScreenPoints;
+    vector<vector<sf::Vector2f>> allScreenPoints;  // 2D vector to store all screen points
 
     float step = (xMax - xMin) / _info->_points; // Calculate the step size
 
-    vector<string> equations = _info->_history;
-    vector<sf::Color> colors = _info->_colors;
+    vector<string> equations = _info->_history;  // get the equations
+    vector<sf::Color> colors = _info->_colors;  // get the colors
 
-    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)
+    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)  // loop through the equations
         {
-        vector<sf::Vector2f> screenPoints;
+        vector<sf::Vector2f> screenPoints;  // vector to store the screen points
 
         // Get the postfix expression
-        Queue<Token*> infix = tokenize(equations[eqIndex]);
+        Queue<Token*> infix = tokenize(equations[eqIndex]);  // tokenize the equation
 
         // Convert Queue to vector
         vector<Token*> vec;
-        while (!infix.empty())
+        while (!infix.empty())  // loop through the infix
             {
-            vec.push_back(infix.pop());
+            vec.push_back(infix.pop());  // push the infix to the vector
             }
 
         // Convert vector back to Queue
-        Queue<Token*> infixCopy;
-        for (Token* token : vec)
+        Queue<Token*> infixCopy;  // create a queue
+        for (Token* token : vec)  // loop through the vector
             {
-            infixCopy.push(token);
+            infixCopy.push(token);  // push the token to the queue
             }
 
         ShuntingYard sy;
@@ -79,11 +79,11 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
         // Evaluate the RPN expression
         RPN _rpn(postfix);
 
-        _rpn.set_input(postfix);
+        _rpn.set_input(postfix);  // set the input of the RPN
 
-        for (int i = 0; i <= _info->_points; ++i)
+        for (int i = 0; i <= _info->_points; ++i)  // loop through the points
             {
-            float x = xMin + i * step;
+            float x = xMin + i * step;  // Calculate the x value
             // Evaluate the RPN expression for the current x value
             float y = _rpn(x);
 
@@ -93,41 +93,41 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
             sf::Vector2f screenCoord = _coordTranslation(sf::Vector2f(x, y));
             cout << "Math Coord: (" << x << ", " << y << ") -> Screen Coord: (" << screenCoord.x << ", " << screenCoord.y << ")" << endl;
 
-            screenPoints.push_back(screenCoord);
+            screenPoints.push_back(screenCoord);  // push the screen coordinates to the vector
             }
-        allScreenPoints.push_back(screenPoints);
+        allScreenPoints.push_back(screenPoints);  // push the screen points to the 2D vector
         }
-    return allScreenPoints;
+    return allScreenPoints;  // return the screen points
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, float increment)
+vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, float increment)  // calculate the polar coordinates
     {
     vector<vector<sf::Vector2f>> allScreenPoints; // 2D vector to store all screen points 
     int pointsCount = _info->_points;
     float step = (thetaMax - thetaMin) / pointsCount; // Calculate the step size
 
-    vector<string> equations = _info->_history;
-    vector<sf::Color> colors = _info->_colors;
+    vector<string> equations = _info->_history;  // get the equations
+    vector<sf::Color> colors = _info->_colors;  // get the colors
 
-    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)
+    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)  // loop through the equations
         {
-        vector<sf::Vector2f> screenPoints;
+        vector<sf::Vector2f> screenPoints;  // vector to store the screen points
 
         // Get the postfix expression
-        Queue<Token*> infix = tokenize(equations[eqIndex]);
+        Queue<Token*> infix = tokenize(equations[eqIndex]);  // tokenize the equation
 
         // Convert Queue to vector
         vector<Token*> vec;
         while (!infix.empty())
             {
-            vec.push_back(infix.pop());
+            vec.push_back(infix.pop());  // push the infix to the vector
             }
 
         // Convert vector back to Queue
         Queue<Token*> infixCopy;
         for (Token* token : vec)
             {
-            infixCopy.push(token);
+            infixCopy.push(token);  // push the token to the queue
             }
 
         ShuntingYard sy;
@@ -135,8 +135,8 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
         Queue<Token*> postfix = sy.postfix(infixCopy);
 
         // Evaluate the RPN expression
-        RPN _rpn(postfix);
-        _rpn.set_input(postfix);
+        RPN _rpn(postfix);  // create an RPN object
+        _rpn.set_input(postfix);  // set the input of the RPN
 
 
         for (int i = 0; i <= pointsCount; ++i)
@@ -155,15 +155,15 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
             sf::Vector2f screenCoord = _coordTranslation(sf::Vector2f(x, y));
             cout << "Polar Coord: (" << r << ", " << theta << ") -> Cartesian Coord: (" << x << ", " << y << ") -> Screen Coord: (" << screenCoord.x << ", " << screenCoord.y << ")" << endl;
 
-            screenPoints.push_back(screenCoord);
+            screenPoints.push_back(screenCoord); // push the screen coordinates to the vector
             }
-        allScreenPoints.push_back(screenPoints);
+        allScreenPoints.push_back(screenPoints); // push the screen points to the 2D vector
         }
 
 
-    _info->setPointsData(allScreenPoints);
+    _info->setPointsData(allScreenPoints); // set the points data
 
-    return allScreenPoints;
+    return allScreenPoints; // return the screen points
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // convert the equation to tokens queue
@@ -210,7 +210,7 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
     float step = (thetaMax - thetaMin) / pointsCount; // Calculate the step size
 
     // Generate the expression with actual values of a and b
-    std::string expression = "a * sin(b * theta)";
+    string expression = "a * sin(b * theta)";
     vector<string> equations;
     if (_info->_mode == GraphInfo::POLAR)
         {
@@ -218,11 +218,11 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
         }
 
 
-    vector<sf::Color> colors = _info->_colors;
+    vector<sf::Color> colors = _info->_colors; // get the colors of the graph
 
-    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)
+    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex) // loop through the equations
         {
-        vector<sf::Vector2f> screenPoints;
+        vector<sf::Vector2f> screenPoints; // vector to store the screen points
 
         // Get the postfix expression
         Queue<Token*> infix = tokenize(equations[eqIndex]);
@@ -236,9 +236,9 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
 
         // Convert vector back to Queue
         Queue<Token*> infixCopy;
-        for (Token* token : vec)
+        for (Token* token : vec) // loop through the tokens
             {
-            infixCopy.push(token);
+            infixCopy.push(token); // push the token to the queue
             }
 
         ShuntingYard sy;
@@ -269,12 +269,12 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
             sf::Vector2f screenCoord = _coordTranslation(sf::Vector2f(x, y));
             cout << "Polar Coord: (" << r << ", " << theta << ") -> Cartesian Coord: (" << x << ", " << y << ") -> Screen Coord: (" << screenCoord.x << ", " << screenCoord.y << ")" << endl;
 
-            screenPoints.push_back(screenCoord);
+            screenPoints.push_back(screenCoord); // push the screen coordinates to the vector
             }
-        allScreenPoints.push_back(screenPoints);
+        allScreenPoints.push_back(screenPoints); // push the screen points to the 2D vector
         }
 
-    _info->setPointsData(allScreenPoints);
+    _info->setPointsData(allScreenPoints); // set the points data
 
-    return allScreenPoints;
+    return allScreenPoints; // return the screen points
     }

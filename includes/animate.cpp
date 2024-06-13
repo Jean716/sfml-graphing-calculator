@@ -11,85 +11,78 @@
 #include <sstream> 
 #include <iomanip>
 #include <cmath>
+#include <thread> // std::this_thread::sleep_for
 #include <SFML/Graphics.hpp>
 
 using namespace std;
-//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-
-// Constructor
-Animate::Animate()
+//*------------------------------------------------------- Constructor-------------------------------------------------------*/
+Animate::Animate() // initialize the window, system, sidebar, and graph etc.
     : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graphing Calculator"),
     _system(), _sidebar(WORK_PANEL, SIDE_BAR_WIDTH), _mouseIn(false),
     _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(),
     _coordTranslation(nullptr), _isPolarMode(false)
     {
 
-    _mousePoint.setRadius(2);
-    _mousePoint.setFillColor(sf::Color::Red);
+    _mousePoint.setRadius(2); // set the radius of the mouse point
+    _mousePoint.setFillColor(sf::Color::Red); // set the color of the mouse point
+
     if (!_font.loadFromFile("arial.ttf"))
         {
-        // handel error
+        cerr << "Error loading font" << endl;
         }
-    // screen coords text
-    // _myTextLabel.setFont(_font);
-    // _myTextLabel.setCharacterSize(20);
-    // _myTextLabel.setFillColor(sf::Color::Black);
-    // _myTextLabel.setPosition(10, 10);
 
-    // math coords text
-    _coordLabel.setFont(_font);
-    _coordLabel.setCharacterSize(20);
-    _coordLabel.setFillColor(sf::Color::Black);
-    _coordLabel.setPosition(10, 40);
-
-    _coordTranslation.set_info(_info);
+    // show the math coordinates on the left top corner
+    _coordLabel.setFont(_font);  // set the font of the text
+    _coordLabel.setCharacterSize(20); // set the size of the text
+    _coordLabel.setFillColor(sf::Color::Black); // set the color of the text
+    _coordLabel.setPosition(10, 40); // set the position of the text
+    _coordTranslation.set_info(_info); // set the information of the graph
 
     }
-//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-
-// Run the main loop
-void Animate::run()
+//*------------------------------------------------------- Run（）-------------------------------------------------------*/
+void Animate::run()  // run the main loop
     {
     while (_window.isOpen())
         {
         try
             {
-            processEvents();
-            update();
-            render();
+            processEvents();  // process the events
+            update();  // update the system state
+            render();  // render the graphics
             }
-        catch (const exception& e)
+        catch (const exception& e)  // catch the exception
             {
-            cerr << "An error occurred: " << e.what() << endl;
-            // Display error message to user (optional)
-            sf::Text errorText;
-            errorText.setFont(_font);
-            errorText.setCharacterSize(20);
-            errorText.setFillColor(sf::Color::Red);
-            errorText.setString("Error: " + string(e.what()));
-            errorText.setPosition(10, 70); // Position below other labels
-            _window.draw(errorText);
-            _window.display();
+            cerr << "An error occurred: " << e.what() << endl;  // handle the error
+            showErrorMessage("Error: " + string(e.what()));  // show the error message
 
             }
         catch (...)
             {
-            cerr << "An unknown error occurred." << endl;
-            // Display generic error message to user (optional)
-            sf::Text errorText;
-            errorText.setFont(_font);
-            errorText.setCharacterSize(20);
-            errorText.setFillColor(sf::Color::Red);
-            errorText.setString("Unknown error occurred.");
-            errorText.setPosition(10, 70); // Position below other labels
-            _window.draw(errorText);
-            _window.display();
+            cerr << "An unknown error occurred." << endl;  // handle the error
+            showErrorMessage("Unknown error occurred.");  // show the error message
 
             }
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
+// Display error message
+void Animate::showErrorMessage(const string& message)  // show error message
+    {
+    sf::Text errorText;  // create a text object
+    errorText.setFont(_font);  // set the font of the text
+    errorText.setCharacterSize(20);  // set the size of the text
+    errorText.setFillColor(sf::Color::Red);  // set the color of the text
+    errorText.setString(message);  // set the text of the label
+    errorText.setPosition(10, 70); // Position below other labels
 
+    // Draw the error message on top of the current content
+    _window.draw(errorText);
+    _window.display();
+
+    // Add a delay to prevent flickering
+    this_thread::sleep_for(chrono::milliseconds(2000)); // 2 seconds delay
+    }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // Process events (like mouse clicks, key presses)
 void Animate::processEvents()
     {
@@ -156,13 +149,12 @@ void Animate::processEvents()
             }
         }
 
-    update();
-    render();
+    update();  // Update the system
+    render();  // Render the graphics
 
     }
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-
 // Update the state of the system
 void Animate::update()
     {
@@ -181,65 +173,66 @@ void Animate::render()
     {
     _window.clear(sf::Color(236, 236, 236)); //  Clear the screen and set a background color
 
+    // based on the mode, draw the graph
     if (_info->_mode == GraphInfo::POLAR)
         {
-        drawPolarDomainAndCoordinates(_window);
-        _polar.drawPolarGrid(_window, _info);
-        _polar.drawPolarLabels(_window, _info);
-        if (_info->_history.size() > 0 && _info->_history[0].find("a") != std::string::npos && _info->_history[0].find("b") != std::string::npos)
+        drawPolarDomainAndCoordinates(_window);  // draw polar domain and coordinates
+        _polar.drawPolarGrid(_window, _info);  // draw polar grid
+        _polar.drawPolarLabels(_window, _info);  // draw polar labels
+        if (_info->_history.size() > 0 && _info->_history[0].find("a") != string::npos && _info->_history[0].find("b") != string::npos)
             {
-            _polar.drawRoseCurve(_window, _info);
+            _polar.drawRoseCurve(_window, _info);  // draw rose curve
             }
         else
             {
-            _polar.draw(_window, _info);
+            _polar.draw(_window, _info);  // draw polar
             }
         }
     else
         {
-        _graph.drawGrid(_window);
-        _graph.draw(_window);
-        drawCartesianDomainAndCoordinates(_window);
+        _graph.drawGrid(_window);  // draw grid
+        _graph.draw(_window);  // draw graph
+        drawCartesianDomainAndCoordinates(_window);  // draw cartesian domain and coordinates
         }
 
-    _sidebar.draw(_window);
-    _window.display();
+    _sidebar.draw(_window);  // draw sidebar
+    _window.display();   // display the window
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 //Helper function to get mouse position as string
-string Animate::mouse_pos_string(sf::RenderWindow & window)
+string Animate::mouse_pos_string(sf::RenderWindow & window)    // get mouse position as string
     {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);  // get the mouse position
 
-    return "(" + to_string(mousePos.x) + ", " + to_string(mousePos.y) + ")";
+    return "(" + to_string(mousePos.x) + ", " + to_string(mousePos.y) + ")";  // return the mouse position
     }
 
-void Animate::set_info(GraphInfo * info)
+void Animate::set_info(GraphInfo * info)  // set the information of the graph
     {
     cout << "Animat:: set_info is fired" << endl;
-    _info = info;
-    _system.set_info(info);
-    _coordTranslation.set_info(_info);
-    _polar.set_info(_info);
+    _info = info;  // set the information of the graph
+    _system.set_info(info);  // set the information of the system
+    _coordTranslation.set_info(_info);  // set the information of the coordinate translation
+    _polar.set_info(_info);  // set the information of the polar
 
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 void Animate::drawCartesianDomainAndCoordinates(sf::RenderWindow& window)
     {
     // Display the domain information for Cartesian mode
-    sf::Text domainText;
-    domainText.setFont(_font);
-    domainText.setCharacterSize(20);
-    domainText.setFillColor(sf::Color::Black);
-    sf::Vector2f domain = _info->_domain;
+    sf::Text domainText;  // create a text object
+    domainText.setFont(_font);  // set the font of the text
+    domainText.setCharacterSize(20);  // set the size of the text
+    domainText.setFillColor(sf::Color::Black);  // set the color of the text
+    sf::Vector2f domain = _info->_domain;  // get the domain of the graph
 
     // Set the precision of the domain text
-    ostringstream domainStream;
+    ostringstream domainStream;  // create a string stream
     domainStream << fixed << setprecision(0) << "[" << domain.x << ", " << domain.y << "]";
     domainText.setString("Domain: " + domainStream.str());
-    domainText.setPosition(10, 10);
-    window.draw(domainText);
+    domainText.setPosition(10, 10);  // set the position of the text
+    window.draw(domainText);  // draw the text
 
     // get the screen coordinates of the mouse
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
@@ -249,13 +242,13 @@ void Animate::drawCartesianDomainAndCoordinates(sf::RenderWindow& window)
     sf::Vector2f mathPos = _coordTranslation.getMathCoords(mousePosFloat);
 
     // set the precision of the math coordinates
-    ostringstream oss;
-    oss.precision(0);
-    oss << fixed << "(" << mathPos.x << ", " << mathPos.y << ")";
-    string mathPosStr = oss.str();
+    ostringstream oss;  // create a string stream
+    oss.precision(0);  // set the precision of the string stream
+    oss << fixed << "(" << mathPos.x << ", " << mathPos.y << ")";  // set the math coordinates
+    string mathPosStr = oss.str();  // convert the string stream to string
 
-    _coordLabel.setString("Cartesian Coordinate: " + mathPosStr);
-    _window.draw(_coordLabel);
+    _coordLabel.setString("Cartesian Coordinate: " + mathPosStr);  // set the text of the label
+    _window.draw(_coordLabel);  // draw the label
 
     // Convert math coordinates back to screen coordinates to ensure the red dot stays at the correct position
     sf::Vector2f screenPos = _coordTranslation.translate(mathPos);
@@ -269,39 +262,39 @@ void Animate::drawPolarDomainAndCoordinates(sf::RenderWindow& window)
     sf::Font font;
     if (!font.loadFromFile("DejaVuSans.ttf"))
         {
-        cerr << "Error loading font" << endl;
+        cerr << "Error loading font" << endl;  // handle error
         }
-    sf::Text domainText;
-    domainText.setFont(font);
-    domainText.setCharacterSize(20);
-    domainText.setFillColor(sf::Color::Black);
+    sf::Text domainText;  // create a text object
+    domainText.setFont(font);  // set the font of the text
+    domainText.setCharacterSize(20);  // set the size of the text
+    domainText.setFillColor(sf::Color::Black);  // set the color of the text
 
-    sf::Vector2f domain = _info->_domain;
+    sf::Vector2f domain = _info->_domain;  // get the domain of the graph
 
     // set the precision of the domain text
-    std::wstring wstr = L"Polar Domain: [0, 2π]";
-    domainText.setString(sf::String(wstr));
-    domainText.setPosition(10, 10);
-    window.draw(domainText);
+    wstring wstr = L"Polar Domain: [0, 2π]";  // set the domain text
+    domainText.setString(sf::String(wstr));  // set the text of the label
+    domainText.setPosition(10, 10);  // set the position of the text
+    window.draw(domainText);  // draw the text
 
     // get the screen coordinates of the mouse
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);  // get the mouse position
     sf::Vector2f mousePosFloat(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-    sf::Vector2f mathPos = _coordTranslation.getPolarCoords(mousePosFloat);
+    sf::Vector2f mathPos = _coordTranslation.getPolarCoords(mousePosFloat);  // convert to math coordinates
 
     // set the precision of the math coordinates
-    ostringstream oss;
-    oss.precision(0);
+    ostringstream oss;  // create a string stream
+    oss.precision(0);  // set the precision of the string stream
     oss << fixed << "(" << mathPos.x << ", " << mathPos.y << ")";
-    std::string mathPosStr = oss.str();
+    string mathPosStr = oss.str();  // convert the string stream to string
 
-    sf::Text coordText;
-    coordText.setFont(font);
-    coordText.setCharacterSize(20);
-    coordText.setFillColor(sf::Color::Black);
-    coordText.setString("Polar Coordinate: " + mathPosStr);
-    coordText.setPosition(10, 40);
-    window.draw(coordText);
+    sf::Text coordText;  // create a text object
+    coordText.setFont(font);  // set the font of the text
+    coordText.setCharacterSize(20);  // set the size of the text
+    coordText.setFillColor(sf::Color::Black);  // set the color of the text
+    coordText.setString("Polar Coordinate: " + mathPosStr);  // set the text of the label
+    coordText.setPosition(10, 40);  // set the position of the text
+    window.draw(coordText);  // draw the text
 
 
     sf::Vector2f screenPos = _coordTranslation.translate(mathPos);

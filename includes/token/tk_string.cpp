@@ -5,17 +5,17 @@
 #include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/missingparan.h"
 
 
-bool TK_string::is_number(const string& s) const
+bool TK_string::is_number(const string& s) const  // check if the string is a number
     {
-    istringstream iss(s);
+    istringstream iss(s);  // create an input string stream
     float f;
     iss >> noskipws >> f;
-    return iss.eof() && !iss.fail();
+    return iss.eof() && !iss.fail();  // return true if the stream is at the end and no errors occurred
     }
 
-bool TK_string::is_operator(const string & s) const
+bool TK_string::is_operator(const string & s) const  // check if the string is an operator
     {
-    return s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "%" || s == "max" || s == "min";
+    return s == "+" || s == "-" || s == "*" || s == "/" || s == "^" || s == "%" || s == "max" || s == "min";  // return true if the string is an operator
     }
 
 bool TK_string::is_function(const string & s) const
@@ -151,136 +151,15 @@ vector<Token*> TK_string::split(const string& tk_Str)
         }
     catch (const MissingParan& e)
         {
-        std::cerr << "Error: " << e.what() << std::endl;
+        cerr << "Error: " << e.what() << endl;
         throw; // Rethrow the exception to be caught by the caller
         }
-    catch (const std::exception& e)
+    catch (const exception& e)
         {
-        std::cerr << "An error occurred in TK_string::split: " << e.what() << std::endl;
+        cerr << "An error occurred in TK_string::split: " << e.what() << endl;
         throw; // Rethrow the exception to be caught by the caller
         }
 
     return tokens;
     }
 
-
-// vector<Token*> TK_string::split(const string& tk_Str)
-//     {
-//     vector<Token*> tokens;
-//     string token;
-//     bool expectUnary = true;
-//     int leftParenCount = 0;
-//     int rightParenCount = 0;
-//     try
-//         {
-//         for (size_t i = 0; i < tk_Str.size(); ++i)
-//             {
-//             char c = tk_Str[i];
-
-//             if (isspace(c))
-//                 {
-//                 continue;
-//                 }
-
-//             if (isdigit(c) || c == '.')
-//                 {
-//                 token += c;
-//                 while (i + 1 < tk_Str.size() && (isdigit(tk_Str[i + 1]) || tk_Str[i + 1] == '.'))
-//                     {
-//                     token += tk_Str[++i];
-//                     }
-//                 tokens.push_back(static_cast<Token*>(new Integer(token)));
-//                 expectUnary = false;
-//                 token.clear();
-
-//                 if (i + 1 < tk_Str.size() && (isalpha(tk_Str[i + 1]) || tk_Str[i + 1] == '('))
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Operator("*", false)));
-//                     }
-//                 }
-//             else if (isalpha(c))
-//                 {
-//                 token += c;
-//                 while (i + 1 < tk_Str.size() && isalpha(tk_Str[i + 1]))
-//                     {
-//                     token += tk_Str[++i];
-//                     }
-//                 if (is_function(token))
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Function(token)));
-
-//                     if (i + 1 >= tk_Str.size() || tk_Str[i + 1] != '(')
-//                         {
-//                         cerr << "Warning: Missing parenthesis for function: " << token << ". Please use the format " << token << "(x)." << endl;
-//                         }
-//                     }
-//                 else if (is_operator(token))
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Operator(token, false)));
-//                     }
-//                 else if (is_constant(token))
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Constant(token)));
-//                     }
-//                 else
-//                     {
-//                     if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::RIGHT_PAREN))
-//                         {
-//                         tokens.push_back(static_cast<Token*>(new Operator("*", false)));
-//                         }
-//                     tokens.push_back(static_cast<Token*>(new Variable(token)));
-//                     }
-//                 token.clear();
-//                 expectUnary = false;
-//                 }
-//             else if (c == '(')
-//                 {
-//                 if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::VARIABLE || tokens.back()->type() == TokenType::RIGHT_PAREN))
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Operator("*", false)));
-//                     }
-//                 tokens.push_back(static_cast<Token*>(new LeftParen()));
-//                 leftParenCount++;
-//                 expectUnary = true;
-//                 }
-//             else if (c == ')')
-//                 {
-//                 tokens.push_back(static_cast<Token*>(new RightParen()));
-//                 rightParenCount++;
-//                 expectUnary = false;
-//                 }
-//             else if (c == ',')
-//                 {
-//                 tokens.push_back(static_cast<Token*>(new Comma()));
-//                 }
-//             else if (is_operator(string(1, c)))
-//                 {
-//                 if (c == '-' && expectUnary)
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Operator(string(1, c), true)));
-//                     }
-//                 else
-//                     {
-//                     tokens.push_back(static_cast<Token*>(new Operator(string(1, c), false)));
-//                     }
-//                 expectUnary = true;
-//                 }
-//             else
-//                 {
-//                 throw invalid_argument("Unknown token: " + string(1, c));
-//                 }
-//             }
-
-//         if (leftParenCount != rightParenCount)
-//             {
-//             throw MissingParan("Mismatched parentheses");
-//             }
-//         }
-//     catch (const std::exception& e)
-//         {
-//         std::cerr << "An error occurred in TK_string::split: " << e.what() << std::endl;
-//         throw; // Rethrow the exception to be caught by the caller
-//         }
-
-//     return tokens;
-//     }

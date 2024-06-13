@@ -1,7 +1,7 @@
 #include "function.h"
 #include <cmath>
 
-string Function::get_value() const
+string Function::get_value() const  // get the value of the function
     {
     if (_name == "sin")
         {

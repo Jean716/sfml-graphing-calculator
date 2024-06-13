@@ -15,7 +15,7 @@ System::System() : _info(nullptr), _graph(nullptr), _sidebar(SIDE_BAR_LEFT, SIDE
 System::System(GraphInfo* info) : _info(info), _graph(info), _sidebar(SIDE_BAR_LEFT, SIDE_BAR_WIDTH) {}
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void System::set_info(GraphInfo* info)
+void System::set_info(GraphInfo* info)  //  set the information of the graph
     {
     _info = info;
     _graph.set_info(info);
@@ -23,7 +23,7 @@ void System::set_info(GraphInfo* info)
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 // Perform a step based on the command
-void System::step(int command, GraphInfo* info)
+void System::step(int command, GraphInfo* info)   // handle the command
     {
     if (info->_mode == GraphInfo::CARTESIAN)
         {
@@ -31,22 +31,22 @@ void System::step(int command, GraphInfo* info)
         switch (command)
             {
                 case 1:
-                    info->zoom(ZOOM_STEP);
+                    info->zoom(ZOOM_STEP);    //  zoom in
                     break;
                 case 2:
-                    info->zoom(1.0f / ZOOM_STEP);
+                    info->zoom(1.0f / ZOOM_STEP);  // zoom out
                     break;
                 case 3:
-                    info->pan(-PAN_STEP, 0.0f);
+                    info->pan(-PAN_STEP, 0.0f);  // pan left
                     break;
                 case 4:
-                    info->pan(PAN_STEP, 0.0f);
+                    info->pan(PAN_STEP, 0.0f);  // pan right
                     break;
                 case 5:
-                    info->pan(0.0f, -PAN_STEP);
+                    info->pan(0.0f, -PAN_STEP);  // pan up
                     break;
                 case 6:
-                    info->pan(0.0f, PAN_STEP);
+                    info->pan(0.0f, PAN_STEP);  // pan down
                     break;
                 default:
                     cout << "Unknown command" << endl;
@@ -59,22 +59,22 @@ void System::step(int command, GraphInfo* info)
         switch (command)
             {
                 case 1:
-                    info->zoom(ZOOM_STEP);
+                    info->zoom(ZOOM_STEP);  // Zoom in
                     break;
                 case 2:
-                    info->zoom(1.0f / ZOOM_STEP);
+                    info->zoom(1.0f / ZOOM_STEP);  // Zoom out
                     break;
                 case 3:
-                    info->pan(-PAN_STEP, 0.0f);
+                    info->pan(-PAN_STEP, 0.0f);  // Pan left
                     break;
                 case 4:
-                    info->pan(PAN_STEP, 0.0f);
+                    info->pan(PAN_STEP, 0.0f);  // Pan right
                     break;
                 case 5:
-                    info->pan(0.0f, -PAN_STEP);
+                    info->pan(0.0f, -PAN_STEP);  // Pan up
                     break;
                 case 6:
-                    info->pan(0.0f, PAN_STEP);
+                    info->pan(0.0f, PAN_STEP);  // Pan down
                     break;
                 case 7: // Increase a
                     info->adjustA(GraphInfo::A_STEP);
@@ -93,21 +93,20 @@ void System::step(int command, GraphInfo* info)
                     break;
             }
         }
-    cout << "Updating graph" << endl;
     _graph.update(info);
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // Update the graph information
 void System::update()
     {
-    _graph.update(_info);
+    _graph.update(_info);  // Update the graph
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 // Draw the graph and sidebar
 void System::draw(sf::RenderWindow& window)
     {
-    _graph.draw(window); // Draw the graph
+    _graph.draw(window); // Draw the graph  
 
     _sidebar.draw(window); // Draw the sidebar
     }

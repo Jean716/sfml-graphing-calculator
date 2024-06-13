@@ -10,40 +10,40 @@ using namespace std;
 Polar::Polar() : _info(nullptr) {}
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Polar::draw(sf::RenderWindow& window, GraphInfo* info)
+void Polar::draw(sf::RenderWindow& window, GraphInfo* info)  // Draw the polar graph
     {
-    drawPolarGrid(window, info);
-    drawPolarLabels(window, info);
-    drawPoints(window, info);
+    drawPolarGrid(window, info);  //call the drawPolarGrid function
+    drawPolarLabels(window, info);  //call the drawPolarLabels function
+    drawPoints(window, info);  //call the drawPoints function
 
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Polar::drawPolarGrid(sf::RenderWindow& window, GraphInfo* info)
+void Polar::drawPolarGrid(sf::RenderWindow& window, GraphInfo* info)  // Draw the polar grid
     {
-    float scale = info->_scale;
-    sf::Vector2f origin = info->_origin;
-    float offsetX = info->_offsetX;
-    float offsetY = info->_offsetY;
+    float scale = info->_scale;  // Get the scale
+    sf::Vector2f origin = info->_origin;  // Get the origin
+    float offsetX = info->_offsetX;  // Get the offset x
+    float offsetY = info->_offsetY;  // Get the offset y
 
-    sf::CircleShape circle;
-    circle.setOutlineColor(sf::Color::Black);
-    circle.setOutlineThickness(1);
-    circle.setFillColor(sf::Color::Transparent);
+    sf::CircleShape circle;  // Create a circle shape
+    circle.setOutlineColor(sf::Color::Black);  // Set the outline color of the circle
+    circle.setOutlineThickness(1);  // Set the outline thickness of the circle
+    circle.setFillColor(sf::Color::Transparent);  // Set the fill color of the circle
 
     // Draw concentric circles
-    for (float r = scale; r < window.getSize().x; r += scale)
+    for (float r = scale; r < window.getSize().x; r += scale)  // Iterate through the concentric circles
         {
-        circle.setRadius(r);
-        circle.setOrigin(r, r);
-        circle.setPosition(origin.x + offsetX, origin.y + offsetY);
-        window.draw(circle);
+        circle.setRadius(r);  // Set the radius of the circle
+        circle.setOrigin(r, r);  // Set the origin of the circle
+        circle.setPosition(origin.x + offsetX, origin.y + offsetY);  // Set the position of the circle
+        window.draw(circle);  // Draw the circle
         }
 
     // Draw radial lines
-    for (int angle = 0; angle < 360; angle += 30)
+    for (int angle = 0; angle < 360; angle += 30)  // Iterate through the angles
         {
-        float radian = angle * M_PI / 180;
+        float radian = angle * M_PI / 180;  // Convert the angle to radians
         sf::Vertex line[] = {
             sf::Vertex(sf::Vector2f(origin.x + offsetX, origin.y + offsetY), sf::Color::Black),
             sf::Vertex(sf::Vector2f(origin.x + offsetX + cos(radian) * window.getSize().x, origin.y + offsetY - sin(radian) * window.getSize().y), sf::Color::Black)
@@ -64,26 +64,26 @@ void Polar::drawPolarGrid(sf::RenderWindow& window, GraphInfo* info)
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
+void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)  // Draw the polar labels
     {
 
-    float scale = info->_scale;
-    sf::Vector2f origin = info->_origin;
-    float offsetX = info->_offsetX;
-    float offsetY = info->_offsetY;
+    float scale = info->_scale;  // Get the scale
+    sf::Vector2f origin = info->_origin;  // Get the origin
+    float offsetX = info->_offsetX;  // Get the offset x
+    float offsetY = info->_offsetY;  // Get the offset y
     sf::Font font;
 
-    if (!font.loadFromFile("DejaVuSans.ttf"))
+    if (!font.loadFromFile("DejaVuSans.ttf"))  // Load the font
         {
         // handle error
-        cerr << "Failed to load font!" << std::endl;
+        cerr << "Failed to load font!" << endl;
         return;
         }
 
     sf::Text label;
-    label.setFont(font);
-    label.setCharacterSize(15);
-    label.setFillColor(sf::Color::Black);
+    label.setFont(font);  // Set the font of the label
+    label.setCharacterSize(15);  // Set the character size of the label
+    label.setFillColor(sf::Color::Black);  // Set the fill color of the label
 
     // Draw radius labels
     // for (float r = scale; r < window.getSize().x; r += scale)
@@ -94,10 +94,10 @@ void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
     //     }
 
     // Draw angle labels
-    for (int angle = 0; angle < 360; angle += 30)
+    for (int angle = 0; angle < 360; angle += 30)  // Iterate through the angles
         {
         float radian = angle * M_PI / 180;
-        std::string piLabel;
+        string piLabel;
 
         switch (angle)
             {
@@ -143,7 +143,7 @@ void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
                     break;
             }
 
-        std::wstring wpiLabel(piLabel.begin(), piLabel.end());
+        wstring wpiLabel(piLabel.begin(), piLabel.end()); // wstring is a wide string which can hold UTF-16 encoded characters
         label.setString(sf::String::fromUtf8(wpiLabel.begin(), wpiLabel.end()));
 
         float x = origin.x + offsetX + (scale * cos(radian)) * 2.1; // Slightly offset the position to avoid overlap with the circle
@@ -154,43 +154,43 @@ void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Polar::drawPoints(sf::RenderWindow& window, GraphInfo* info)
+void Polar::drawPoints(sf::RenderWindow& window, GraphInfo* info)  // Draw the points
     {
-    vector<sf::Color> colors = info->_colors;
-    vector<vector<sf::Vector2f>> points = info->getPointsData();
+    vector<sf::Color> colors = info->_colors;  // Get the colors
+    vector<vector<sf::Vector2f>> points = info->getPointsData();  // Get the points data
 
-    for (size_t eqIndex = 0; eqIndex < points.size(); ++eqIndex)
+    for (size_t eqIndex = 0; eqIndex < points.size(); ++eqIndex)  // Iterate through the points data
         {
-        for (const auto& point : points[eqIndex])
+        for (const auto& point : points[eqIndex])  // Iterate through the points
             {
-            sf::CircleShape shape(2);
-            shape.setPosition(point);
-            shape.setFillColor(colors[eqIndex]);
-            window.draw(shape);
+            sf::CircleShape shape(2);  // Create a circle shape
+            shape.setPosition(point);  // Set the position of the shape
+            shape.setFillColor(colors[eqIndex]);  // Set the fill color of the shape
+            window.draw(shape);  // Draw the shape
             }
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Polar::set_info(GraphInfo* info)
+void Polar::set_info(GraphInfo* info)  // Set the information of the graph
     {
-    _info = info;
+    _info = info;     // Set the information of the graph
     _coordTranslation.set_info(info);
 
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Polar::drawRoseCurve(sf::RenderWindow& window, GraphInfo* info)
+void Polar::drawRoseCurve(sf::RenderWindow& window, GraphInfo* info)   // Draw the rose curve
     {
-    vector<vector<sf::Vector2f>> points = info->getPointsData();
-    for (const auto& pointSet : points)
+    vector<vector<sf::Vector2f>> points = info->getPointsData(); // Get the points data
+    for (const auto& pointSet : points)  // Iterate through the points data
         {
-        for (const auto& point : pointSet)
+        for (const auto& point : pointSet)  // Iterate through the points
             {
-            sf::CircleShape shape(2);
-            shape.setPosition(point);
-            shape.setFillColor(sf::Color::Red);
-            window.draw(shape);
+            sf::CircleShape shape(2);  // Create a circle shape
+            shape.setPosition(point);  // Set the position of the shape
+            shape.setFillColor(sf::Color::Red);  // Set the fill color of the shape
+            window.draw(shape); // Draw the shape
             }
         }
     }

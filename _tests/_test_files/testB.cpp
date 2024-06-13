@@ -34,12 +34,12 @@ TEST(TEST_STUB, TestStub)
 
 void printVector(const sf::Vector2f& vec)
     {
-    std::cout << "(" << vec.x << ", " << vec.y << ")" << std::endl;
+    cout << "(" << vec.x << ", " << vec.y << ")" << endl;
     }
 
 void testTranslateMathToScreen()
     {
-    std::cout << "Running testTranslateMathToScreen..." << std::endl;
+    cout << "Running testTranslateMathToScreen..." << endl;
     GraphInfo info;
     info._origin = sf::Vector2f(400, 300);
     info._scale = 100;
@@ -51,15 +51,15 @@ void testTranslateMathToScreen()
     sf::Vector2f mathPoint(2, 3);
     sf::Vector2f screenPoint = translation.translate(mathPoint);
 
-    std::cout << "Math Point: ";
+    cout << "Math Point: ";
     printVector(mathPoint);
-    std::cout << "Screen Point: ";
+    cout << "Screen Point: ";
     printVector(screenPoint);
     }
 
 void testGetMathCoordsFromScreen()
     {
-    std::cout << "Running testGetMathCoordsFromScreen..." << std::endl;
+    cout << "Running testGetMathCoordsFromScreen..." << endl;
     GraphInfo info;
     info._origin = sf::Vector2f(400, 300);
     info._scale = 100;
@@ -71,43 +71,43 @@ void testGetMathCoordsFromScreen()
     sf::Vector2f screenPoint(610, -20);
     sf::Vector2f mathPoint = translation.getMathCoords(screenPoint);
 
-    std::cout << "Screen Point: ";
+    cout << "Screen Point: ";
     printVector(screenPoint);
-    std::cout << "Math Point: ";
+    cout << "Math Point: ";
     printVector(mathPoint);
     }
 
 void testPolarToCartesian()
     {
-    std::cout << "Running testPolarToCartesian..." << std::endl;
+    cout << "Running testPolarToCartesian..." << endl;
     CoordTranslation translation;
 
     float r = 5;
     float theta = M_PI / 4; // 45 degrees
     sf::Vector2f cartesian = translation.polarToCartesian(r, theta);
 
-    std::cout << "Polar Coord (r, theta): (" << r << ", " << theta << ")" << std::endl;
-    std::cout << "Cartesian Coord: ";
+    cout << "Polar Coord (r, theta): (" << r << ", " << theta << ")" << endl;
+    cout << "Cartesian Coord: ";
     printVector(cartesian);
     }
 
 void testCartesianToPolar()
     {
-    std::cout << "Running testCartesianToPolar..." << std::endl;
+    cout << "Running testCartesianToPolar..." << endl;
     CoordTranslation translation;
 
     sf::Vector2f cartesian(3, 4);
     sf::Vector2f polar = translation.cartesianToPolar(cartesian);
 
-    std::cout << "Cartesian Coord: ";
+    cout << "Cartesian Coord: ";
     printVector(cartesian);
-    std::cout << "Polar Coord (r, theta): ";
+    cout << "Polar Coord (r, theta): ";
     printVector(polar);
     }
 
 void testGetPolarCoordsFromScreen()
     {
-    std::cout << "Running testGetPolarCoordsFromScreen..." << std::endl;
+    cout << "Running testGetPolarCoordsFromScreen..." << endl;
     GraphInfo info;
     info._origin = sf::Vector2f(400, 300);
     info._scale = 100;
@@ -119,9 +119,9 @@ void testGetPolarCoordsFromScreen()
     sf::Vector2f screenPoint(510, 180);
     sf::Vector2f polarCoords = translation.getPolarCoords(screenPoint);
 
-    std::cout << "Screen Point: ";
+    cout << "Screen Point: ";
     printVector(screenPoint);
-    std::cout << "Polar Coord (r, theta): ";
+    cout << "Polar Coord (r, theta): ";
     printVector(polarCoords);
     }
 

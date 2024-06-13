@@ -12,11 +12,11 @@ class Polar
     public:
         Polar();
         void draw(sf::RenderWindow& window, GraphInfo* info); // draw the polar graph
-        void set_info(GraphInfo* info);
-        void drawPolarGrid(sf::RenderWindow& window, GraphInfo* info);
-        void drawPolarLabels(sf::RenderWindow& window, GraphInfo* info);
-        void drawPoints(sf::RenderWindow& window, GraphInfo* info);
-        void drawRoseCurve(sf::RenderWindow& window, GraphInfo* info);
+        void set_info(GraphInfo* info);  // set the information of the graph
+        void drawPolarGrid(sf::RenderWindow& window, GraphInfo* info);  // draw the polar grid
+        void drawPolarLabels(sf::RenderWindow& window, GraphInfo* info);  // draw the polar labels
+        void drawPoints(sf::RenderWindow& window, GraphInfo* info);  // draw the points of the polar graph
+        void drawRoseCurve(sf::RenderWindow& window, GraphInfo* info);  // draw the rose curve
 
     private:
         GraphInfo* _info;

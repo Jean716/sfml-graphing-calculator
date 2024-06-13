@@ -59,30 +59,30 @@
 # Example Functions and Graphs
 
 ## Rose Curve with three variables
-![Rose Curve](./images/rose_curve.png)
-Equation: `r = a * sin(b * theta)`
+![Rose Curve](images/rose_curve.png)
+Equation: `r = a * sin(b * theta)`<br>
 
 ## Polar Functions
 ![Polar Functions](images/polar_functions.png)
-Equation: `y = 4 * cos(2 * theta)`
-Equation: `y = 2 * cos(5 * theta)`
-Equation: `y = -4 * tan(theta)`
+Equation: `y = 4 * cos(2 * theta)`<br>
+Equation: `y = 2 * cos(5 * theta)`<br>
+Equation: `y = -4 * tan(theta)`<br>
 
 ## Logarithmic and Exponential Combination
 ![Logarithmic and Exponential Combination](images/log_and_exp_functions.png.png)
-Equation: `y = log(x) + exp(x) - x^2`
-Equation: `y = sqrt(x^2 + 2)`
-Equation: `y = e^(x^2)`
-Equation: `y = 1/x^2`
-Equation: `y = 4x^2 + 2x + 1`
+Equation: `y = log(x) + exp(x) - x^2`<br>
+Equation: `y = sqrt(x^2 + 2)`<br>
+Equation: `y = e^(x^2)`<br>
+Equation: `y = 1/x^2`<br>
+Equation: `y = 4x^2 + 2x + 1`<br>
 
 ## Absolute Value and Sine Function Combination
 ![Absolute Value and Sine Function Combination](./images/trigonometric_functions.png)
-Equation: `y = abs(sin(x)) + cos(x)`
-Equation: `y = sin(x) * cos(x)`
-Equation: `y = sin(x) + cos(x)`
-Equation: `y = abs(sin(x)) + tan(x)`
-Equation: `y = 3 * cot(x) + 4`
+Equation: `y = abs(sin(x)) + cos(x)`<br>
+Equation: `y = sin(x) * cos(x)`<br>
+Equation: `y = sin(x) + cos(x)`<br>
+Equation: `y = abs(sin(x)) + tan(x)`<br>
+Equation: `y = 3 * cot(x) + 4`<br>
 
 
 

@@ -20,6 +20,7 @@ class Animate
         void update(); // update the system state
         void render();  // render the graphics
 
+        void showErrorMessage(const string& message);  // show error message
 
     private:
         sf::RenderWindow _window; // main SFML window
@@ -34,21 +35,21 @@ class Animate
         sf::Font _font; // font to draw on main screen
         sf::Text _myTextLabel; // text to draw on main screen
         sf::Text _coordLabel; // math coordinates
-        sf::Text _domainLabel;
-        CoordTranslation  _coordTranslation;
-        bool _isPolarMode = false;
-        Polar _polar;
-        sf::Vector2f _lastMousePos;
+        sf::Text _domainLabel;    //  domain label
+        CoordTranslation  _coordTranslation;   // coordinate translation object
+        bool _isPolarMode = false;  // if polar mode is on
+        Polar _polar;  // polar object
+        sf::Vector2f _lastMousePos;  // last mouse position
 
         // helper function to convert mouse position to string
-        string mouse_pos_string(sf::RenderWindow& window);
+        string mouse_pos_string(sf::RenderWindow& window);  // convert mouse position to string
 
-        vector<string> _functions;
+        vector<string> _functions;  // vector of functions
 
 
         // Helper methods to display domain and coordinates
-        void drawCartesianDomainAndCoordinates(sf::RenderWindow& window);
-        void drawPolarDomainAndCoordinates(sf::RenderWindow& window);
+        void drawCartesianDomainAndCoordinates(sf::RenderWindow& window);  // draw cartesian domain and coordinates
+        void drawPolarDomainAndCoordinates(sf::RenderWindow& window);  // draw polar domain and coordinates
 
 
     };

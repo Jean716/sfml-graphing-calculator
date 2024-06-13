@@ -11,7 +11,7 @@ using namespace std;
 struct GraphInfo
     {
     public:
-        enum Mode
+        enum Mode   // Enum for the mode of the graph
             {
             INPUT,
             ZOOM,
@@ -46,19 +46,19 @@ struct GraphInfo
 
         //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-        void zoom(float factor);
-        void pan(float deltaX, float deltaY);
-        void panPolar(float dr);
-        void adjustTheta(float dtheta);
-        void adjustA(float step);
-        void adjustB(float step);
+        void zoom(float factor);  // Zoom the graph
+        void pan(float deltaX, float deltaY); // Pan the graph
+        void panPolar(float dr); // Pan the polar graph
+        void adjustTheta(float dtheta); // Adjust the theta value
+        void adjustA(float step); // Adjust the A value
+        void adjustB(float step); // Adjust the B value
 
-        sf::Color generateDistinctColor();
-        void evaluateMode(const string& equation);
-        void toggleMode();
-        string getFunctionPrefix() const;
-        void setPointsData(const vector<vector<sf::Vector2f>>& pointsData);
-        vector<vector<sf::Vector2f>> getPointsData() const;
+        sf::Color generateDistinctColor(); // Generate a distinct color
+        void evaluateMode(const string& equation); // Evaluate the mode of the graph
+        void toggleMode(); // Toggle the mode of the graph
+        string getFunctionPrefix() const; // Get the function prefix
+        void setPointsData(const vector<vector<sf::Vector2f>>& pointsData);    // Set the points data
+        vector<vector<sf::Vector2f>> getPointsData() const;  // Get the points data
 
     };
 

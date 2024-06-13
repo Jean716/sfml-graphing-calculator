@@ -45,6 +45,7 @@ class Sidebar
         int _cursorPos; // Cursor position in the input box
         sf::Text _errorLabel; // Error label
 
+
         void updateText(); // Update the text for the input box
     };
 

@@ -18,13 +18,13 @@ GraphInfo::GraphInfo()
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::zoom(float factor)
+void GraphInfo::zoom(float factor)  // Zoom the graph
     {
     _scale *= factor;
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::pan(float deltaX, float deltaY)
+void GraphInfo::pan(float deltaX, float deltaY)  // Pan the graph
     {
     _offsetX += deltaX;
     _offsetY += deltaY;
@@ -32,16 +32,16 @@ void GraphInfo::pan(float deltaX, float deltaY)
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-sf::Color GraphInfo::generateDistinctColor()
+sf::Color GraphInfo::generateDistinctColor()  // Generate a distinct color
     {
     return distinctColors[rand() % distinctColors.size()];
     }
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::evaluateMode(const string& equation)
+void GraphInfo::evaluateMode(const string& equation)  // Evaluate the mode of the graph
     {
-    if (equation.find("theta") != string::npos || equation.find("θ") != string::npos)
+    if (equation.find("theta") != string::npos || equation.find("θ") != string::npos)  // If the equation contains theta
         {
         _mode = POLAR;
         }
@@ -53,63 +53,63 @@ void GraphInfo::evaluateMode(const string& equation)
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::toggleMode()
+void GraphInfo::toggleMode()  // Toggle the mode of the graph
     {
-    if (_mode == CARTESIAN)
+    if (_mode == CARTESIAN) // If the mode is cartesian
         {
-        _mode = POLAR;
+        _mode = POLAR;  // Set the mode to polar
         }
     else
         {
-        _mode = CARTESIAN;
+        _mode = CARTESIAN;  // Set the mode to cartesian
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-vector<vector<sf::Vector2f>> GraphInfo::getPointsData() const
+vector<vector<sf::Vector2f>> GraphInfo::getPointsData() const  // Get the points data
     {
-    return _pointsData;
+    return _pointsData;  // Return the points data
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::setPointsData(const vector<vector<sf::Vector2f>>& pointsData)
+void GraphInfo::setPointsData(const vector<vector<sf::Vector2f>>& pointsData)  // Set the points data
     {
-    _pointsData = pointsData;
+    _pointsData = pointsData;  // Set the points data
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-string GraphInfo::getFunctionPrefix() const
+string GraphInfo::getFunctionPrefix() const  // Get the function prefix
     {
-    if (_mode == POLAR)
+    if (_mode == POLAR)  // If the mode is polar
         {
-        return "r = ";
+        return "r = ";  // Return r =
         }
     else
         {
-        return "y = ";
+        return "y = ";  // Return y =
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::panPolar(float dr)
+void GraphInfo::panPolar(float dr)  // Pan the graph in polar mode
     {
-    _origin.x += dr * cos(_domain.x);
-    _origin.y += dr * sin(_domain.x);
+    _origin.x += dr * cos(_domain.x);  // Pan the graph in x direction
+    _origin.y += dr * sin(_domain.x);  // Pan the graph in y direction
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void GraphInfo::adjustTheta(float dtheta)
+void GraphInfo::adjustTheta(float dtheta)  // Adjust the theta
     {
-    _domain.x += dtheta;
-    _domain.y += dtheta;
+    _domain.x += dtheta;  // Adjust the theta
+    _domain.y += dtheta;  // Adjust the theta
     }
-void GraphInfo::adjustA(float step)
+void GraphInfo::adjustA(float step) // Adjust the a
     {
-    a += step;
+    a += step; // a plus equal to step
     }
 
-void GraphInfo::adjustB(float step)
+void GraphInfo::adjustB(float step) // Adjust the b
     {
-    b += step;
+    b += step; // b plus equal to step
     }
 

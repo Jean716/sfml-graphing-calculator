@@ -15,9 +15,8 @@ Graph::Graph(GraphInfo* info)
     generatePoints();
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-void Graph::set_info(GraphInfo* info)
+void Graph::set_info(GraphInfo* info)  // Set the information of the graph
     {
-    std::cout << "Graph::set_info is Fired" << std::endl;
     _info = info;
     _plot.set_info(info);
     _coordTranslation.set_info(info);
@@ -25,90 +24,90 @@ void Graph::set_info(GraphInfo* info)
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::update(GraphInfo* info)
+void Graph::update(GraphInfo* info) // This function will be used to update the graph
     {
     set_info(info);
     generatePoints();
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::draw(sf::RenderWindow& window)
+void Graph::draw(sf::RenderWindow& window) // This function will be used to draw the graph
     {
-    if (_info->_mode == GraphInfo::CARTESIAN)
+    if (_info->_mode == GraphInfo::CARTESIAN) // If the mode is Cartesian
         {
-        drawCartesian(window);
+        drawCartesian(window); // call the drawCartesian function to draw the Cartesian graph
         }
-    else if (_info->_mode == GraphInfo::POLAR)
+    else if (_info->_mode == GraphInfo::POLAR) // If the mode is Polar
         {
-        _polar.draw(window, _info);
+        _polar.draw(window, _info); // call the draw function of the Polar object to draw the Polar graph
 
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::drawCartesian(sf::RenderWindow& window)
+void Graph::drawCartesian(sf::RenderWindow& window) // Draw the Cartesian graph
     {
-    drawAxes(window);
-    drawTicksAndLabels(window);
-    drawGraphPoints(window);
+    drawAxes(window);  // Draw the axes for the Cartesian graph
+    drawTicksAndLabels(window); // Draw ticks and labels for the Cartesian graph
+    drawGraphPoints(window); // Draw the graph points
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::drawAxes(sf::RenderWindow& window)
+void Graph::drawAxes(sf::RenderWindow& window) // Draw the axes for the Cartesian graph
     {
-    float scale = _info->_scale;
-    sf::Vector2f origin = _info->_origin;
-    float offsetX = _info->_offsetX;
-    float offsetY = _info->_offsetY;
+    float scale = _info->_scale; // Get the scale
+    sf::Vector2f origin = _info->_origin; // Get the origin
+    float offsetX = _info->_offsetX; // Get the offset x
+    float offsetY = _info->_offsetY; // Get the offset y
 
     sf::Vertex xAxis[] = {
-        sf::Vertex(sf::Vector2f(0, origin.y + offsetY), sf::Color::Black),
-        sf::Vertex(sf::Vector2f(window.getSize().x, origin.y + offsetY), sf::Color::Black)
+        sf::Vertex(sf::Vector2f(0, origin.y + offsetY), sf::Color::Black), // Create a vertex for the x-axis
+        sf::Vertex(sf::Vector2f(window.getSize().x, origin.y + offsetY), sf::Color::Black) // Create a vertex for the x-axis
         };
     window.draw(xAxis, 2, sf::Lines);
 
     sf::Vertex yAxis[] = {
-        sf::Vertex(sf::Vector2f(origin.x + offsetX, 0), sf::Color::Black),
-        sf::Vertex(sf::Vector2f(origin.x + offsetX, window.getSize().y), sf::Color::Black)
+        sf::Vertex(sf::Vector2f(origin.x + offsetX, 0), sf::Color::Black), // Create a vertex for the y-axis
+        sf::Vertex(sf::Vector2f(origin.x + offsetX, window.getSize().y), sf::Color::Black)   // Create a vertex for the y-axis
         };
     window.draw(yAxis, 2, sf::Lines);
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::drawTicksAndLabels(sf::RenderWindow& window)
+void Graph::drawTicksAndLabels(sf::RenderWindow& window) // Draw ticks and labels for the Cartesian graph
     {
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
         {
-        // handle error
+        cerr << "Error loading font" << endl; // If the font is not loaded, print an error message
         }
 
-    float scale = _info->_scale;
-    sf::Vector2f origin = _info->_origin;
-    float offsetX = _info->_offsetX;
-    float offsetY = _info->_offsetY;
+    float scale = _info->_scale; // Get the scale
+    sf::Vector2f origin = _info->_origin; // Get the origin
+    float offsetX = _info->_offsetX; // Get the offset x
+    float offsetY = _info->_offsetY; // Get the offset y
 
-    sf::Text originLabel;
-    originLabel.setFont(font);
-    originLabel.setCharacterSize(15);
-    originLabel.setFillColor(sf::Color::Black);
-    originLabel.setString("0");
-    originLabel.setPosition(origin.x + offsetX + 5, origin.y + offsetY + 5);
-    window.draw(originLabel);
+    sf::Text originLabel; // Create a text object for the origin
+    originLabel.setFont(font); // Set the font of the origin label
+    originLabel.setCharacterSize(15); // Set the character size of the origin label
+    originLabel.setFillColor(sf::Color::Black); // Set the fill color of the origin label
+    originLabel.setString("0"); // Set the string of the origin label
+    originLabel.setPosition(origin.x + offsetX + 5, origin.y + offsetY + 5); // Set the position of the origin label
+    window.draw(originLabel); // Draw the origin label
 
-    for (float graphX = 0; graphX * scale < window.getSize().x / 2; ++graphX)
+    for (float graphX = 0; graphX * scale < window.getSize().x / 2; ++graphX) // Loop through the x-axis
         {
         if (graphX != 0)
             {
-            drawTickAndLabel(window, font, graphX, scale, origin, offsetX, offsetY);
+            drawTickAndLabel(window, font, graphX, scale, origin, offsetX, offsetY); // Call the drawTickAndLabel function to draw the tick and label
             }
         }
 
-    for (float graphY = 0; graphY * scale < window.getSize().y / 2; ++graphY)
+    for (float graphY = 0; graphY * scale < window.getSize().y / 2; ++graphY) // Loop through the y-axis
         {
         if (graphY != 0)
             {
-            drawTickAndLabel(window, font, graphY, scale, origin, offsetX, offsetY, true);
+            drawTickAndLabel(window, font, graphY, scale, origin, offsetX, offsetY, true); // Call the drawTickAndLabel function to draw the tick and label
             }
         }
     }
@@ -121,173 +120,173 @@ void Graph::drawTickAndLabel(sf::RenderWindow& window, const sf::Font& font, flo
 
     if (isYAxis)
         {
-        screenPos = sf::Vector2f(origin.x + offsetX, origin.y - graphValue * scale + offsetY);
-        tick[0] = sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, screenPos.y), sf::Color::Black);
+        screenPos = sf::Vector2f(origin.x + offsetX, origin.y - graphValue * scale + offsetY); // Set the screen position
+        tick[0] = sf::Vertex(sf::Vector2f(origin.x + offsetX - 5, screenPos.y), sf::Color::Black); // Set the first vertex of the tick
         tick[1] = sf::Vertex(sf::Vector2f(origin.x + offsetX + 5, screenPos.y), sf::Color::Black);
         }
     else
         {
-        screenPos = sf::Vector2f(origin.x + graphValue * scale + offsetX, origin.y + offsetY);
-        tick[0] = sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY - 5), sf::Color::Black);
+        screenPos = sf::Vector2f(origin.x + graphValue * scale + offsetX, origin.y + offsetY); // Set the screen position
+        tick[0] = sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY - 5), sf::Color::Black); // Set the first vertex of the tick
         tick[1] = sf::Vertex(sf::Vector2f(screenPos.x, origin.y + offsetY + 5), sf::Color::Black);
         }
 
-    window.draw(tick, 2, sf::Lines);
+    window.draw(tick, 2, sf::Lines); // Draw the tick   
 
-    sf::Text label;
-    label.setFont(font);
-    label.setCharacterSize(15);
-    label.setFillColor(sf::Color::Black);
-    label.setString(std::to_string(static_cast<int>(graphValue)));
+    sf::Text label;   // Create a text object for the label
+    label.setFont(font);   // Set the font of the label
+    label.setCharacterSize(15);    // Set the character size of the label
+    label.setFillColor(sf::Color::Black);     // Set the fill color of the label
+    label.setString(to_string(static_cast<int>(graphValue)));
 
     if (isYAxis)
         {
-        label.setPosition(origin.x + offsetX + 10, screenPos.y);
+        label.setPosition(origin.x + offsetX + 10, screenPos.y);  // Set the position of the label
         }
     else
         {
-        label.setPosition(screenPos.x, origin.y + offsetY + 10);
+        label.setPosition(screenPos.x, origin.y + offsetY + 10);  //  Set the position of the label
         }
 
     window.draw(label);
 
-    if (!isYAxis)
+    if (!isYAxis)  // If the axis is not y-axis
         {
-        screenPos = sf::Vector2f(origin.x - graphValue * scale + offsetX, origin.y + offsetY);
-        tick[0].position = sf::Vector2f(screenPos.x, origin.y + offsetY - 5);
-        tick[1].position = sf::Vector2f(screenPos.x, origin.y + offsetY + 5);
-        window.draw(tick, 2, sf::Lines);
+        screenPos = sf::Vector2f(origin.x - graphValue * scale + offsetX, origin.y + offsetY);  // Set the screen position
+        tick[0].position = sf::Vector2f(screenPos.x, origin.y + offsetY - 5);  // Set the first vertex of the tick
+        tick[1].position = sf::Vector2f(screenPos.x, origin.y + offsetY + 5); //  Set the second vertex of the tick
+        window.draw(tick, 2, sf::Lines); // Draw the tick
 
-        label.setString("-" + std::to_string(static_cast<int>(graphValue)));
-        label.setPosition(screenPos.x, origin.y + offsetY + 10);
-        window.draw(label);
+        label.setString("-" + to_string(static_cast<int>(graphValue))); // Set the string of the label
+        label.setPosition(screenPos.x, origin.y + offsetY + 10); // Set the position of the label
+        window.draw(label); // Draw the label
         }
     else
         {
-        screenPos = sf::Vector2f(origin.x + offsetX, origin.y + graphValue * scale + offsetY);
-        tick[0].position = sf::Vector2f(origin.x + offsetX - 5, screenPos.y);
-        tick[1].position = sf::Vector2f(origin.x + offsetX + 5, screenPos.y);
-        window.draw(tick, 2, sf::Lines);
+        screenPos = sf::Vector2f(origin.x + offsetX, origin.y + graphValue * scale + offsetY); // Set the screen position
+        tick[0].position = sf::Vector2f(origin.x + offsetX - 5, screenPos.y); // Set the first vertex of the tick
+        tick[1].position = sf::Vector2f(origin.x + offsetX + 5, screenPos.y);   // Set the second vertex of the tick
+        window.draw(tick, 2, sf::Lines); // Draw the tick
 
-        label.setString("-" + std::to_string(static_cast<int>(graphValue)));
-        label.setPosition(origin.x + offsetX + 10, screenPos.y);
-        window.draw(label);
+        label.setString("-" + to_string(static_cast<int>(graphValue))); // Set the string of the label
+        label.setPosition(origin.x + offsetX + 10, screenPos.y); // Set the position of the label
+        window.draw(label); // Draw the label
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::drawGraphPoints(sf::RenderWindow& window)
+void Graph::drawGraphPoints(sf::RenderWindow& window) // Draw the graph points
     {
-    std::vector<sf::Color> colors = _info->_colors;
-    for (size_t eqIndex = 0; eqIndex < _points.size(); ++eqIndex)
+    vector<sf::Color> colors = _info->_colors; // Get the colors
+    for (size_t eqIndex = 0; eqIndex < _points.size(); ++eqIndex) // Loop through the equations
         {
-        for (const auto& point : _points[eqIndex])
+        for (const auto& point : _points[eqIndex]) // Loop through the points
             {
-            sf::CircleShape shape(2);
-            shape.setPosition(point);
-            if (_info->_currentFunctionIndex == eqIndex)
+            sf::CircleShape shape(2); // Create a circle shape
+            shape.setPosition(point); // Set the position of the shape
+            if (_info->_currentFunctionIndex == eqIndex) // If the current function index is equal to the equation index
                 {
-                shape.setFillColor(sf::Color::Red);
-                shape.setRadius(2); // 
+                shape.setFillColor(sf::Color::Red); // Set the fill color of the shape
+                shape.setRadius(2);  // Set the radius of the shape
                 }
             else
                 {
-                shape.setFillColor(colors[eqIndex]);
+                shape.setFillColor(colors[eqIndex]); // Set the fill color of the shape
                 }
-            window.draw(shape);
+            window.draw(shape); // Draw the shape
             }
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::generatePoints()
+void Graph::generatePoints() // Call the plot object to generate the points
     {
-    if (_info)
+    if (_info) // If the info is not null
         {
-        _points = _plot(_info->_domain.x, _info->_domain.y, 0.1f);
+        _points = _plot(_info->_domain.x, _info->_domain.y, 0.1f); // Generate the points
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
-void Graph::drawDomainAndCoordinate(sf::RenderWindow& window)
+void Graph::drawDomainAndCoordinate(sf::RenderWindow& window) // Draw the domain and coordinate
     {
-    sf::Font font;
-    if (!font.loadFromFile("arial.ttf"))
+    sf::Font font; // Create a font object
+    if (!font.loadFromFile("arial.ttf")) // If the font is not loaded
         {
-        // handle error
+        cerr << "Error loading font" << endl; // Print an error message
         }
 
-    sf::Text domainText;
-    domainText.setFont(font);
-    domainText.setCharacterSize(15);
-    domainText.setFillColor(sf::Color::Black);
+    sf::Text domainText; // Create a text object for the domain
+    domainText.setFont(font); // Set the font of the domain text
+    domainText.setCharacterSize(15); // Set the character size of the domain text
+    domainText.setFillColor(sf::Color::Black); // Set the fill color of the domain text
 
-    sf::Text coordinateText;
-    coordinateText.setFont(font);
-    coordinateText.setCharacterSize(15);
-    coordinateText.setFillColor(sf::Color::Black);
+    sf::Text coordinateText; // Create a text object for the coordinate
+    coordinateText.setFont(font); // Set the font of the coordinate text
+    coordinateText.setCharacterSize(15); // Set the character size of the coordinate text
+    coordinateText.setFillColor(sf::Color::Black); // Set the fill color of the coordinate text
 
-    stringstream domainStream;
-    stringstream coordinateStream;
+    stringstream domainStream; // Create a string stream for the domain
+    stringstream coordinateStream; // Create a string stream for the coordinate
 
-    if (_info->_mode == GraphInfo::CARTESIAN)
+    if (_info->_mode == GraphInfo::CARTESIAN) // If the mode is Cartesian
         {
-        domainStream << "Domain: [" << _info->_domain.x << ", " << _info->_domain.y << "]";
-        coordinateStream << "Cartesian Coordinate: (" << _info->_origin.x << ", " << _info->_origin.y << ")";
+        domainStream << "Domain: [" << _info->_domain.x << ", " << _info->_domain.y << "]"; // Set the domain stream
+        coordinateStream << "Cartesian Coordinate: (" << _info->_origin.x << ", " << _info->_origin.y << ")";   // Set the coordinate stream
         }
-    else if (_info->_mode == GraphInfo::POLAR)
+    else if (_info->_mode == GraphInfo::POLAR) // If the mode is Polar
         {
-        domainStream << "Domain: [0, 2π]";
-        coordinateStream << "Polar Coordinate: (r, θ)";
+        domainStream << "Domain: [0, 2π]"; // Set the domain stream
+        coordinateStream << "Polar Coordinate: (r, θ)"; // Set the coordinate stream
         }
 
-    domainText.setString(domainStream.str());
-    domainText.setPosition(10, 10);
-    window.draw(domainText);
+    domainText.setString(domainStream.str()); // Set the string of the domain text
+    domainText.setPosition(10, 10); // Set the position of the domain text
+    window.draw(domainText); // Draw the domain text
 
-    coordinateText.setString(coordinateStream.str());
-    coordinateText.setPosition(10, 30);
-    window.draw(coordinateText);
+    coordinateText.setString(coordinateStream.str()); // Set the string of the coordinate text
+    coordinateText.setPosition(10, 30); // Set the position of the coordinate text
+    window.draw(coordinateText); // Draw the coordinate text
     }
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
-void Graph::drawGrid(sf::RenderWindow & window)
+void Graph::drawGrid(sf::RenderWindow & window) // Draw the grid
     {
-    sf::VertexArray lines(sf::Lines);
+    sf::VertexArray lines(sf::Lines); // Create a vertex array for the lines
 
-    const float step = _info->_scale;
-    const sf::Color gridColor(200, 200, 200);
+    const float step = _info->_scale; // Get the step
+    const sf::Color gridColor(200, 200, 200); // Set the grid color
 
-    sf::Vector2f origin = _info->_origin;
-    float offsetX = _info->_offsetX;
-    float offsetY = _info->_offsetY;
-    float scale = _info->_scale;
+    sf::Vector2f origin = _info->_origin; // Get the origin
+    float offsetX = _info->_offsetX;     // Get the offset x
+    float offsetY = _info->_offsetY;   // Get the offset y
+    float scale = _info->_scale;   // Get the scale
 
 
-    for (float x = origin.x + offsetX; x < WORK_PANEL; x += step)
+    for (float x = origin.x + offsetX; x < WORK_PANEL; x += step) // Loop through the x-axis
         {
-        lines.append(sf::Vertex(sf::Vector2f(x, 0), gridColor));
-        lines.append(sf::Vertex(sf::Vector2f(x, SCREEN_HEIGHT), gridColor));
+        lines.append(sf::Vertex(sf::Vector2f(x, 0), gridColor)); // Append a vertex to the lines
+        lines.append(sf::Vertex(sf::Vector2f(x, SCREEN_HEIGHT), gridColor)); // Append a vertex to the lines
         }
-    for (float x = origin.x + offsetX; x > 0; x -= step)
+    for (float x = origin.x + offsetX; x > 0; x -= step) // Loop through the x-axis
         {
-        lines.append(sf::Vertex(sf::Vector2f(x, 0), gridColor));
-        lines.append(sf::Vertex(sf::Vector2f(x, SCREEN_HEIGHT), gridColor));
-        }
-
-
-    for (float y = origin.y + offsetY; y < SCREEN_HEIGHT; y += step)
-        {
-        lines.append(sf::Vertex(sf::Vector2f(0, y), gridColor));
-        lines.append(sf::Vertex(sf::Vector2f(WORK_PANEL, y), gridColor));
-        }
-    for (float y = origin.y + offsetY; y > 0; y -= step)
-        {
-        lines.append(sf::Vertex(sf::Vector2f(0, y), gridColor));
-        lines.append(sf::Vertex(sf::Vector2f(WORK_PANEL, y), gridColor));
+        lines.append(sf::Vertex(sf::Vector2f(x, 0), gridColor)); // Append a vertex to the lines
+        lines.append(sf::Vertex(sf::Vector2f(x, SCREEN_HEIGHT), gridColor));    // Append a vertex to the lines
         }
 
-    window.draw(lines);
+
+    for (float y = origin.y + offsetY; y < SCREEN_HEIGHT; y += step)    // Loop through the y-axis
+        {
+        lines.append(sf::Vertex(sf::Vector2f(0, y), gridColor)); // Append a vertex to the lines
+        lines.append(sf::Vertex(sf::Vector2f(WORK_PANEL, y), gridColor)); // Append a vertex to the lines
+        }
+    for (float y = origin.y + offsetY; y > 0; y -= step) // Loop through the y-axis
+        {
+        lines.append(sf::Vertex(sf::Vector2f(0, y), gridColor)); // Append a vertex to the lines
+        lines.append(sf::Vertex(sf::Vector2f(WORK_PANEL, y), gridColor)); // Append a vertex to the lines
+        }
+
+    window.draw(lines); // Draw the lines
     }
 
 
