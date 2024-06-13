@@ -59,17 +59,17 @@
 # Example Functions and Graphs
 
 ## Rose Curve with three variables
-![Rose Curve](/Users/jwcomputer/CS3A_Project/99_00_final_project/images/Screenshot 2024-06-13 at 12.37.03 AM.png)
+![Rose Curve](./images/rose_curve.png)
 Equation: `r = a * sin(b * theta)`
 
 ## Polar Functions
-![Polar Functions]
+![Polar Functions](images/polar_functions.png)
 Equation: `y = 4 * cos(2 * theta)`
 Equation: `y = 2 * cos(5 * theta)`
 Equation: `y = -4 * tan(theta)`
 
 ## Logarithmic and Exponential Combination
-![Logarithmic and Exponential Combination](/Users/jwcomputer/CS3A_Project/99_00_final_project/images/Screenshot 2024-06-13 at 12.33.11 AM.png)
+![Logarithmic and Exponential Combination](images/log_and_exp_functions.png.png)
 Equation: `y = log(x) + exp(x) - x^2`
 Equation: `y = sqrt(x^2 + 2)`
 Equation: `y = e^(x^2)`
@@ -77,7 +77,7 @@ Equation: `y = 1/x^2`
 Equation: `y = 4x^2 + 2x + 1`
 
 ## Absolute Value and Sine Function Combination
-![Absolute Value and Sine Function Combination](/Users/jwcomputer/CS3A_Project/99_00_final_project/images/Screenshot 2024-06-13 at 12.33.11 AM.png)
+![Absolute Value and Sine Function Combination](./images/trigonometric_functions.png)
 Equation: `y = abs(sin(x)) + cos(x)`
 Equation: `y = sin(x) * cos(x)`
 Equation: `y = sin(x) + cos(x)`
@@ -86,7 +86,7 @@ Equation: `y = 3 * cot(x) + 4`
 
 
 
-# **output**
+# **basic_test.cpp output:**
 <pre>
 <br/><br/><br/><br/>
 ----------running basic_test.cpp---------
@@ -153,10 +153,9 @@ jwcomputer@JWs-MacBook-Pro bin %
 
 <br/><br/>
 
-# basic_test.cpp output:
+# testB.cpp output:
 <pre>
 <br/><br/><br/><br/>
-</pre>
 ----------running testB.cpp---------
 Running testTranslateMathToScreen...
 Math Point: (2, 3)
@@ -183,8 +182,8 @@ Polar Coord (r, theta): (1.41421, 0.785398)
 [----------] Global test environment tear-down
 [==========] 1 test from 1 test suite ran. (0 ms total)
 [  PASSED  ] 1 test.
-<pre>
-<br/><br/><br/><br/>
 </pre>
+
+
 
 
