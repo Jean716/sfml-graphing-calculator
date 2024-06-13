@@ -65,23 +65,34 @@ void System::step(int command, GraphInfo* info)
                     info->zoom(1.0f / ZOOM_STEP);
                     break;
                 case 3:
-                    info->panPolar(-PAN_STEP);
+                    info->pan(-PAN_STEP, 0.0f);
                     break;
                 case 4:
-                    info->panPolar(PAN_STEP);
+                    info->pan(PAN_STEP, 0.0f);
                     break;
                 case 5:
-                    info->adjustTheta(-PAN_STEP);
+                    info->pan(0.0f, -PAN_STEP);
                     break;
                 case 6:
-                    info->adjustTheta(PAN_STEP);
+                    info->pan(0.0f, PAN_STEP);
+                    break;
+                case 7: // Increase a
+                    info->adjustA(GraphInfo::A_STEP);
+                    break;
+                case 8: // Decrease a
+                    info->adjustA(-GraphInfo::A_STEP);
+                    break;
+                case 9: // Increase b
+                    info->adjustB(GraphInfo::B_STEP);
+                    break;
+                case 10: // Decrease b
+                    info->adjustB(-GraphInfo::B_STEP);
                     break;
                 default:
                     cout << "Unknown command" << endl;
                     break;
             }
         }
-
     cout << "Updating graph" << endl;
     _graph.update(info);
     }
@@ -97,7 +108,9 @@ void System::update()
 void System::draw(sf::RenderWindow& window)
     {
     _graph.draw(window); // Draw the graph
+
     _sidebar.draw(window); // Draw the sidebar
     }
+
 
 

@@ -11,6 +11,7 @@
 #include "../../includes/token/function.h"
 #include "../../includes/token/variable.h"
 #include "../../includes/token/constant.h"
+#include "../../includes/graphInfo.h"
 
 using namespace std;
 
@@ -21,6 +22,8 @@ class RPN
     public:
         RPN(Queue<Token*>& postfix) : _postfix(postfix) {}
         void set_input(Queue<Token*>& postfix) { _postfix = postfix; }
+
+
         float operator()(float x);
 
     private:

@@ -21,7 +21,7 @@ Animate::Animate()
     : _window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Graphing Calculator"),
     _system(), _sidebar(WORK_PANEL, SIDE_BAR_WIDTH), _mouseIn(false),
     _mousePoint(5.0f), _font(), _myTextLabel(), _coordLabel(),
-    _coordTranslation(nullptr), _isPolarMode(false), _isDragging(false)
+    _coordTranslation(nullptr), _isPolarMode(false)
     {
 
     _mousePoint.setRadius(2);
@@ -135,52 +135,27 @@ void Animate::processEvents()
                         _system.step(6, _info); // move down
                         break;
                     case sf::Keyboard::Tab:
-                        _isPolarMode = !_isPolarMode; // toggle mode
+                        _isPolarMode = !_isPolarMode;
                         _info->_mode = _isPolarMode ? GraphInfo::POLAR : GraphInfo::CARTESIAN;
-                        if (_isPolarMode)
-                            {
-                            _info->_domain = DEFAULT_POLAR_DOMAIN;
-                            }
-                        else
-                            {
-                            _info->_domain = DEFAULT_DOMAIN;
-                            }
                         break;
-
+                    case sf::Keyboard::A: // press A key to increase a
+                        _system.step(7, _info);
+                        break;
+                    case sf::Keyboard::D: // press Z key to decrease a
+                        _system.step(8, _info);
+                        break;
+                    case sf::Keyboard::W: // press S key to increase b
+                        _system.step(9, _info);
+                        break;
+                    case sf::Keyboard::E: // press X key to decrease b
+                        _system.step(10, _info);
+                        break;
                     default:
                         break;
                 }
             }
         }
-    // Add mouse dragging logic
-    if (event.type == sf::Event::MouseButtonPressed)
-        {
-        if (event.mouseButton.button == sf::Mouse::Left)
-            {
-            _isDragging = true;
-            _dragStartPos = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
-            _lastMousePos = _dragStartPos;
-            }
-        }
 
-    if (event.type == sf::Event::MouseButtonReleased)
-        {
-        if (event.mouseButton.button == sf::Mouse::Left)
-            {
-            _isDragging = false;
-            }
-        }
-
-    if (event.type == sf::Event::MouseMoved)
-        {
-        if (_isDragging)
-            {
-            sf::Vector2f currentPos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
-            sf::Vector2f delta = currentPos - _dragStartPos;
-            _dragStartPos = currentPos;
-            _info->pan(delta.x, delta.y);
-            }
-        }
     update();
     render();
 
@@ -208,9 +183,17 @@ void Animate::render()
 
     if (_info->_mode == GraphInfo::POLAR)
         {
-        _polar.draw(_window, _info);
-        _polar.drawPolarLabels(_window, _info);
         drawPolarDomainAndCoordinates(_window);
+        _polar.drawPolarGrid(_window, _info);
+        _polar.drawPolarLabels(_window, _info);
+        if (_info->_history.size() > 0 && _info->_history[0].find("a") != std::string::npos && _info->_history[0].find("b") != std::string::npos)
+            {
+            _polar.drawRoseCurve(_window, _info);
+            }
+        else
+            {
+            _polar.draw(_window, _info);
+            }
         }
     else
         {
@@ -238,6 +221,7 @@ void Animate::set_info(GraphInfo * info)
     _info = info;
     _system.set_info(info);
     _coordTranslation.set_info(_info);
+    _polar.set_info(_info);
 
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
@@ -324,3 +308,4 @@ void Animate::drawPolarDomainAndCoordinates(sf::RenderWindow& window)
     _mousePoint.setPosition(screenPos.x - _mousePoint.getRadius(), screenPos.y - _mousePoint.getRadius());
     window.draw(_mousePoint);
     }
+//*------------------------------------------------------- DIVISION -------------------------------------------------------*/

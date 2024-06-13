@@ -13,6 +13,7 @@ CoordTranslation::CoordTranslation(GraphInfo* info) : _info(info) {} // paramete
 void CoordTranslation::set_info(GraphInfo* info)
     {
     _info = info; // set the information of the graph
+
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 // covert math coord to screen coord

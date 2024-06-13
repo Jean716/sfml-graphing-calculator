@@ -10,11 +10,7 @@ class Variable : public Token
 
         TokenType type() const override
             {
-            if (_name == "x" || _name == "X")
-                {
-                return TokenType::VARIABLE;
-                }
-            if (_name == "theta" || _name == "θ")
+            if (_name == "x" || _name == "X" || _name == "theta" || _name == "θ" || _name == "a" || _name == "b" || _name == "b" || _name == "y")
                 {
                 return TokenType::VARIABLE;
                 }
@@ -22,7 +18,6 @@ class Variable : public Token
                 {
                 throw invalid_argument("Invalid variable name: " + _name);
                 }
-
             }
 
         string get_value() const override

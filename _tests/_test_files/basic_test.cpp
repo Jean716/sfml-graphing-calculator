@@ -112,8 +112,9 @@ int main(int argc, char **argv)
   {
   ::testing::InitGoogleTest(&argc, argv);
   cout << "\n\n----------running basic_test.cpp---------\n\n" << endl;
-  test_shunting_yard_2();
   test_shunting_yard_1();
+  test_shunting_yard_2();
+
   cout << "test:sinx" << endl;
   test_split("sinx");
   cout << "2x+3" << endl;
@@ -125,7 +126,6 @@ int main(int argc, char **argv)
   test_split("abs(-5) + abs(5)");
   test_split("max(10, 20) + min(5, 10)");
 
-
-  return 0;
+  return RUN_ALL_TESTS();
   }
 

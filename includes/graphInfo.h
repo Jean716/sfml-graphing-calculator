@@ -39,12 +39,19 @@ struct GraphInfo
         vector<float> functionValues;
         int _currentFunctionIndex;          // Index of the currently selected function
 
+        float a;
+        float b;
+        static constexpr float A_STEP = 1.0f;
+        static constexpr float B_STEP = 1.0f;
+
         //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
         void zoom(float factor);
         void pan(float deltaX, float deltaY);
         void panPolar(float dr);
         void adjustTheta(float dtheta);
+        void adjustA(float step);
+        void adjustB(float step);
 
         sf::Color generateDistinctColor();
         void evaluateMode(const string& equation);
@@ -52,13 +59,6 @@ struct GraphInfo
         string getFunctionPrefix() const;
         void setPointsData(const vector<vector<sf::Vector2f>>& pointsData);
         vector<vector<sf::Vector2f>> getPointsData() const;
-
-
-        // string getCurrentFunction() const;
-        // sf::Color getCurrentFunctionColor() const;
-        //void setColor(const sf::Color& color);
-        //void addEquation(const string& equation);
-        // void removeEquation(size_t index);
 
     };
 

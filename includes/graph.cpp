@@ -41,6 +41,7 @@ void Graph::draw(sf::RenderWindow& window)
     else if (_info->_mode == GraphInfo::POLAR)
         {
         _polar.draw(window, _info);
+
         }
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/

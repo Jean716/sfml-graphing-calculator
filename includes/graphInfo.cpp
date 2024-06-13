@@ -9,9 +9,12 @@ GraphInfo::GraphInfo()
     : _windowDimensions(SCREEN_WIDTH, SCREEN_HEIGHT),
     _origin(WORK_PANEL / 2, SCREEN_HEIGHT / 2), _domain(DEFAULT_DOMAIN),
     _scale(DEFAULT_SCALE), _points(DEFAULT_POINTS), _offsetX(DEFAULT_OFFSET_X),
-    _offsetY(DEFAULT_OFFSET_Y), _mode(CARTESIAN)
+    _offsetY(DEFAULT_OFFSET_Y), _mode(CARTESIAN), a(1.0f), b(1.0f), _currentFunctionIndex(-1), _history(0), _colors(0)
     {
+    a = 5.0f;
+    b = 6.0f;
     }
+
 
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
@@ -99,5 +102,14 @@ void GraphInfo::adjustTheta(float dtheta)
     {
     _domain.x += dtheta;
     _domain.y += dtheta;
+    }
+void GraphInfo::adjustA(float step)
+    {
+    a += step;
+    }
+
+void GraphInfo::adjustB(float step)
+    {
+    b += step;
     }
 

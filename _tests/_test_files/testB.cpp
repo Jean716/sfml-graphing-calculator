@@ -1,20 +1,20 @@
 #include "gtest/gtest.h"
 #include <iostream>
 using namespace std;
-// #include <iomanip>
+#include <iomanip>
 
-// #include <SFML/Graphics.hpp>
-// #include "../../includes/system.h"
-// #include "../../includes/graph.h"
-// #include "../../includes/animate.h"
-// #include "../../includes/sidebar.h"
-// #include "../../includes/graphInfo.h"
-// #include "../../includes/constants.h"
-// #include "../../includes/coord_translation.h"
-// #include "../../includes/plot.h"
-// #include "../../includes/token/token.h"
-// #include "../../includes/token/variable.h"
-// using namespace std;
+#include <SFML/Graphics.hpp>
+#include "../../includes/system.h"
+#include "../../includes/graph.h"
+#include "../../includes/animate.h"
+#include "../../includes/sidebar.h"
+#include "../../includes/graphInfo.h"
+#include "../../includes/constants.h"
+#include "../../includes/coord_translation.h"
+#include "../../includes/plot.h"
+#include "../../includes/token/token.h"
+#include "../../includes/token/variable.h"
+using namespace std;
 
 bool test_stub(bool debug = false)
     {
@@ -29,92 +29,112 @@ TEST(TEST_STUB, TestStub)
     {
 
 
-
     EXPECT_EQ(1, test_stub(false));
     }
 
+void printVector(const sf::Vector2f& vec)
+    {
+    std::cout << "(" << vec.x << ", " << vec.y << ")" << std::endl;
+    }
 
+void testTranslateMathToScreen()
+    {
+    std::cout << "Running testTranslateMathToScreen..." << std::endl;
+    GraphInfo info;
+    info._origin = sf::Vector2f(400, 300);
+    info._scale = 100;
+    info._offsetX = 10;
+    info._offsetY = 20;
 
+    CoordTranslation translation(&info);
 
+    sf::Vector2f mathPoint(2, 3);
+    sf::Vector2f screenPoint = translation.translate(mathPoint);
 
+    std::cout << "Math Point: ";
+    printVector(mathPoint);
+    std::cout << "Screen Point: ";
+    printVector(screenPoint);
+    }
 
+void testGetMathCoordsFromScreen()
+    {
+    std::cout << "Running testGetMathCoordsFromScreen..." << std::endl;
+    GraphInfo info;
+    info._origin = sf::Vector2f(400, 300);
+    info._scale = 100;
+    info._offsetX = 10;
+    info._offsetY = 20;
 
+    CoordTranslation translation(&info);
 
+    sf::Vector2f screenPoint(610, -20);
+    sf::Vector2f mathPoint = translation.getMathCoords(screenPoint);
 
+    std::cout << "Screen Point: ";
+    printVector(screenPoint);
+    std::cout << "Math Point: ";
+    printVector(mathPoint);
+    }
 
+void testPolarToCartesian()
+    {
+    std::cout << "Running testPolarToCartesian..." << std::endl;
+    CoordTranslation translation;
 
+    float r = 5;
+    float theta = M_PI / 4; // 45 degrees
+    sf::Vector2f cartesian = translation.polarToCartesian(r, theta);
 
+    std::cout << "Polar Coord (r, theta): (" << r << ", " << theta << ")" << std::endl;
+    std::cout << "Cartesian Coord: ";
+    printVector(cartesian);
+    }
 
+void testCartesianToPolar()
+    {
+    std::cout << "Running testCartesianToPolar..." << std::endl;
+    CoordTranslation translation;
 
+    sf::Vector2f cartesian(3, 4);
+    sf::Vector2f polar = translation.cartesianToPolar(cartesian);
 
+    std::cout << "Cartesian Coord: ";
+    printVector(cartesian);
+    std::cout << "Polar Coord (r, theta): ";
+    printVector(polar);
+    }
 
+void testGetPolarCoordsFromScreen()
+    {
+    std::cout << "Running testGetPolarCoordsFromScreen..." << std::endl;
+    GraphInfo info;
+    info._origin = sf::Vector2f(400, 300);
+    info._scale = 100;
+    info._offsetX = 10;
+    info._offsetY = 20;
 
+    CoordTranslation translation(&info);
 
+    sf::Vector2f screenPoint(510, 180);
+    sf::Vector2f polarCoords = translation.getPolarCoords(screenPoint);
 
+    std::cout << "Screen Point: ";
+    printVector(screenPoint);
+    std::cout << "Polar Coord (r, theta): ";
+    printVector(polarCoords);
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// void testPolarPlot()
-//     {
-
-//     GraphInfo info;
-//     info->_mode(GraphInfo::POLAR);
-//     info.addEquation("2 * sin((3/2)theta)");
-
-
-//     Plot plot(&info);
-//     plot.set_info(&info);
-
-
-//     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Polar Coordinates Test");
-
-
-//     while (window.isOpen())
-//         {
-//         sf::Event event;
-//         while (window.pollEvent(event))
-//             {
-//             if (event.type == sf::Event::Closed)
-//                 window.close();
-//             }
-
-//         window.clear(sf::Color::White);
-
-
-//         vector<vector<sf::Vector2f>> points = plot(0, 2 * M_PI, 0.01f);
-//         for (const auto& pointSet : points)
-//             {
-//             for (const auto& point : pointSet)
-//                 {
-//                 sf::CircleShape shape(2);
-//                 shape.setPosition(point);
-//                 shape.setFillColor(sf::Color::Red);
-//                 window.draw(shape);
-//                 }
-//             }
-
-//         window.display();
-//         }
-//     }
 
 int main(int argc, char **argv)
     {
     ::testing::InitGoogleTest(&argc, argv);
     cout << "\n\n----------running testB.cpp---------\n\n" << endl;
-
-    // testPolarPlot();
+    testTranslateMathToScreen();
+    testGetMathCoordsFromScreen();
+    testPolarToCartesian();
+    testCartesianToPolar();
+    testGetPolarCoordsFromScreen();
     return RUN_ALL_TESTS();
     }
 

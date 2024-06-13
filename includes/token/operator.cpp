@@ -61,11 +61,11 @@ TokenType Operator::type() const
     }
 
 
-float Operator::evaluate(float a) const
+float Operator::evaluate(float value) const
     {
     if (_op == "-")
         {
-        return -a;
+        return -value;
         }
     else
         {

@@ -44,8 +44,7 @@ class Animate
         string mouse_pos_string(sf::RenderWindow& window);
 
         vector<string> _functions;
-        bool _isDragging;
-        sf::Vector2f _dragStartPos;
+
 
         // Helper methods to display domain and coordinates
         void drawCartesianDomainAndCoordinates(sf::RenderWindow& window);

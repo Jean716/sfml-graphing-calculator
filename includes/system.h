@@ -7,6 +7,7 @@
 #include "sidebar.h"
 #include "coord_translation.h"
 
+
 // manage domain,zoom,pan,etc
 class System
     {
@@ -23,6 +24,7 @@ class System
         sf::RenderWindow _window; //  window object
         Graph _graph; // manage the graph drawing
         GraphInfo* _info;  // manage the graph information
+        Polar _polar; // manage the polar graph
         Sidebar _sidebar; // manage the sidebar
     };
 

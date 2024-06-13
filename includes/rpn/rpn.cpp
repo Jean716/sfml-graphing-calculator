@@ -12,6 +12,7 @@ float RPN::operator()(float x)
         Stack<float> stack;
         Queue<Token*> postfix_copy = _postfix; // Make a copy of the postfix queue
 
+
         while (!postfix_copy.empty())
             {
             Token* token = postfix_copy.pop();
@@ -25,7 +26,14 @@ float RPN::operator()(float x)
                     break;
                     }
                     case TokenType::VARIABLE: {
-                    stack.push(x);
+                    Variable* variable_token = static_cast<Variable*>(token);
+                    string var_name = variable_token->get_value();
+                    if (var_name == "x")
+                        stack.push(x);
+                    // else if (var_name == "a")
+                    //     stack.push(a);
+                    // else if (var_name == "b")
+                    //     stack.push(b);
                     break;
                     }
                     case TokenType::OPERATOR: {

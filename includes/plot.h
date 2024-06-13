@@ -29,8 +29,7 @@ class Plot
         Queue<Token*> tokenize(const string& equation) const; // tokenize the equation
         vector<vector<sf::Vector2f>> calculateC(float xMin, float xMax, float increment); // calculate the cartesian coordinates
         vector<vector<sf::Vector2f>> calculateP(float thetaMin, float thetaMax, float increment); // calculate the polar coordinates
-
-
+        vector<vector<sf::Vector2f>> calculateRoseCurve(float thetaMin, float thetaMax, float increment, float a, float b);
     private:
         GraphInfo* _info; // graph information
         ShuntingYard _shuntingYard; // shunting yard object

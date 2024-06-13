@@ -3,6 +3,7 @@
 #include "graphInfo.h"
 #include "constants.h"
 #include "coord_translation.h"
+#include  <sstream>
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Plot::Plot(GraphInfo* info) : _info(info), _coordTranslation(info)
@@ -27,6 +28,13 @@ vector<vector<sf::Vector2f>> Plot::operator()(float xMin, float xMax, float incr
         }
     else if (_info->_mode == GraphInfo::POLAR)
         {
+        if (_info->_history.size() > 0 && _info->_history[0].find("a") != string::npos && _info->_history[0].find("b") != string::npos)
+            {
+            float a = _info->a;
+            float b = _info->b;
+            cout << _info->a << " " << _info->b << endl;
+            return calculateRoseCurve(0, 2 * M_PI, increment, a, b); // handle the rose curve with additional parameters
+            }
         return calculateP(0, 2 * M_PI, increment);
         }
     return {};
@@ -128,8 +136,8 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
 
         // Evaluate the RPN expression
         RPN _rpn(postfix);
-
         _rpn.set_input(postfix);
+
 
         for (int i = 0; i <= pointsCount; ++i)
             {
@@ -174,6 +182,16 @@ Queue<Token*> Plot::tokenize(const string & equation) const
             Token* newToken = new Variable("x");
             tokenQueue.push(newToken);
             }
+        else if (token->get_value() == "a")
+            {
+            Token* newToken = new Integer(_info->a);
+            tokenQueue.push(newToken);
+            }
+        else if (token->get_value() == "b")
+            {
+            Token* newToken = new Integer(_info->b);
+            tokenQueue.push(newToken);
+            }
 
         else
             {
@@ -182,4 +200,81 @@ Queue<Token*> Plot::tokenize(const string & equation) const
         }
 
     return tokenQueue;
+    }
+
+vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thetaMax, float increment, float a, float b)
+    {
+
+    vector<vector<sf::Vector2f>> allScreenPoints; // 2D vector to store all screen points 
+    int pointsCount = _info->_points;
+    float step = (thetaMax - thetaMin) / pointsCount; // Calculate the step size
+
+    // Generate the expression with actual values of a and b
+    std::string expression = "a * sin(b * theta)";
+    vector<string> equations;
+    if (_info->_mode == GraphInfo::POLAR)
+        {
+        equations.push_back(expression);
+        }
+
+
+    vector<sf::Color> colors = _info->_colors;
+
+    for (size_t eqIndex = 0; eqIndex < equations.size(); ++eqIndex)
+        {
+        vector<sf::Vector2f> screenPoints;
+
+        // Get the postfix expression
+        Queue<Token*> infix = tokenize(equations[eqIndex]);
+
+        // Convert Queue to vector
+        vector<Token*> vec;
+        while (!infix.empty())
+            {
+            vec.push_back(infix.pop());
+            }
+
+        // Convert vector back to Queue
+        Queue<Token*> infixCopy;
+        for (Token* token : vec)
+            {
+            infixCopy.push(token);
+            }
+
+        ShuntingYard sy;
+        // Now you can pass infixCopy to ShuntingYard::postfix
+        Queue<Token*> postfix = sy.postfix(infixCopy);
+
+        // Evaluate the RPN expression
+        RPN _rpn(postfix);
+
+        _rpn.set_input(postfix);
+
+
+        for (int i = 0; i <= pointsCount; ++i)
+            {
+            float theta = thetaMin + i * step;
+            cout << "a: " << _info->a << ", b: " << _info->b << ", theta: " << theta << endl;
+
+            // Evaluate the RPN expression for the current theta value
+            float r = _rpn(theta);  // Use theta as the input variable
+
+            cout << "Evaluating RPN with theta = " << theta << " Result: r = " << r << endl;
+
+            // Convert polar coordinates to Cartesian coordinates
+            float x = r * cos(theta);
+            float y = r * sin(theta);
+
+            // Translate mathematical coordinates to screen coordinates
+            sf::Vector2f screenCoord = _coordTranslation(sf::Vector2f(x, y));
+            cout << "Polar Coord: (" << r << ", " << theta << ") -> Cartesian Coord: (" << x << ", " << y << ") -> Screen Coord: (" << screenCoord.x << ", " << screenCoord.y << ")" << endl;
+
+            screenPoints.push_back(screenCoord);
+            }
+        allScreenPoints.push_back(screenPoints);
+        }
+
+    _info->setPointsData(allScreenPoints);
+
+    return allScreenPoints;
     }

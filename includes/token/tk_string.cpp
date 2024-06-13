@@ -27,7 +27,7 @@ bool TK_string::is_function(const string & s) const
 bool TK_string::is_variable(const string & s) const
     {
 
-    return s == "x" || s == "X" || s == "theta" || s == "θ";
+    return s == "x" || s == "X" || s == "theta" || s == "θ" || s == "a" || s == "b";
     }
 
 bool TK_string::is_constant(const string& s) const

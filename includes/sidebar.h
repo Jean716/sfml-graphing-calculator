@@ -7,12 +7,19 @@
 #include <vector> //for vector
 #include "graphInfo.h" //for class definition
 
+
 class Sidebar
     {
     public:
         Sidebar(float left = SIDE_BAR_LEFT, float width = SIDE_BAR_WIDTH); // Constructor
         void draw(sf::RenderWindow& window); // Draw the sidebar
+
         void handleEvent(const sf::Event& event, GraphInfo* info); // Handle events
+        void handleTextEntered(const sf::Event& event, GraphInfo* info);
+        void handleMouseButtonPressed(const sf::Event& event, GraphInfo* info);
+        void handleKeyPressed(const sf::Event& event, GraphInfo* info);
+        void handleCursorBlinking();
+
         void setFunctions(const vector<string>& functions, const vector<sf::Color>& colors); // Set the functions
         void removeFunction(size_t index, GraphInfo* info); // Remove a function
         void selectFunction(size_t index, GraphInfo* info);

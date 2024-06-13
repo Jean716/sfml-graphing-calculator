@@ -1,5 +1,10 @@
 #include "sidebar.h" // for class definition
 #include "constants.h" // for SCREEN_HEIGHT
+#include "polar.h"
+#include <iostream> // for cout, cerr
+using namespace std; // simplify std::cout to cout
+#include <SFML/Graphics.hpp> // for sf::RenderWindow, sf::RectangleShape, sf::Text, sf::Color, sf::Vector2f, sf::CircleShape
+#include "system.h"
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Sidebar::Sidebar(float left, float width) : _left(left), _width(width),
@@ -32,7 +37,7 @@ _rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _cursorPos(0)
     _instructionLabel.setFont(_font);
     _instructionLabel.setCharacterSize(15);
     _instructionLabel.setFillColor(sf::Color::Black);
-    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: [\nZoom Out: ]\nPan: Up Down Left Right Arrow Keys\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
+    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: [\nZoom Out: ]\nPan: Up Down Left Right Arrow Keys\nRose Curve Step: A D W E\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
     _instructionLabel.setPosition(_left + 10, SCREEN_HEIGHT - 200);
 
     updateText();
@@ -104,169 +109,7 @@ void Sidebar::draw(sf::RenderWindow& window)
         }
     }
 
-/**----------------------------------------------
- * *                   INFO
- *  1.handle TextEntered event
- *  2.handle MouseButtonPressed event
- *  3.handle KeyPressed event
- *  4.handle cursor blinking
- *---------------------------------------------**/
-void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)
-    {
-    try
-        {
-        // Check if the current mode is input
-        if (info->_mode != GraphInfo::INPUT)
-            {
 
-            switch (event.type)
-                {
-                    case sf::Event::TextEntered:
-                        if (event.text.unicode == '\b')
-                            {
-                            if (!_inputEquation.empty() && _cursorPos > 0)
-                                {
-                                _inputEquation.erase(_cursorPos - 1, 1);
-                                _cursorPos--;
-                                }
-                            }
-                        else if (event.text.unicode == '\n')
-                            {
-                            if (!_inputEquation.empty())
-                                {
-                                if (_inputEquation.find("theta") != string::npos)
-                                    {
-                                    info->_mode = GraphInfo::POLAR;
-                                    }
-                                else
-                                    {
-                                    info->_mode = GraphInfo::CARTESIAN;
-                                    }
-
-                                _functions.push_back(_inputEquation);
-                                info->_history.push_back(_inputEquation);
-                                sf::Color color = info->generateDistinctColor();
-                                _colors.push_back(color);
-                                info->_colors.push_back(color);
-                                _inputEquation.clear();
-                                _inputText.setString(_inputEquation);
-                                _cursorPos = 0;
-                                updateText();
-                                }
-                            }
-                        else
-                            {
-                            _inputEquation.insert(_cursorPos, 1, static_cast<char>(event.text.unicode));
-                            _cursorPos++;
-                            }
-                        _inputText.setString(_inputEquation);
-                        break;
-
-                    case sf::Event::MouseButtonPressed:
-                        if (event.mouseButton.button == sf::Mouse::Left)
-                            {
-                            float yPos = 100.0f;
-                            for (size_t i = 0; i < _functions.size(); ++i)
-                                {
-                                sf::FloatRect boxBounds(_left + 40, yPos, _width - 60, 30); // function box bounds
-                                sf::FloatRect deleteBounds(_left + 10, yPos + 5, 30, 30);  // delete button bounds
-
-                                if (deleteBounds.contains(event.mouseButton.x, event.mouseButton.y))
-                                    {
-                                    removeFunction(i, info); //delete butoon at index i clicked
-                                    break;
-                                    }
-                                else if (boxBounds.contains(event.mouseButton.x, event.mouseButton.y)) // function box clicked
-                                    {
-                                    selectFunction(i, info); // call select function
-                                    break;
-                                    }
-                                yPos += 40.0f;
-                                }
-
-                            sf::FloatRect addBounds(_left + 10, 55, 30, 30); // add button bounds
-                            if (addBounds.contains(event.mouseButton.x, event.mouseButton.y))
-                                {
-                                if (!_inputEquation.empty())
-                                    {
-                                    _functions.push_back(_inputEquation);
-                                    info->_history.push_back(_inputEquation);
-                                    sf::Color color = info->generateDistinctColor();
-                                    _colors.push_back(color);
-                                    info->_colors.push_back(color);
-                                    _inputEquation.clear();
-                                    _inputText.setString(_inputEquation);
-                                    _cursorPos = 0;
-                                    updateText();
-                                    }
-                                }
-                            }
-                        break;
-
-                    case sf::Event::KeyPressed:
-                        switch (event.key.code)
-                            {
-                                case sf::Keyboard::Left:
-                                    if (_cursorPos > 0)
-                                        {
-                                        _cursorPos--;
-                                        }
-                                    break;
-
-                                case sf::Keyboard::Right:
-                                    if (_cursorPos < _inputEquation.length())
-                                        {
-                                        _cursorPos++;
-                                        }
-                                    break;
-
-                                case sf::Keyboard::Tab:
-                                    info->toggleMode();
-                                    updateText();
-                                    cout << "Mode toggled to: " << (info->_mode == GraphInfo::CARTESIAN ? "CARTESIAN" : "POLAR") << endl;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                        break;
-
-                    default:
-                        break;
-                }
-
-            if (_cursorClock.getElapsedTime().asSeconds() >= 0.5f)
-                {
-                _showCursor = !_showCursor;
-                _cursorClock.restart();
-                }
-            }
-        else
-            {
-            cout << "Current mode is INPUT" << endl;
-            }
-        }
-    catch (const std::exception& e)
-        {
-        cerr << "An error occurred in Sidebar::handleEvent: " << e.what() << std::endl;
-        // Display error message to user
-        _errorLabel.setString("Error: " + std::string(e.what()));
-        // Clear the current input
-        _inputEquation.clear();
-        _inputText.setString(_inputEquation);
-        _cursorPos = 0;
-        }
-    catch (...)
-        {
-        std::cerr << "An unknown error occurred in Sidebar::handleEvent." << std::endl;
-        // Display generic error message to user
-        _errorLabel.setString("Unknown error occurred.");
-        // Clear the current input
-        _inputEquation.clear();
-        _inputText.setString(_inputEquation);
-        _cursorPos = 0;
-        }
-    }
 
 
 void Sidebar::updateText()
@@ -326,4 +169,164 @@ sf::Color Sidebar::getCurrentFunctionColor(GraphInfo* info) const
         return _colors[info->_currentFunctionIndex];
         }
     return sf::Color::White;
+    }
+
+/**----------------------------------------------
+ * *                   INFO
+ *  1.handle TextEntered event
+ *  2.handle MouseButtonPressed event
+ *  3.handle KeyPressed event
+ *  4.handle cursor blinking
+ *---------------------------------------------**/
+void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)
+    {
+    if (info->_mode != GraphInfo::INPUT)
+        {
+        switch (event.type)
+            {
+                case sf::Event::TextEntered:
+                    handleTextEntered(event, info);
+                    break;
+
+                case sf::Event::MouseButtonPressed:
+                    handleMouseButtonPressed(event, info);
+                    break;
+
+                case sf::Event::KeyPressed:
+                    handleKeyPressed(event, info);
+                    break;
+
+                default:
+                    break;
+            }
+
+        handleCursorBlinking();
+        }
+    else
+        {
+        std::cout << "Current mode is INPUT" << std::endl;
+        }
+    }
+
+void Sidebar::handleTextEntered(const sf::Event& event, GraphInfo* info)
+    {
+    if (event.text.unicode == '\b')
+        {
+        if (!_inputEquation.empty() && _cursorPos > 0)
+            {
+            _inputEquation.erase(_cursorPos - 1, 1);
+            _cursorPos--;
+            }
+        }
+    else if (event.text.unicode == '\n')
+        {
+        if (!_inputEquation.empty())
+            {
+            if (_inputEquation.find("theta") != std::string::npos)
+                {
+                info->_mode = GraphInfo::POLAR;
+                }
+            else
+                {
+                info->_mode = GraphInfo::CARTESIAN;
+                }
+
+            _functions.push_back(_inputEquation);
+            info->_history.push_back(_inputEquation);
+            sf::Color color = info->generateDistinctColor();
+            _colors.push_back(color);
+            info->_colors.push_back(color);
+
+
+            _inputEquation.clear();
+            _inputText.setString(_inputEquation);
+            _cursorPos = 0;
+            updateText();
+            }
+        }
+    else
+        {
+        _inputEquation.insert(_cursorPos, 1, static_cast<char>(event.text.unicode));
+        _cursorPos++;
+        }
+    _inputText.setString(_inputEquation);
+    }
+
+void Sidebar::handleMouseButtonPressed(const sf::Event& event, GraphInfo* info)
+    {
+    if (event.mouseButton.button == sf::Mouse::Left)
+        {
+        float yPos = 100.0f;
+        for (size_t i = 0; i < _functions.size(); ++i)
+            {
+            sf::FloatRect boxBounds(_left + 40, yPos, _width - 60, 30); // function box bounds
+            sf::FloatRect deleteBounds(_left + 10, yPos + 5, 30, 30);  // delete button bounds
+
+            if (deleteBounds.contains(event.mouseButton.x, event.mouseButton.y))
+                {
+                removeFunction(i, info); //delete button at index i clicked
+                break;
+                }
+            else if (boxBounds.contains(event.mouseButton.x, event.mouseButton.y)) // function box clicked
+                {
+                selectFunction(i, info); // call select function
+                break;
+                }
+            yPos += 40.0f;
+            }
+
+        sf::FloatRect addBounds(_left + 10, 55, 30, 30); // add button bounds
+        if (addBounds.contains(event.mouseButton.x, event.mouseButton.y))
+            {
+            if (!_inputEquation.empty())
+                {
+                _functions.push_back(_inputEquation);
+                info->_history.push_back(_inputEquation);
+                sf::Color color = info->generateDistinctColor();
+                _colors.push_back(color);
+                info->_colors.push_back(color);
+                _inputEquation.clear();
+                _inputText.setString(_inputEquation);
+                _cursorPos = 0;
+                updateText();
+                }
+            }
+        }
+    }
+
+void Sidebar::handleKeyPressed(const sf::Event& event, GraphInfo* info)
+    {
+    switch (event.key.code)
+        {
+            case sf::Keyboard::Left:
+                if (_cursorPos > 0)
+                    {
+                    _cursorPos--;
+                    }
+                break;
+
+            case sf::Keyboard::Right:
+                if (_cursorPos < _inputEquation.length())
+                    {
+                    _cursorPos++;
+                    }
+                break;
+
+            case sf::Keyboard::Tab:
+                info->toggleMode();
+                updateText();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+void Sidebar::handleCursorBlinking()
+    {
+    if (_cursorClock.getElapsedTime().asSeconds() >= 0.5f)
+        {
+        _showCursor = !_showCursor;
+        _cursorClock.restart();
+        }
     }

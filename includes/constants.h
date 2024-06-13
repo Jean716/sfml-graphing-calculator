@@ -20,7 +20,7 @@ const float _maxScale = 10.0f; // maximum scale
 #endif
 
 // Default domain values
-const sf::Vector2f DEFAULT_DOMAIN(-5.0f, 5.0f);
+const sf::Vector2f DEFAULT_DOMAIN(-10.0f, 10.0f);
 const sf::Vector2f DEFAULT_POLAR_DOMAIN(0.0f, 2 * M_PI);
 const float DEFAULT_SCALE = 60.0f; // default scale
 const int DEFAULT_POINTS = 1000; // default number of points
@@ -29,6 +29,8 @@ const float DEFAULT_OFFSET_Y = 0.0f; // default Y-axis offset for panning
 
 // Sidebar default values
 const float SIDE_BAR_LEFT = 1120.0f;
+static constexpr float A_STEP = 1.0f;
+static constexpr float B_STEP = 1.0f;
 
 // Zoom and pan steps
 const float ZOOM_STEP = 1.1f; // zoom factor
