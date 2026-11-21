@@ -28,6 +28,16 @@ int ShuntingYard::precedence(const string& op) const
     }
 
 
+bool ShuntingYard::is_call_operator(const Token* token)
+    {
+    if (token->type() != TokenType::OPERATOR)
+        {
+        return false;
+        }
+    const string op = token->get_value();
+    return op == "max" || op == "min";
+    }
+
 bool ShuntingYard::is_left_assoc(const string& op) const
     {
     return op != "^";
@@ -66,6 +76,13 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                     break;
 
                 case TokenType::OPERATOR:
+                    // max(a, b) / min(a, b) are written like functions: hold
+                    // them until their closing parenthesis, as with sin(x).
+                    if (is_call_operator(it))
+                        {
+                        stack.push(it);
+                        break;
+                        }
                     // A unary minus is a prefix operator: its operand has not
                     // been read yet, so it must not pop anything (otherwise
                     // "2*-3" would emit "*" before the 3).
@@ -115,7 +132,8 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                         throw invalid_argument("Mismatched parentheses");
                         }
                     stack.pop();
-                    if (!stack.empty() && stack.top()->type() == TokenType::FUNCTION)
+                    if (!stack.empty() &&
+                        (stack.top()->type() == TokenType::FUNCTION || is_call_operator(stack.top())))
                         {
                         output.push(stack.pop());
                         }

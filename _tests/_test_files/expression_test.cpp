@@ -117,10 +117,16 @@ TEST(Functions, MaxMinAlone) {
     expect_value("max(x, 2)", 5, 5);
 }
 
-// Known bug: max/min are handled as operators with no precedence, so they
-// are not emitted when their closing parenthesis is reached.
-TEST(Functions, DISABLED_MaxMinInsideLargerExpression) {
+// max/min are emitted at their closing parenthesis, like functions.
+TEST(Functions, MaxMinInsideLargerExpression) {
     expect_value("max(10, 20) + min(5, 10)", 0, 25);
+    expect_value("max(x, 2)*3", 1, 6);
+    expect_value("2max(1, 3)", 0, 6);
+    expect_value("max(1, 2)^2", 0, 4);
+    expect_value("max(min(x, 4), 0)", 7, 4);   // clamp x to [0, 4]
+    expect_value("max(min(x, 4), 0)", -3, 0);
+    expect_value("max(x + 1, 2x)", 3, 6);
+    expect_value("-min(x, 1)", 5, -1);
 }
 
 // A value followed by a function, constant or "(" is multiplied.

@@ -26,6 +26,7 @@ class ShuntingYard
 
         int precedence(const string& op) const;
         bool is_left_assoc(const string& op) const;
+        static bool is_call_operator(const Token* token); // max / min, written as max(a, b)
 
 
     public:
