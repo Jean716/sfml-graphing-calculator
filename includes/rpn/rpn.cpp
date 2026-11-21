@@ -1,7 +1,7 @@
 #include "rpn.h"
 #include <iostream>
 #include <stdexcept> // for runtime_error
-#include "/Users/jwcomputer/CS3A_Project/99_00_final_project/includes/exceptions/dividebyzero.h"
+#include "../exceptions/dividebyzero.h"
 
 using namespace std;
 
