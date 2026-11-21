@@ -1,3 +1,4 @@
+#include "font.h"
 #include "graph.h"
 #include "plot.h"
 #include "graphInfo.h"
@@ -27,7 +28,35 @@ void Graph::set_info(GraphInfo* info)  // Set the information of the graph
 void Graph::update(GraphInfo* info) // This function will be used to update the graph
     {
     set_info(info);
+    // update() runs every frame, but the points only change when an input
+    // changes, so skip the (expensive) re-evaluation otherwise.
+    string key = makeCacheKey();
+    if (key == _cacheKey)
+        {
+        return;
+        }
     generatePoints();
+    _cacheKey = key; // only cache after a successful evaluation
+    }
+
+string Graph::makeCacheKey() const
+    {
+    if (!_info)
+        {
+        return "";
+        }
+    stringstream key;
+    key << _info->_mode << '|' << _info->_points << '|'
+        << _info->_domain.x << ',' << _info->_domain.y << '|'
+        << _info->_origin.x << ',' << _info->_origin.y << '|'
+        << _info->_windowDimensions.x << ',' << _info->_windowDimensions.y << '|'
+        << _info->_scale << '|' << _info->_offsetX << ',' << _info->_offsetY << '|'
+        << _info->a << ',' << _info->b;
+    for (const string& eq : _info->_history)
+        {
+        key << '|' << eq;
+        }
+    return key.str();
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
@@ -76,11 +105,7 @@ void Graph::drawAxes(sf::RenderWindow& window) // Draw the axes for the Cartesia
 
 void Graph::drawTicksAndLabels(sf::RenderWindow& window) // Draw ticks and labels for the Cartesian graph
     {
-    sf::Font font;
-    if (!font.loadFromFile("arial.ttf"))
-        {
-        cerr << "Error loading font" << endl; // If the font is not loaded, print an error message
-        }
+    const sf::Font& font = app_font();  // shared font, loaded once
 
     float scale = _info->_scale; // Get the scale
     sf::Vector2f origin = _info->_origin; // Get the origin
@@ -228,11 +253,7 @@ void Graph::generatePoints() // Call the plot object to generate the points
 
 void Graph::drawDomainAndCoordinate(sf::RenderWindow& window) // Draw the domain and coordinate
     {
-    sf::Font font; // Create a font object
-    if (!font.loadFromFile("arial.ttf")) // If the font is not loaded
-        {
-        cerr << "Error loading font" << endl; // Print an error message
-        }
+    const sf::Font& font = app_font();  // shared font, loaded once
 
     sf::Text domainText; // Create a text object for the domain
     domainText.setFont(font); // Set the font of the domain text

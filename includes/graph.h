@@ -27,6 +27,8 @@ class Graph
         GraphInfo* _info; // Graph information
         vector<vector<sf::Vector2f>> _points; // Store the points of the graph
         Plot _plot; // Plot object
+        string _cacheKey; // Inputs used for the last computed _points
+        string makeCacheKey() const; // Summarize every input that affects the points
         Polar _polar;
         CoordTranslation _coordTranslation;
         void generatePoints(); // Call the plot object to generate the points

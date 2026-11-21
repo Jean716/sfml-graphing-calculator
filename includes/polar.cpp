@@ -1,3 +1,4 @@
+#include "font.h"
 #include "polar.h"
 #include <cmath>
 #include <sstream>
@@ -71,14 +72,7 @@ void Polar::drawPolarLabels(sf::RenderWindow& window, GraphInfo* info)  // Draw 
     sf::Vector2f origin = info->_origin;  // Get the origin
     float offsetX = info->_offsetX;  // Get the offset x
     float offsetY = info->_offsetY;  // Get the offset y
-    sf::Font font;
-
-    if (!font.loadFromFile("DejaVuSans.ttf"))  // Load the font
-        {
-        // handle error
-        cerr << "Failed to load font!" << endl;
-        return;
-        }
+    const sf::Font& font = app_font();  // shared font, loaded once
 
     sf::Text label;
     label.setFont(font);  // Set the font of the label

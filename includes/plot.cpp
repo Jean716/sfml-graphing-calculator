@@ -4,6 +4,20 @@
 #include "constants.h"
 #include "coord_translation.h"
 #include  <sstream>
+
+namespace
+    {
+    // Plot creates its tokens with `new`; this deletes them once the
+    // equation has been evaluated (also if evaluation throws).
+    struct TokenOwner
+        {
+        vector<Token*>& tokens;
+        ~TokenOwner()
+            {
+            for (Token* t : tokens) delete t;
+            }
+        };
+    }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Plot::Plot(GraphInfo* info) : _info(info), _coordTranslation(info)
@@ -78,6 +92,7 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
             infixCopy.push(token);  // push the token to the queue
             }
 
+        TokenOwner owner{vec}; // frees this equation's tokens when the loop iteration ends
         ShuntingYard sy;
         // Now you can pass infixCopy to ShuntingYard::postfix
         Queue<Token*> postfix = sy.postfix(infixCopy);
@@ -136,6 +151,7 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
             infixCopy.push(token);  // push the token to the queue
             }
 
+        TokenOwner owner{vec}; // frees this equation's tokens when the loop iteration ends
         ShuntingYard sy;
         // Now you can pass infixCopy to ShuntingYard::postfix
         Queue<Token*> postfix = sy.postfix(infixCopy);
@@ -187,16 +203,19 @@ Queue<Token*> Plot::tokenize(const string & equation) const
             {
             Token* newToken = new Variable("x");
             tokenQueue.push(newToken);
+            delete token; // replaced by newToken
             }
         else if (token->get_value() == "a")
             {
             Token* newToken = new Integer(_info->a);
             tokenQueue.push(newToken);
+            delete token; // replaced by newToken
             }
         else if (token->get_value() == "b")
             {
             Token* newToken = new Integer(_info->b);
             tokenQueue.push(newToken);
+            delete token; // replaced by newToken
             }
 
         else
@@ -247,6 +266,7 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
             infixCopy.push(token); // push the token to the queue
             }
 
+        TokenOwner owner{vec}; // frees this equation's tokens when the loop iteration ends
         ShuntingYard sy;
         // Now you can pass infixCopy to ShuntingYard::postfix
         Queue<Token*> postfix = sy.postfix(infixCopy);

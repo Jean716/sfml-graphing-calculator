@@ -1,98 +1,68 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(barkeshli_s22)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+project(sfml_graphing_calculator LANGUAGES CXX)
 
-
-#. . . . . . . . . . . . . . . . . . . .
-include(GNUInstallDirs)
-if(MSVC)
-    add_compile_options(/W4)
-    add_link_options(/W4)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
-    # message("compiler: MSVC")
-else()
-    # message("compiler: NOT MSVC")
-    # add_compile_options(-Wall -Wextra -pedantic -Werror -Wl,--fatal-warnings)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-
-# place binaries and libraries according to GNU standards
+include(GNUInstallDirs)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 
-
-
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+option(ENABLE_COVERAGE "Build with gcov coverage instrumentation" OFF)
+if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    add_compile_options(-fprofile-arcs -ftest-coverage)
+    add_link_options(-fprofile-arcs -ftest-coverage)
 endif()
-#. . . . . . . . . . . . . . . . . . . .
 
-# ------------------------------------
+# ---------------------------------------------------------------------------
+# SFML 2.5+ (macOS: brew install sfml@2, Ubuntu/Debian: apt install libsfml-dev)
+# Homebrew's keg-only sfml@2 is not on the default search path, so add it.
+# ---------------------------------------------------------------------------
+if(APPLE)
+    list(APPEND CMAKE_PREFIX_PATH /opt/homebrew/opt/sfml@2 /usr/local/opt/sfml@2
+                                  /opt/homebrew/opt/sfml /usr/local/opt/sfml)
+endif()
+find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+
+# ---------------------------------------------------------------------------
+# GoogleTest
+# ---------------------------------------------------------------------------
 include(FetchContent)
 FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+    googletest
+    URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
 )
-
-# For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
+enable_testing()
+include(GoogleTest)
 
- 
-enable_testing() 
+# ---------------------------------------------------------------------------
+# Core library: every .cpp under includes/
+# ---------------------------------------------------------------------------
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.cpp")
+add_library(calculator STATIC ${SOURCE_FILES})
+target_include_directories(calculator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+target_link_libraries(calculator PUBLIC sfml-graphics sfml-window sfml-system)
+# Absolute path to the bundled font, so the app works from any directory
+target_compile_definitions(calculator PRIVATE
+    FONT_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/fonts/DejaVuSans.ttf")
 
+add_executable(main main.cpp)
+target_link_libraries(main PRIVATE calculator)
 
-# ------------------------------------
+# ---------------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------------
+add_executable(expression_test _tests/_test_files/expression_test.cpp)
+target_link_libraries(expression_test PRIVATE calculator gtest_main)
+gtest_discover_tests(expression_test)
 
-
-
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-#   Grab all cpp files from includes folder
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-set(INCLUDES_FOLDER includes)
-FILE(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}   "${INCLUDES_FOLDER}/*.cpp" )
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
-ADD_EXECUTABLE(main
-    main.cpp
-    ${SOURCE_FILES}
-)
-
-ADD_EXECUTABLE(basic_test
-    _tests/_test_files/basic_test.cpp
-    ${SOURCE_FILES}
-)
-
-ADD_EXECUTABLE(testB
-    _tests/_test_files/testB.cpp
-    ${SOURCE_FILES}
-    #- - - - - - - - - - - - - - - - 
-)
-
-TARGET_LINK_LIBRARIES(basic_test gtest)
-TARGET_LINK_LIBRARIES(testB gtest)
-
- 
-set(SFML_DIR "/opt/homebrew/opt/sfml/lib/cmake/SFML")
-find_package(SFML 2.5 REQUIRED COMPONENTS system window graphics network audio)
-
-set(SFML_INCLUDE_DIRS "/opt/homebrew/opt/sfml/include")
-set(SFML_LIBRARY_DIRS "/opt/homebrew/opt/sfml/lib")
-
-if(SFML_FOUND)
-    message(STATUS "SFML_INCLUDE_DIRS: ${SFML_INCLUDE_DIRS}")
-    message(STATUS "SFML_LIBRARIES: ${SFML_LIBRARIES}")
-    include_directories(${SFML_INCLUDE_DIRS})
-    link_directories(${SFML_LIBRARY_DIRS})
-    target_link_libraries(main sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
-    target_link_libraries(basic_test sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
-    target_link_libraries(testB sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
-else()
-    message(FATAL_ERROR "SFML not found")
-endif()
+add_executable(coord_test _tests/_test_files/coord_test.cpp)
+target_link_libraries(coord_test PRIVATE calculator gtest_main)
+gtest_discover_tests(coord_test)

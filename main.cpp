@@ -1,18 +1,31 @@
+#include <cstring>
 #include <iostream>
-#include <SFML/Graphics.hpp>
-#include "includes/system.h"
-#include "includes/graph.h"
 #include "includes/animate.h"
-#include "includes/sidebar.h"
 #include "includes/graphInfo.h"
-#include "includes/constants.h"
 using namespace std;
-int main() {
+
+// Usage:
+//   ./bin/main             run the calculator
+//   ./bin/main --verbose   also print the internal trace (tokenizer,
+//                          shunting yard, RPN evaluation of every point)
+int main(int argc, char** argv)
+    {
+    const bool verbose = argc > 1 && strcmp(argv[1], "--verbose") == 0;
+
+    // The engine traces every step to stdout, which is tens of thousands of
+    // lines per redraw. Discard that trace unless it was asked for; errors
+    // still go to stderr. (With no buffer, cout drops output cheaply.)
+    streambuf* original = cout.rdbuf();
+    if (!verbose)
+        {
+        cout.rdbuf(nullptr);
+        }
+
     GraphInfo graphInfo;
     Animate animate;
     animate.set_info(&graphInfo);
     animate.run();
 
-
+    cout.rdbuf(original);
     return 0;
     }

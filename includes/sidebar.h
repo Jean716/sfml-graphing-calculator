@@ -25,6 +25,7 @@ class Sidebar
         void selectFunction(size_t index, GraphInfo* info);
         string getCurrentFunction(GraphInfo* info) const; // Get the current function
         sf::Color getCurrentFunctionColor(GraphInfo* info) const; // Get the current function color
+        bool isInputEmpty() const { return _inputEquation.empty(); } // True when nothing is being typed
 
 
     private:

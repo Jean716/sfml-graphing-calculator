@@ -1,3 +1,4 @@
+#include "font.h"
 #include "animate.h"
 #include "constants.h"
 #include "system.h"
@@ -27,10 +28,7 @@ Animate::Animate() // initialize the window, system, sidebar, and graph etc.
     _mousePoint.setRadius(2); // set the radius of the mouse point
     _mousePoint.setFillColor(sf::Color::Red); // set the color of the mouse point
 
-    if (!_font.loadFromFile("arial.ttf"))
-        {
-        cerr << "Error loading font" << endl;
-        }
+    _font = app_font();  // shared font, loaded once
 
     // show the math coordinates on the left top corner
     _coordLabel.setFont(_font);  // set the font of the text
@@ -134,17 +132,22 @@ void Animate::processEvents()
                         _info->_mode = _isPolarMode ? GraphInfo::POLAR : GraphInfo::CARTESIAN;
                         break;
 
-                    case sf::Keyboard::V: // press A key to increase a
-                        _system.step(7, _info);
-                        break;
-                    case sf::Keyboard::F: // press Z key to decrease a
-                        _system.step(8, _info);
-                        break;
-                    case sf::Keyboard::G: // press S key to increase b
-                        _system.step(9, _info);
-                        break;
-                    case sf::Keyboard::D: // press X key to decrease b
-                        _system.step(10, _info);
+                    // V/F/G/D adjust the rose-curve parameters, but only while
+                    // the input box is empty; otherwise they are typed as text
+                    // (e.g. the "g" in log).
+                    case sf::Keyboard::V:
+                    case sf::Keyboard::F:
+                    case sf::Keyboard::G:
+                    case sf::Keyboard::D:
+                        if (!_sidebar.isInputEmpty())
+                            {
+                            inputDisabled = false;
+                            break;
+                            }
+                        if (event.key.code == sf::Keyboard::V) _system.step(7, _info);       // increase a
+                        else if (event.key.code == sf::Keyboard::F) _system.step(8, _info);  // decrease a
+                        else if (event.key.code == sf::Keyboard::G) _system.step(9, _info);  // increase b
+                        else _system.step(10, _info);                                        // decrease b
                         break;
                     default:
                         inputDisabled = false; // Allow input handling for other keys
@@ -272,11 +275,7 @@ void Animate::drawCartesianDomainAndCoordinates(sf::RenderWindow& window)
 void Animate::drawPolarDomainAndCoordinates(sf::RenderWindow& window)
     {
     // check if the font is loaded
-    sf::Font font;
-    if (!font.loadFromFile("DejaVuSans.ttf"))
-        {
-        cerr << "Error loading font" << endl;  // handle error
-        }
+    const sf::Font& font = app_font();  // shared font, loaded once
     sf::Text domainText;  // create a text object
     domainText.setFont(font);  // set the font of the text
     domainText.setCharacterSize(20);  // set the size of the text

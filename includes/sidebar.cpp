@@ -1,3 +1,4 @@
+#include "font.h"
 #include "sidebar.h" // for class definition
 #include "constants.h" // for SCREEN_HEIGHT
 #include "polar.h"
@@ -8,12 +9,9 @@ using namespace std; // simplify std::cout to cout
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Sidebar::Sidebar(float left, float width) : _left(left), _width(width),
-_rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _cursorPos(0)
+_rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _info(nullptr), _cursorPos(0)
     {
-    if (!_font.loadFromFile("arial.ttf"))  // load the font
-        {
-        cerr << "Error loading font." << endl;
-        }
+    _font = app_font();  // shared font, loaded once
     //  set the sidebar text
     _sb_text.setFont(_font);  // font for the sidebar text
     _sb_text.setCharacterSize(20);  // character size for the sidebar text
@@ -37,7 +35,7 @@ _rect(sf::Vector2f(width, SCREEN_HEIGHT)), _showCursor(true), _cursorPos(0)
     _instructionLabel.setFont(_font);  // font for the instruction label
     _instructionLabel.setCharacterSize(15);  // character size for the instruction label
     _instructionLabel.setFillColor(sf::Color::Black);  // color for the instruction label
-    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: [\nZoom Out: ]\nPan: Up Down Left Right Arrow Keys\nRose Curve Step: V F G D\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
+    _instructionLabel.setString("INSTRUCTIONS:\nZoom In: ]\nZoom Out: [\nPan: Up Down Left Right Arrow Keys\nRose Curve Step: V F G D\nToggle Coordinates: Tab\nAdd Function: Enter\nDelete Function: Click Circle Button\nSelect Function: Click Function Box\n");
     _instructionLabel.setPosition(_left + 10, SCREEN_HEIGHT - 200);  // position for the instruction label
 
     updateText(); //  update the text
@@ -99,7 +97,7 @@ void Sidebar::draw(sf::RenderWindow& window)
         functionText.setFont(_font);  // font for the function text
         functionText.setCharacterSize(20);  // character size for the function text
         functionText.setFillColor(sf::Color::Black);  // color for the function text
-        functionText.setString(_info->getFunctionPrefix() + _functions[i]);  // string for the function text
+        functionText.setString((_info ? _info->getFunctionPrefix() : string()) + _functions[i]);  // string for the function text
         functionText.setPosition(_left + 45, yPos + 5);  // position for the function text
         window.draw(functionText);   // draw the function text
 
@@ -179,6 +177,7 @@ sf::Color Sidebar::getCurrentFunctionColor(GraphInfo* info) const // Get the cur
  *---------------------------------------------**/
 void Sidebar::handleEvent(const sf::Event& event, GraphInfo* info)  // Handle events
     {
+    _info = info;  // remembered for draw(), which has no GraphInfo parameter
     if (info->_mode != GraphInfo::INPUT)
         {
         if (info->_mode == GraphInfo::INPUT)
@@ -221,7 +220,7 @@ void Sidebar::handleTextEntered(const sf::Event& event, GraphInfo* info)  // Han
             _cursorPos--;
             }
         }
-    else if (event.text.unicode == '\n')  // If the unicode is newline
+    else if (event.text.unicode == '\n' || event.text.unicode == '\r')  // Enter: '\n' on macOS, '\r' on Linux/Windows
         {
         if (!_inputEquation.empty())
             {
