@@ -37,9 +37,8 @@ TEST(CoordTranslation, RoundTripWithoutPan) {
     }
 }
 
-// Known bug: getMathCoords subtracts offsetY where translate adds it, so after
-// panning vertically the mouse readout is off by 2 * offsetY / scale.
-TEST(CoordTranslation, DISABLED_RoundTripAfterPan) {
+// getMathCoords must undo translate() after panning in both directions.
+TEST(CoordTranslation, RoundTripAfterPan) {
     GraphInfo info = make_info(10, 20);
     CoordTranslation t(&info);
     for (sf::Vector2f p : {sf::Vector2f(0, 0), sf::Vector2f(2, 3), sf::Vector2f(-1.5f, 4)}) {
@@ -47,6 +46,18 @@ TEST(CoordTranslation, DISABLED_RoundTripAfterPan) {
         EXPECT_NEAR(back.x, p.x, 1e-4);
         EXPECT_NEAR(back.y, p.y, 1e-4);
     }
+}
+
+TEST(CoordTranslation, ScreenToMathAfterPan) {
+    GraphInfo info = make_info(10, 20);
+    CoordTranslation t(&info);
+    // The math origin is drawn at (origin + offset) = (410, 320).
+    sf::Vector2f m = t.getMathCoords({410, 320});
+    EXPECT_NEAR(m.x, 0, 1e-5);
+    EXPECT_NEAR(m.y, 0, 1e-5);
+    m = t.getMathCoords({610, 20});  // 2 units right, 3 units up
+    EXPECT_NEAR(m.x, 2, 1e-5);
+    EXPECT_NEAR(m.y, 3, 1e-5);
 }
 
 TEST(CoordTranslation, PolarCartesianRoundTrip) {

@@ -1,9 +1,6 @@
 // End-to-end tests for the expression engine:
 //   string -> TK_string::split -> ShuntingYard::postfix -> RPN(x)
 // Expected values are computed with <cmath>.
-//
-// Tests prefixed with DISABLED_ document known bugs. GoogleTest skips them;
-// run them anyway with --gtest_also_run_disabled_tests.
 #include "gtest/gtest.h"
 #include <cmath>
 #include <sstream>

@@ -40,7 +40,8 @@ sf::Vector2f CoordTranslation::getMathCoords(const sf::Vector2f& screenPoint) co
     {
     assert(_info != nullptr && "GraphInfo pointer is null!"); // check if the pointer is null
     float x = (screenPoint.x - _info->_origin.x - _info->_offsetX) / _info->_scale;
-    float y = (_info->_origin.y - screenPoint.y - _info->_offsetY) / _info->_scale;
+    // Inverse of translate(): screenY = origin.y - y * scale + offsetY
+    float y = (_info->_origin.y + _info->_offsetY - screenPoint.y) / _info->_scale;
     return sf::Vector2f(x, y); // return the math coord
     }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
