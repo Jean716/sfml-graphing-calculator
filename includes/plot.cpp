@@ -67,7 +67,6 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
     {
     vector<vector<sf::Vector2f>> allScreenPoints;  // 2D vector to store all screen points
 
-    float step = (xMax - xMin) / _info->_points; // Calculate the step size
 
     vector<string> equations = _info->_history;  // get the equations
     vector<sf::Color> colors = _info->_colors;  // get the colors
@@ -105,7 +104,7 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
 
         for (int i = 0; i <= _info->_points; ++i)  // loop through the points
             {
-            float x = xMin + i * step;  // Calculate the x value
+            float x = xMin + (xMax - xMin) * i / _info->_points;  // computed per sample so x = 0 is exact (no accumulated step error)
             // Evaluate the RPN expression for the current x value
             float y = _rpn(x);
             if (!std::isfinite(y))  // undefined here (e.g. 1/0, log of a negative): leave a gap
@@ -130,7 +129,6 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
     {
     vector<vector<sf::Vector2f>> allScreenPoints; // 2D vector to store all screen points 
     int pointsCount = _info->_points;
-    float step = (thetaMax - thetaMin) / pointsCount; // Calculate the step size
 
     vector<string> equations = _info->_history;  // get the equations
     vector<sf::Color> colors = _info->_colors;  // get the colors
@@ -168,7 +166,7 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
 
         for (int i = 0; i <= pointsCount; ++i)
             {
-            float theta = thetaMin + i * step;
+            float theta = thetaMin + (thetaMax - thetaMin) * i / pointsCount;
             // Evaluate the RPN expression for the current theta value
             float r = _rpn(theta);  // Use theta as the input variable
             if (!std::isfinite(r))  // undefined here (e.g. 1/0, log of a negative): leave a gap
@@ -241,7 +239,6 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
 
     vector<vector<sf::Vector2f>> allScreenPoints; // 2D vector to store all screen points 
     int pointsCount = _info->_points;
-    float step = (thetaMax - thetaMin) / pointsCount; // Calculate the step size
 
     // Generate the expression with actual values of a and b
     string expression = "a * sin(b * theta)";
@@ -288,7 +285,7 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
 
         for (int i = 0; i <= pointsCount; ++i)
             {
-            float theta = thetaMin + i * step;
+            float theta = thetaMin + (thetaMax - thetaMin) * i / pointsCount;
             cout << "a: " << _info->a << ", b: " << _info->b << ", theta: " << theta << endl;
 
             // Evaluate the RPN expression for the current theta value
