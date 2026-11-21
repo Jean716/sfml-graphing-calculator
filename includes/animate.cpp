@@ -57,7 +57,6 @@ void Animate::run()  // run the main loop
             std::cerr << "Caught DivideByZero exception in Animate::run: " << e.what() << std::endl;
             showErrorMessage("Error: " + std::string(e.what()));  // show the error message
 
-
             }
         catch (const exception& e)  // catch the exception
             {
@@ -70,6 +69,7 @@ void Animate::run()  // run the main loop
             {
             cerr << "An unknown error occurred." << endl;  // handle the error
             showErrorMessage("Unknown error occurred.");  // show the error message
+
 
 
             }

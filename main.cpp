@@ -7,29 +7,12 @@
 #include "includes/graphInfo.h"
 #include "includes/constants.h"
 using namespace std;
-int main()
-    {
-    try
-        {
+int main() {
+    GraphInfo graphInfo;
+    Animate animate;
+    animate.set_info(&graphInfo);
+    animate.run();
 
-        GraphInfo graphInfo;
-        Animate animate;
-        animate.set_info(&graphInfo);
-        animate.run();
-        }
-    catch (const DivideByZero& e)
-        {
-        std::cerr << "Caught DivideByZero exception in Animate::run: " << e.what() << std::endl;
-
-        }
-    catch (const exception& e)
-        {
-        cerr << "An error occurred: " << e.what() << endl;
-        }
-    catch (...)
-        {
-        cerr << "An unknown error occurred." << endl;
-        }
 
     return 0;
     }

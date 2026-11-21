@@ -26,6 +26,7 @@ class Sidebar
         string getCurrentFunction(GraphInfo* info) const; // Get the current function
         sf::Color getCurrentFunctionColor(GraphInfo* info) const; // Get the current function color
 
+
     private:
         string _inputEquation;    // Equation input by the user
         sf::Font _font;       // Font for the text
@@ -44,6 +45,7 @@ class Sidebar
         GraphInfo* _info; // Pointer to the graph info
         int _cursorPos; // Cursor position in the input box
         sf::Text _errorLabel; // Error label
+
 
 
         void updateText(); // Update the text for the input box
