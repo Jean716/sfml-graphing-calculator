@@ -66,3 +66,7 @@ gtest_discover_tests(expression_test)
 add_executable(coord_test _tests/_test_files/coord_test.cpp)
 target_link_libraries(coord_test PRIVATE calculator gtest_main)
 gtest_discover_tests(coord_test)
+
+add_executable(plot_test _tests/_test_files/plot_test.cpp)
+target_link_libraries(plot_test PRIVATE calculator gtest_main)
+gtest_discover_tests(plot_test)

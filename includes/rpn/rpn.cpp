@@ -1,7 +1,6 @@
 #include "rpn.h"
 #include <iostream>
 #include <stdexcept> // for runtime_error
-#include "../exceptions/dividebyzero.h"
 
 using namespace std;
 
@@ -57,15 +56,7 @@ float RPN::operator()(float x)
                             }
                         float right = stack.pop();
                         float left = stack.pop();
-                        try
-                            {
-                            stack.push(operator_token->evaluate(left, right));
-                            }
-                        catch (const DivideByZero& e)
-                            {
-                            cerr << "Error: " << e.what() << endl;
-                            throw; // Rethrow the exception to be caught by the outer catch block
-                            }
+                        stack.push(operator_token->evaluate(left, right));
                         }
                     break;
                     }
@@ -100,11 +91,6 @@ float RPN::operator()(float x)
     catch (const exception& e)
         {
         cerr << "An error occurred in RPN::operator(): " << e.what() << endl;
-        throw;
-        }
-    catch (const DivideByZero& e)
-        {
-        std::cerr << "Error: " << e.what() << std::endl;
         throw;
         }
     }

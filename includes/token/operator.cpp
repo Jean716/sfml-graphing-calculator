@@ -20,10 +20,9 @@ float Operator::evaluate(float a, float b) const
         }
     else if (_op == "/")
         {
-        if (b == 0)
-            {
-            throw runtime_error("Division by zero error");
-            }
+        // No exception on b == 0: IEEE 754 gives +/-inf (or NaN for 0/0),
+        // and the plotter skips non-finite points. Throwing here aborted
+        // the whole redraw whenever one sample landed exactly on x = 0.
         return a / b;
         }
     else if (_op == "^")

@@ -136,12 +136,14 @@ TEST(InvalidInput, IsRejected) {
     EXPECT_ANY_THROW(eval("y + 1"));     // unknown variable
 }
 
-// Known bug: division by zero throws, and Plot does not catch it per point,
-// so one undefined point (x = 0 is sampled exactly in the default domain)
-// stops every function from being drawn. Expected: return +/-inf or NaN
-// and let the plotter skip that point.
-TEST(InvalidInput, DISABLED_DivisionByZeroDoesNotThrow) {
+// Division by zero follows IEEE 754 instead of throwing; the plotter skips
+// the resulting non-finite points (see plot_test).
+TEST(InvalidInput, DivisionByZeroGivesInfOrNaN) {
     double y = 0;
     ASSERT_NO_THROW(y = eval("1/x", 0));
-    EXPECT_TRUE(std::isinf(y) || std::isnan(y));
+    EXPECT_TRUE(std::isinf(y) && y > 0);
+    ASSERT_NO_THROW(y = eval("-1/x", 0));
+    EXPECT_TRUE(std::isinf(y) && y < 0);
+    ASSERT_NO_THROW(y = eval("0/x", 0));
+    EXPECT_TRUE(std::isnan(y));
 }

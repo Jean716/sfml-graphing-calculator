@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "coord_translation.h"
 #include  <sstream>
+#include <cmath>
 
 namespace
     {
@@ -107,6 +108,10 @@ vector<vector<sf::Vector2f>> Plot::calculateC(float xMin, float xMax, float incr
             float x = xMin + i * step;  // Calculate the x value
             // Evaluate the RPN expression for the current x value
             float y = _rpn(x);
+            if (!std::isfinite(y))  // undefined here (e.g. 1/0, log of a negative): leave a gap
+                {
+                continue;
+                }
 
             cout << "Evaluating RPN with x = " << x << " Result: y = " << y << endl;
 
@@ -166,6 +171,10 @@ vector<vector<sf::Vector2f>> Plot::calculateP(float thetaMin, float thetaMax, fl
             float theta = thetaMin + i * step;
             // Evaluate the RPN expression for the current theta value
             float r = _rpn(theta);  // Use theta as the input variable
+            if (!std::isfinite(r))  // undefined here (e.g. 1/0, log of a negative): leave a gap
+                {
+                continue;
+                }
 
             cout << "Evaluating RPN with theta = " << theta << " Result: r = " << r << endl;
 
@@ -284,6 +293,10 @@ vector<vector<sf::Vector2f>> Plot::calculateRoseCurve(float thetaMin, float thet
 
             // Evaluate the RPN expression for the current theta value
             float r = _rpn(theta);  // Use theta as the input variable
+            if (!std::isfinite(r))  // undefined here (e.g. 1/0, log of a negative): leave a gap
+                {
+                continue;
+                }
 
             cout << "Evaluating RPN with theta = " << theta << " Result: r = " << r << endl;
 
