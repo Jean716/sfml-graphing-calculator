@@ -82,12 +82,16 @@ TEST(Arithmetic, LeadingUnaryMinus) {
     expect_value("x^2", -3, 9);
 }
 
-// Known bug: a unary minus after another operator gets the same precedence
-// as binary minus, so it pops that operator off the stack too early.
-TEST(Arithmetic, DISABLED_UnaryMinusAfterOperator) {
+// A unary minus after another operator must not pop that operator.
+TEST(Arithmetic, UnaryMinusAfterOperator) {
     expect_value("2*-3", 0, -6);
     expect_value("2^-1", 0, 0.5);
     expect_value("3 - -2", 0, 5);
+    expect_value("2*-3+1", 0, -5);   // (2*(-3)) + 1
+    expect_value("-3+1", 0, -2);     // (-3) + 1
+    expect_value("-x*2", 3, -6);
+    expect_value("2^-x^2", 1, 0.5);  // 2^(-(1^2))
+    expect_value("--2", 0, 2);
 }
 
 // --- Functions and constants ----------------------------------------------

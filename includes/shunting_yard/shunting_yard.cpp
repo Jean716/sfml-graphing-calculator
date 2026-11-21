@@ -66,9 +66,28 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input) const
                     break;
 
                 case TokenType::OPERATOR:
+                    // A unary minus is a prefix operator: its operand has not
+                    // been read yet, so it must not pop anything (otherwise
+                    // "2*-3" would emit "*" before the 3).
+                    if (static_cast<Operator*>(it)->isUnary())
+                        {
+                        stack.push(it);
+                        break;
+                        }
                     while (!stack.empty() && stack.top()->type() == TokenType::OPERATOR)
                         {
                         Token* top = stack.top();
+                        // Unary minus binds tighter than + - * / but looser
+                        // than ^, so -2^2 = -(2^2) while -3+1 = (-3)+1.
+                        if (static_cast<Operator*>(top)->isUnary())
+                            {
+                            if (it->get_value() == "^")
+                                {
+                                break;
+                                }
+                            output.push(stack.pop());
+                            continue;
+                            }
                         if ((precedence(top->get_value()) > precedence(it->get_value())) ||
                             (precedence(top->get_value()) == precedence(it->get_value()) && is_left_assoc(top->get_value())))
                             {
