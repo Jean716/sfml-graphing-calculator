@@ -6,6 +6,35 @@
 using namespace std; // simplify std::cout to cout
 #include <SFML/Graphics.hpp> // for sf::RenderWindow, sf::RectangleShape, sf::Text, sf::Color, sf::Vector2f, sf::CircleShape
 #include "system.h"
+#include "plot.h"
+
+namespace
+    {
+    // Plot the equation once on a scratch copy of the graph state, so an
+    // invalid equation (e.g. "logx") throws here, before it is added to the
+    // history. Otherwise every redraw would throw again and the app would
+    // hang in the error loop.
+    void validate_equation(const string& equation, const GraphInfo& info)
+        {
+        GraphInfo scratch = info;
+        scratch._history = {equation};
+        scratch._colors = {sf::Color::Black};
+        scratch._mode = equation.find("theta") != string::npos ? GraphInfo::POLAR : GraphInfo::CARTESIAN;
+
+        streambuf* out = cout.rdbuf(nullptr);  // silence the engine trace
+        try
+            {
+            Plot plot(&scratch);
+            plot(scratch._domain.x, scratch._domain.y, 0.1f);
+            }
+        catch (...)
+            {
+            cout.rdbuf(out);
+            throw;  // shown once by Animate::run; the input stays in the box
+            }
+        cout.rdbuf(out);
+        }
+    }
 //*------------------------------------------------------- DIVISION -------------------------------------------------------*/
 
 Sidebar::Sidebar(float left, float width) : _left(left), _width(width),
@@ -224,6 +253,8 @@ void Sidebar::handleTextEntered(const sf::Event& event, GraphInfo* info)  // Han
         {
         if (!_inputEquation.empty())
             {
+            validate_equation(_inputEquation, *info);  // throws (and adds nothing) if invalid
+
             if (_inputEquation.find("theta") != string::npos)
                 {
                 info->_mode = GraphInfo::POLAR;
@@ -282,6 +313,7 @@ void Sidebar::handleMouseButtonPressed(const sf::Event& event, GraphInfo* info) 
             {
             if (!_inputEquation.empty())  // if input equation is not empty
                 {
+                validate_equation(_inputEquation, *info);  // throws (and adds nothing) if invalid
                 _functions.push_back(_inputEquation);  // push back the input equation
                 info->_history.push_back(_inputEquation);  // push back the input equation to the history
                 sf::Color color = info->generateDistinctColor();  // generate a distinct color
