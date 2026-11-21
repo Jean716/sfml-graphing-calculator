@@ -135,6 +135,7 @@ vector<Token*> TK_string::split(const string& tk_Str)
             else if (c == ',')
                 {
                 tokens.push_back(static_cast<Token*>(new Comma()));
+                expectUnary = true;  // a new argument starts: "max(x, -1)"
                 }
             else if (is_operator(string(1, c)))
                 {

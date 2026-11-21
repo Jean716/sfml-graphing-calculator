@@ -124,6 +124,9 @@ TEST(Functions, MaxMinInsideLargerExpression) {
     expect_value("max(min(x, 4), 0)", -3, 0);
     expect_value("max(x + 1, 2x)", 3, 6);
     expect_value("-min(x, 1)", 5, -1);
+    expect_value("max(x, -1)", -3, -1);            // unary minus after a comma
+    expect_value("max(min(x, 2), -1)", 5, 2);
+    expect_value("max(min(x, 2), -1)", -5, -1);
 }
 
 // A value followed by a function, constant or "(" is multiplied.
