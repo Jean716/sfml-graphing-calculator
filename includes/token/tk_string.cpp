@@ -42,6 +42,24 @@ vector<Token*> TK_string::split(const string& tk_Str)
     int leftParenCount = 0;
     int rightParenCount = 0;
 
+    // Implicit multiplication: when a complete value (number, variable,
+    // constant or ")") is directly followed by the start of another value
+    // (variable, constant, function or "("), insert "*".
+    // Examples: 2x, x(x+1), (x+1)(x-1), sin(x)cos(x), x sin(x), pi(x+1)
+    auto insert_implicit_multiply = [&tokens]()
+        {
+        if (tokens.empty())
+            {
+            return;
+            }
+        TokenType prev = tokens.back()->type();
+        if (prev == TokenType::INTEGER || prev == TokenType::VARIABLE ||
+            prev == TokenType::CONSTANT || prev == TokenType::RIGHT_PAREN)
+            {
+            tokens.push_back(static_cast<Token*>(new Operator("*", false)));
+            }
+        };
+
     try
         {
         for (size_t i = 0; i < tk_Str.size(); ++i)
@@ -64,10 +82,6 @@ vector<Token*> TK_string::split(const string& tk_Str)
                 expectUnary = false;
                 token.clear();
 
-                if (i + 1 < tk_Str.size() && (isalpha(tk_Str[i + 1]) || tk_Str[i + 1] == '('))
-                    {
-                    tokens.push_back(static_cast<Token*>(new Operator("*", false)));
-                    }
                 }
             else if (isalpha(c))
                 {
@@ -78,6 +92,7 @@ vector<Token*> TK_string::split(const string& tk_Str)
                     }
                 if (is_function(token))
                     {
+                    insert_implicit_multiply();
                     tokens.push_back(static_cast<Token*>(new Function(token)));
 
                     if (i + 1 >= tk_Str.size() || tk_Str[i + 1] != '(')
@@ -86,20 +101,19 @@ vector<Token*> TK_string::split(const string& tk_Str)
                         throw MissingParan("Mismatched parentheses for function: " + token);
                         }
                     }
-                else if (is_operator(token))
+                else if (is_operator(token))  // max / min, used like functions
                     {
+                    insert_implicit_multiply();
                     tokens.push_back(static_cast<Token*>(new Operator(token, false)));
                     }
                 else if (is_constant(token))
                     {
+                    insert_implicit_multiply();
                     tokens.push_back(static_cast<Token*>(new Constant(token)));
                     }
                 else
                     {
-                    if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::RIGHT_PAREN))
-                        {
-                        tokens.push_back(static_cast<Token*>(new Operator("*", false)));
-                        }
+                    insert_implicit_multiply();
                     tokens.push_back(static_cast<Token*>(new Variable(token)));
                     }
                 token.clear();
@@ -107,10 +121,7 @@ vector<Token*> TK_string::split(const string& tk_Str)
                 }
             else if (c == '(')
                 {
-                if (!tokens.empty() && (tokens.back()->type() == TokenType::INTEGER || tokens.back()->type() == TokenType::VARIABLE || tokens.back()->type() == TokenType::RIGHT_PAREN))
-                    {
-                    tokens.push_back(static_cast<Token*>(new Operator("*", false)));
-                    }
+                insert_implicit_multiply();
                 tokens.push_back(static_cast<Token*>(new LeftParen()));
                 leftParenCount++;
                 expectUnary = true;

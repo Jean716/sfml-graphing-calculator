@@ -123,9 +123,15 @@ TEST(Functions, DISABLED_MaxMinInsideLargerExpression) {
     expect_value("max(10, 20) + min(5, 10)", 0, 25);
 }
 
-// Known bug: no implicit '*' is inserted between ')' and a function name.
-TEST(Functions, DISABLED_ImplicitMultiplicationBeforeFunction) {
+// A value followed by a function, constant or "(" is multiplied.
+TEST(Functions, ImplicitMultiplicationBeforeFunction) {
     expect_value("sin(x)cos(x)", 1, sin(1.0) * cos(1.0));
+    expect_value("x sin(x)", 1, sin(1.0));
+    expect_value("(x+1)sin(x)", 1, 2 * sin(1.0));
+    expect_value("2x sin(x)", 1, 2 * sin(1.0));
+    expect_value("pi(x+1)", 1, 2 * M_PI);
+    expect_value("2pi x", 1, 2 * M_PI);
+    expect_value("x pi", 2, 2 * M_PI);
 }
 
 // --- Invalid input ---------------------------------------------------------
