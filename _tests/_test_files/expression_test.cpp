@@ -1,0 +1,143 @@
+// End-to-end tests for the expression engine:
+//   string -> TK_string::split -> ShuntingYard::postfix -> RPN(x)
+// Expected values are computed with <cmath>.
+//
+// Tests prefixed with DISABLED_ document known bugs. GoogleTest skips them;
+// run them anyway with --gtest_also_run_disabled_tests.
+#include "gtest/gtest.h"
+#include <cmath>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "token/tk_string.h"
+#include "shunting_yard/shunting_yard.h"
+#include "rpn/rpn.h"
+using namespace std;
+
+namespace {
+
+// Evaluate `expr` at x. The engine prints a trace to stdout/stderr, which is
+// silenced here so test output stays readable.
+double eval(const string& expr, float x = 0) {
+    ostringstream sink;
+    streambuf* out = cout.rdbuf(sink.rdbuf());
+    streambuf* err = cerr.rdbuf(sink.rdbuf());
+    vector<Token*> tokens;
+    try {
+        TK_string tk;
+        tokens = tk.split(expr);
+        Queue<Token*> infix;
+        for (Token* t : tokens) infix.push(t);
+        ShuntingYard sy;
+        Queue<Token*> postfix = sy.postfix(infix);
+        RPN rpn(postfix);
+        double y = rpn(x);
+        for (Token* t : tokens) delete t;
+        cout.rdbuf(out);
+        cerr.rdbuf(err);
+        return y;
+    } catch (...) {
+        for (Token* t : tokens) delete t;
+        cout.rdbuf(out);
+        cerr.rdbuf(err);
+        throw;
+    }
+}
+
+// Most expressions are evaluated in float, so compare with a relative tolerance.
+void expect_value(const string& expr, float x, double expected) {
+    double got = 0;
+    ASSERT_NO_THROW(got = eval(expr, x)) << expr << " at x = " << x;
+    EXPECT_NEAR(got, expected, 1e-4 * max(1.0, fabs(expected))) << expr << " at x = " << x;
+}
+
+}  // namespace
+
+// --- Arithmetic, precedence, associativity --------------------------------
+
+TEST(Arithmetic, LeftAssociativeMinusAndDivide) {
+    expect_value("x - 1 - 1", 5, 3);
+    expect_value("8/2/2", 0, 2);
+    expect_value("10 % 3", 0, 1);
+}
+
+TEST(Arithmetic, PowerIsRightAssociative) {
+    expect_value("2^3^2", 0, 512);  // 2^(3^2), not (2^3)^2 = 64
+}
+
+TEST(Arithmetic, PolynomialsAndImplicitMultiplication) {
+    expect_value("2x+3", 1, 5);
+    expect_value("4x^2 + 2x + 1", 1, 7);
+    expect_value("1.5x", 2, 3);
+    expect_value("x(x+1)", 2, 6);
+    expect_value("(x+1)(x-1)", 3, 8);
+    expect_value("x/2x", 4, 8);  // read left to right as (x/2)*x
+}
+
+TEST(Arithmetic, LeadingUnaryMinus) {
+    expect_value("-x^2", 2, -4);  // -(x^2)
+    expect_value("-2^2", 0, -4);
+    expect_value("(-x)^2", 3, 9);
+    expect_value("x^2", -3, 9);
+}
+
+// Known bug: a unary minus after another operator gets the same precedence
+// as binary minus, so it pops that operator off the stack too early.
+TEST(Arithmetic, DISABLED_UnaryMinusAfterOperator) {
+    expect_value("2*-3", 0, -6);
+    expect_value("2^-1", 0, 0.5);
+    expect_value("3 - -2", 0, 5);
+}
+
+// --- Functions and constants ----------------------------------------------
+
+TEST(Functions, SingleArgument) {
+    expect_value("-sin(x)", 1, -sin(1.0));
+    expect_value("sin(x)*cos(x)", 1, sin(1.0) * cos(1.0));
+    expect_value("x*sin(x)", 1, sin(1.0));
+    expect_value("2sin(x)", 1, 2 * sin(1.0));
+    expect_value("log(100)", 0, log(100.0));  // natural log
+    expect_value("sqrt(x^2 + 2)", 1, sqrt(3.0));
+    expect_value("abs(-5) + abs(5)", 0, 10);
+    expect_value("1/x^2", 2, 0.25);
+}
+
+TEST(Functions, Constants) {
+    expect_value("2pi", 0, 2 * M_PI);
+    expect_value("pi*x", 2, 2 * M_PI);
+    expect_value("e^x", 1, M_E);
+}
+
+TEST(Functions, MaxMinAlone) {
+    expect_value("max(x, 2)", 5, 5);
+}
+
+// Known bug: max/min are handled as operators with no precedence, so they
+// are not emitted when their closing parenthesis is reached.
+TEST(Functions, DISABLED_MaxMinInsideLargerExpression) {
+    expect_value("max(10, 20) + min(5, 10)", 0, 25);
+}
+
+// Known bug: no implicit '*' is inserted between ')' and a function name.
+TEST(Functions, DISABLED_ImplicitMultiplicationBeforeFunction) {
+    expect_value("sin(x)cos(x)", 1, sin(1.0) * cos(1.0));
+}
+
+// --- Invalid input ---------------------------------------------------------
+
+TEST(InvalidInput, IsRejected) {
+    EXPECT_ANY_THROW(eval("sin(x", 1));  // unbalanced parenthesis
+    EXPECT_ANY_THROW(eval("2 +"));       // missing operand
+    EXPECT_ANY_THROW(eval("y + 1"));     // unknown variable
+}
+
+// Known bug: division by zero throws, and Plot does not catch it per point,
+// so one undefined point (x = 0 is sampled exactly in the default domain)
+// stops every function from being drawn. Expected: return +/-inf or NaN
+// and let the plotter skip that point.
+TEST(InvalidInput, DISABLED_DivisionByZeroDoesNotThrow) {
+    double y = 0;
+    ASSERT_NO_THROW(y = eval("1/x", 0));
+    EXPECT_TRUE(std::isinf(y) || std::isnan(y));
+}

@@ -1,189 +1,107 @@
+# SFML Graphing Calculator
 
-# Work Report
+An interactive graphing calculator written in C++17 with SFML. Type a
+function, press Enter, and it is parsed, evaluated, and plotted in Cartesian or
+polar coordinates. The expression engine (tokenizer, shunting-yard parser, RPN
+evaluator) and its stack and queue are implemented from scratch.
 
-## Name: <ins> Jian Wang </ins>
+![Rose curve](images/rose_curve.png)
 
-## Features:
+## Features
 
-- Not Implemented:
-  - Advanced mathematical functions support (e.g., calculus and differential equations )
-  - GUI interface enhancements
-  - Multithreading for performance improvement
-  - 3D Graphic
+- **Expressions:** `+ - * / ^ %`, unary minus, parentheses, implicit
+  multiplication (`2x`, `3(x+1)`, `(x+1)(x-1)`), constants `pi` and `e`
+- **Functions:** `sin cos tan cot sqrt log exp abs`, plus `max(a, b)` and
+  `min(a, b)`. `log` is the natural logarithm
+- **Cartesian and polar modes:** `y = f(x)` and `r = f(theta)`. Entering a
+  function that uses `theta` switches to polar mode automatically
+- **Rose curves:** `a*sin(b*theta)` with keyboard control of `a` and `b`
+- **Multiple functions** at once, each in its own color; select or delete them
+  from the sidebar
+- **Zoom and pan** with live re-plotting and a mouse coordinate readout
 
-<br><br>
+| Cartesian | Polar |
+|---|---|
+| ![Trigonometric functions](images/trigonometric_functions.png) | ![Polar functions](images/polar_functions.png) |
 
-- Implemented:
-  - Basic arithmetic operations (addition, subtraction, multiplication, division)
-  - Single variable functions (e.g., `sin(x)`, `cos(x)`,`tan(x)`,`cot(x)`)
-  - Multi-argument functions (e.g., `Max(a, b)`)
-  - Logarithmic and exponential functions (e.g., `log(x)`, `exp(x)`, `e^x^2`)
-  - Square root function (`sqrt(x)`)
-  - Absolute value function (`abs(x)`)
-  - Unary Operations (e.g., `-x` for negation)
-  - Rose Curve (e.g., `asin(bθ)` )
-  - Expression parsing using the Shunting Yard algorithm 
-  - Expression evaluation to generate graph points
-  - Coordinate translation (graph coordinates to screen coordinates)
-  - Graph drawing (X-axis and Y-axis, plotting points)
-  - Switch between polar and Cartesian coordinate modes
-  - User interaction features：
-    - User interaction features:
-    - Zoom In: `[`
-    - Zoom Out: `]`
-    - Pan: Up, Down, Left, Right Arrow Keys
-    - Toggle Coordinates (Polar/Cartesian): `Tab`
-    - Add Function: `Enter`
-    - Delete Function: Click Circle Button
-    - Select Function: Click Function Box
+## How it works
 
-<br><br>
+```mermaid
+flowchart LR
+    A["Input string<br/>2x^2 + sin(x)"] --> B["Tokenizer<br/>(TK_string)"]
+    B -->|"tokens, with implicit *<br/>and unary minus"| C["Shunting-yard<br/>infix → postfix"]
+    C -->|"2 x 2 ^ * x sin +"| D["RPN evaluator<br/>(stack)"]
+    D -->|"y = f(x) for each<br/>sample x"| E["Coordinate translation<br/>math → screen"]
+    E --> F["SFML rendering"]
+```
 
-- Partly implemented:
-  - Complete function handling (limited support for some advanced functions)
-  - More refined graph drawing (optimization for details)
+| Module | Path | Role |
+|---|---|---|
+| Tokenizer | `includes/token/tk_string.*` | Splits input into numbers, variables, functions, operators and parentheses; inserts implicit `*` and marks unary minus |
+| Shunting-yard | `includes/shunting_yard/` | Converts infix to postfix using precedence (`+ -` < `* /` < `^`) and associativity (`^` is right-associative) |
+| RPN evaluator | `includes/rpn/` | Evaluates the postfix queue with a stack for a given `x` (or `theta`) |
+| Plot | `includes/plot.*` | Samples the domain (1000 points), evaluates every function, converts to screen coordinates |
+| Coordinate translation | `includes/coord_translation.*` | Math ↔ screen and polar ↔ Cartesian conversions, including zoom and pan |
+| UI | `includes/animate.*`, `sidebar.*`, `graph.*`, `polar.*` | Event loop, input box, axes, grid, labels |
+| Containers | `includes/stack/`, `includes/queue/` | Linked-list stack and queue used by the parser |
 
-<br><br>
+Points are re-evaluated only when something that affects them changes (the
+function list, zoom, pan, mode, or `a` / `b`), so an idle frame does no
+evaluation work.
 
-- Bugs
-  - Parsing complex expressions may cause the program to exit
-  - High-frequency zoom operations may cause program to exit
-  - Interface adaptation issues at extreme resolutions
-<br><br>
+## Build and run
 
-# Reflections:
+Requirements: CMake 3.14+, a C++17 compiler, and **SFML 2.5 or 2.6** (SFML 3
+has a different API). GoogleTest is downloaded automatically.
 
-- This project helped me deepen my understanding of the combination of mathematics and computer science , particularly the Shunting Yard algorithm and RPN expression handling. Implementing this graphing calculator also taught me how to perform graphical drawing and handle user interactions by using SFML, which will be very useful for my future programming project.
+```bash
+# macOS: Homebrew's "sfml" formula is SFML 3, so install sfml@2
+brew install sfml@2
+# Ubuntu / Debian
+sudo apt install libsfml-dev
 
+git clone https://github.com/Jean716/sfml-graphing-calculator.git
+cd sfml-graphing-calculator
+cmake -S . -B build
+cmake --build build -j
+./build/bin/main
+```
 
-# Example Functions and Graphs
+Run `./build/bin/main --verbose` to print the full trace of tokenizing,
+parsing, and evaluating every point. The UI font (DejaVu Sans) is bundled in
+`assets/fonts/`.
 
-## Rose Curve with three variables
-![Rose Curve](images/rose_curve.png)
-Equation: `r = a * sin(b * theta)`<br>
+## Controls
 
-## Polar Functions
-![Polar Functions](images/polar_functions.png)
-Equation: `y = 4 * cos(2 * theta)`<br>
-Equation: `y = 2 * cos(5 * theta)`<br>
-Equation: `y = -4 * tan(theta)`<br>
+| Action | Key |
+|---|---|
+| Add the typed function | Enter |
+| Zoom in / out | `]` / `[` |
+| Pan | Arrow keys |
+| Toggle Cartesian / polar | Tab |
+| Rose curve: increase / decrease `a` | `V` / `F` (while the input box is empty) |
+| Rose curve: increase / decrease `b` | `G` / `D` (while the input box is empty) |
+| Select a function | Click its box in the sidebar |
+| Delete a function | Click its colored circle |
 
-## Logarithmic and Exponential Combination
-![Logarithmic and Exponential Combination](images/log_and_exp_functions.png.png)
-Equation: `y = log(x) + exp(x) - x^2`<br>
-Equation: `y = sqrt(x^2 + 2)`<br>
-Equation: `y = e^(x^2)`<br>
-Equation: `y = 1/x^2`<br>
-Equation: `y = 4x^2 + 2x + 1`<br>
+Example inputs: `sin(x)*cos(x)`, `x^2/4 - 2`, `sqrt(x^2 + 2)`, `e^(x^2)`,
+`3cos(2theta)`, `a*sin(b*theta)`.
 
-## Absolute Value and Sine Function Combination
-![Absolute Value and Sine Function Combination](./images/trigonometric_functions.png)
-Equation: `y = abs(sin(x)) + cos(x)`<br>
-Equation: `y = sin(x) * cos(x)`<br>
-Equation: `y = sin(x) + cos(x)`<br>
-Equation: `y = abs(sin(x)) + tan(x)`<br>
-Equation: `y = 3 * cot(x) + 4`<br>
+## Testing
 
+```bash
+cd build
+ctest --output-on-failure
+```
 
+| Suite | What it checks |
+|---|---|
+| `expression_test` | End-to-end evaluation (string → tokens → postfix → value) against `<cmath>`: precedence, associativity, implicit multiplication, unary minus, functions, constants, and rejection of invalid input |
+| `coord_test` | Math ↔ screen translation, math → screen → math round trips, and polar ↔ Cartesian conversion |
 
-# **basic_test.cpp output:**
-<pre>
-<br/><br/><br/><br/>
-----------running basic_test.cpp---------
-=====test_shunting_yard_1()=====
-Input: 4^ 2 ^ 3
+## Background
 
-*****SY::ShuntingYard is Fired*****
-Postfix Queue:   4  2  3  ^  ^
-Test result: 
-*****RPN::operator() is Fired*****
-65536
-=====test_shunting_yard_2()===== 
-Input: sin x
-
-*****SY::ShuntingYard is Fired*****
-Postfix Queue:   xsin
-Test result:  = 
-*****RPN::operator() is Fired*****
-0.893997
-test:sinx
-
-===Test 3: split===
-
-Expression: sinx
-Tokens: sinx 
-2x+3
-
-===Test 3: split===
-
-Expression: 2x+3
-Tokens: 2 * x + 3 
-test(sqrt(x) + 5 ^ 2)
-
-===Test 3: split===
-
-Expression: sqrt(x) + 5 ^ 2
-Tokens: sqrt ( x ) + 5 ^ 2 
-
-===Test 3: split===
-
-Expression: tan(30) + cot(60)
-Tokens: tan ( 30 ) + cot ( 60 ) 
-
-===Test 3: split===
-
-Expression: log(100) % exp(2)
-Tokens: log ( 100 ) % exp ( 2 ) 
-
-===Test 3: split===
-
-Expression: abs(-5) + abs(5)
-Tokens: abs ( - 5 ) + abs ( 5 ) 
-
-===Test 3: split===
-
-Expression: max(10, 20) + min(5, 10)
-Tokens: max ( 10 , 20 ) + min ( 5 , 10 ) 
-[==========] Running 0 tests from 0 test suites.
-[==========] 0 tests from 0 test suites ran. (0 ms total)
-[  PASSED  ] 0 tests.
-jwcomputer@JWs-MacBook-Pro bin % 
-</pre>
-
-
-<br/><br/>
-
-# testB.cpp output:
-<pre>
-<br/><br/><br/><br/>
-----------running testB.cpp---------
-Running testTranslateMathToScreen...
-Math Point: (2, 3)
-Screen Point: (610, 20)
-Running testGetMathCoordsFromScreen...
-Screen Point: (610, -20)
-Math Point: (2, 3)
-Running testPolarToCartesian...
-Polar Coord (r, theta): (5, 0.785398)
-Cartesian Coord: (3.53553, 3.53553)
-Running testCartesianToPolar...
-Cartesian Coord: (3, 4)
-Polar Coord (r, theta): (5, 0.927295)
-Running testGetPolarCoordsFromScreen...
-Screen Point: (510, 180)
-Polar Coord (r, theta): (1.41421, 0.785398)
-[==========] Running 1 test from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 1 test from TEST_STUB
-[ RUN      ] TEST_STUB.TestStub
-[       OK ] TEST_STUB.TestStub (0 ms)
-[----------] 1 test from TEST_STUB (0 ms total)
-
-[----------] Global test environment tear-down
-[==========] 1 test from 1 test suite ran. (0 ms total)
-[  PASSED  ] 1 test.
-</pre>
-
-
-
-
+Built as the final project for CS 3A at Pasadena City College. After the course, the
+build was made portable (macOS and Linux), the font was bundled, plotting was
+changed to re-evaluate only when inputs change, and the test suites were
+rewritten with real assertions.
